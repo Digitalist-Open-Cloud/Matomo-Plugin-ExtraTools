@@ -1,0 +1,29 @@
+{
+    "name": "Install",
+    "description": "Installer for Matomo",
+    "version": "0.0.1",
+    "theme": false,
+    "require": {
+        "matomo": ">=3.8.1-stable,<4.0.0-b1"
+    },
+    "authors": [
+        {
+            "name": "Mikke Schirén",
+            "email": "mikke.schiren@digitalistgroup.com",
+            "homepage": "https://digitalist.se"
+        }
+    ],
+    "support": {
+        "email": "",
+        "issues": "",
+        "forum": "",
+        "irc": "",
+        "wiki": "",
+        "source": "",
+        "docs": "",
+        "rss": ""
+    },
+    "homepage": "",
+    "license": "GPL v3+",
+    "keywords": []
+}
