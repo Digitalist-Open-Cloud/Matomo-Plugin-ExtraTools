@@ -109,11 +109,8 @@ To run:
         /** @var DiagnosticService $diagnosticService */
         $diagnosticService = StaticContainer::get('Piwik\Plugins\Diagnostics\DiagnosticService');
         $diagnosticReport = $diagnosticService->runDiagnostics();
-        if ($diagnosticReport->hasErrors()) {
-            return "Errors were found";
-        }
 
-        $output->writeln("<info>Mandatory results</info>");
+        $output->writeln("<info>Mandatory test results</info>");
 
         $results = $diagnosticReport->getMandatoryDiagnosticResults();
         $errors =  $diagnosticReport->getErrorCount();
@@ -133,11 +130,10 @@ To run:
         $table->setRows($rows);
         $table->render();
 
-        $output->writeln("<info>Optional results</info>");
+        $output->writeln("<info>Optional test results</info>");
 
         $results = $diagnosticReport->getOptionalDiagnosticResults();
-        $errors =  $diagnosticReport->getErrorCount();
-        $warnings =  $diagnosticReport->getWarningCount();
+
 
         $table = new Table($output);
         $table->setColumnWidth(0, 20);
@@ -153,36 +149,10 @@ To run:
         $table->render();
 
 
-
-
-         $output->writeln("<info>Number of errors: <comment>$errors</comment>. Number of warnings: <comment>$warnings</comment></info>");
-    }
-
-    private function json($config)
-    {
-        $json = json_encode($config, JSON_PRETTY_PRINT |JSON_UNESCAPED_SLASHES);
-        print_r($json);
-        echo "\n";
-    }
-    private function yaml($config)
-    {
-        $yaml = Yaml::dump($config, 2, 2);
-        print_r($yaml);
-    }
-
-
-    private function text($config, OutputInterface $output)
-    {
-
-        foreach ($config as $key => $section) {
-            if (is_array($section)) {
-                foreach ($section as $key_1 => $section_1) {
-                    $output->write("<info>$key: </info>");
-                    $output->writeln("<info><comment>$section_1</comment></info>");
-                }
-            } else {
-                $output->writeln("<info>$key: <comment>$section</comment></info>");
-            }
+        if ($diagnosticReport->hasErrors()) {
+            $output->writeln("<error>Errors were found in!</error>");
         }
+
+         $output->writeln("<info>Number of type errors: <comment>$errors</comment>. Number of type warnings: <comment>$warnings</comment></info>");
     }
 }

@@ -4,10 +4,24 @@ Some extra cli commands to help with maintaining Matomo.
 Introducing three new console commands:
 * `config:get`
 * `database:backup`
+* `database:create`
 * `database:drop`
 * `database:import`
 * `matomo:install`
 * `matomo:requirements`
+
+
+## Dependencies
+### On host:
+* mysql-client (for database tasks)
+
+### In composer.json (Matomo root):
+
+* `composer require symfony/yaml:~2.6.0` (moves it from dev)
+* `composer require symfony/process:^3.4`
+
+optional (upgrade console):
+* `composer require symfony/console:^3.4`
 
 ## Commands
 
@@ -18,10 +32,10 @@ Gets a section config.
 Backups the db. 
 
 ### database:drop
-Not implemented yet
+Drops the db defined i config.ini.php - backup first if needed.
 
 ### database:import
-Not implemented yet
+Imports database dump to database defined in config.ini.php.
 
 ### matomo:install
 Not implemented yet
@@ -44,7 +58,9 @@ db_backup_path = "/var/www/html/tmp"
 
 ## CAUTION!
 `matamo:install` wipes your current install if you use the `--new` argument.
-`database:drop` - as it says - drops the entire db, make a backup first if you want to save you data, 
-and check if it's ok.
+`database:drop` - as it says - drops the entire db, make a backup first if you 
+want to save you data, and check if it's ok.
+`database:import` - writes over your current database.
 
-This plugin comes with **no** guarantees.
+This plugin comes with **no** guarantees. But it's free and open source. 
+So, let's make it better!

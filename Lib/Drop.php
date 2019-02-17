@@ -6,7 +6,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class Backup
+class Drop
 {
 
     protected $config;
@@ -24,27 +24,22 @@ class Backup
 
     public function execute()
     {
-        // Fetch config.
-        $backup_folder = $this->config['db_backup_folder'];
         $db_host = $this->config['db_host'];
         $db_user = $this->config['db_user'];
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
-        $prefix  = $this->config['db_backup_prefix'];
 
-        $timestamp = date("Ymd-His");
-        $backup = new Process\Process(
-            "mysqldump -u $db_user -h $db_host -p$db_pass $db_name --add-drop-table >" .
-            "$backup_folder/$prefix-$timestamp.sql"
+        $drop = new Process\Process(
+            "mysqladmin -u $db_user -h $db_host -p$db_pass drop $db_name --force"
         );
-        $backup->enableOutput();
+        $drop->enableOutput();
 
-        $backup->run();
-        echo $backup->getOutput();
-        if (!$backup->isSuccessful()) {
-            throw new ProcessFailedException($backup);
+        $drop->run();
+        echo $drop->getOutput();
+        if (!$drop->isSuccessful()) {
+            throw new ProcessFailedException($drop);
         } else {
-            $this->output->writeln("<info>Backup done, dump at <comment>$backup_folder/$prefix-$timestamp.sql</comment></info>");
+            $this->output->writeln("<info>Db $db_name dropped</info>");
         }
     }
 }

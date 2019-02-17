@@ -6,7 +6,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class Backup
+class Import
 {
 
     protected $config;
@@ -25,17 +25,14 @@ class Backup
     public function execute()
     {
         // Fetch config.
-        $backup_folder = $this->config['db_backup_folder'];
+        $backup_path = $this->config['db_backup_path'];
         $db_host = $this->config['db_host'];
         $db_user = $this->config['db_user'];
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
-        $prefix  = $this->config['db_backup_prefix'];
 
-        $timestamp = date("Ymd-His");
         $backup = new Process\Process(
-            "mysqldump -u $db_user -h $db_host -p$db_pass $db_name --add-drop-table >" .
-            "$backup_folder/$prefix-$timestamp.sql"
+            "mysql -u $db_user -h $db_host -p$db_pass $db_name < $backup_path"
         );
         $backup->enableOutput();
 
@@ -44,7 +41,7 @@ class Backup
         if (!$backup->isSuccessful()) {
             throw new ProcessFailedException($backup);
         } else {
-            $this->output->writeln("<info>Backup done, dump at <comment>$backup_folder/$prefix-$timestamp.sql</comment></info>");
+            $this->output->writeln("<info>Import done</info>");
         }
     }
 }
