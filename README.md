@@ -9,6 +9,27 @@ Introducing three new console commands:
 * `matomo:install`
 * `matomo:requirements`
 
+## Commands
+
+### config:get
+Gets a section config.
+
+### database:backup
+Backups the db. 
+
+### database:drop
+Not implemented yet
+
+### database:import
+Not implemented yet
+
+### matomo:install
+Not implemented yet
+
+### matomo:requirements
+Check that all requirements, mandatory and optional, are in place.
+Normally throws a notice for mod pagespeed check.
+
 ## Config
 To set a db backup path, use the console (use the path you desire):
 ```
@@ -20,10 +41,6 @@ Or add it to config.ini.php:
 db_backup_path = "/var/www/html/tmp"
 
 ```
-
-
-
-
 
 ## CAUTION!
 `matamo:install` wipes your current install if you use the `--new` argument.
