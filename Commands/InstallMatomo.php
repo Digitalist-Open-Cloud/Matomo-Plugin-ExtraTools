@@ -62,7 +62,7 @@ To reinstall site - warning - this will remove your current sites db:
     }
 
     /**
-     * Execute the command like: ./console install:install-matomo --name="The Piwik Team"
+     * Execute the command like: ./console install:install-matomo --new
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

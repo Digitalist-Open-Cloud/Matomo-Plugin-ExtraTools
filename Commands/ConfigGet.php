@@ -74,10 +74,10 @@ You could use options to override config or environment variables:
             $output->writeln("<info>Looks like section <comment>$section</comment> does not exist</info>");
         } else {
             if ($format=='json') {
-              $this->json($get_section);
+                $this->json($get_section);
             }
             if ($format=='yaml') {
-              $this->yaml($get_section);
+                $this->yaml($get_section);
             }
             if ($format=='text') {
                 $this->text($get_section, $output);
@@ -97,7 +97,8 @@ You could use options to override config or environment variables:
     }
 
 
-    private function text($config, OutputInterface $output) {
+    private function text($config, OutputInterface $output)
+    {
 
         foreach ($config as $key => $section) {
             if (is_array($section)) {

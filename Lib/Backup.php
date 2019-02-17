@@ -2,22 +2,6 @@
 
 namespace Piwik\Plugins\MatomoExtraTools\Lib;
 
-use Piwik\ErrorHandler;
-use Piwik\ExceptionHandler;
-use Piwik\FrontController;
-use Piwik\Access;
-use Piwik\Common;
-use Piwik\Plugins\UsersManager\API as APIUsersManager;
-use Piwik\Plugins\SitesManager\API as APISitesManager;
-use Piwik\Config;
-use Piwik\Filesystem;
-use Piwik\DbHelper;
-use Piwik\Db\Schema;
-use Piwik\Updater;
-use Piwik\Plugin\Manager;
-use Piwik\Container\StaticContainer;
-use Piwik\Option;
-use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
