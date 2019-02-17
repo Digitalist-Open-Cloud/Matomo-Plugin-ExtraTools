@@ -1,63 +1,71 @@
 <?php
 
-  namespace Piwik\Plugins\Install\Lib;
+  namespace Piwik\Plugins\MatomoExtraTools\Lib;
 
-  use Piwik\ErrorHandler;
-  use Piwik\ExceptionHandler;
-  use Piwik\FrontController;
-  use Piwik\Access;
-  use Piwik\Common;
-  use Piwik\Plugins\UsersManager\API as APIUsersManager;
-  use Piwik\Plugins\SitesManager\API as APISitesManager;
-  use Piwik\Config;
   use Piwik\Filesystem;
   use Piwik\DbHelper;
-  use Piwik\Updater;
-  use Piwik\Plugin\Manager;
-  use Piwik\Container\StaticContainer;
-  use Piwik\Option;
-  use Piwik\Plugin\ConsoleCommand;
+  use Piwik\Db\Schema;
   use Symfony\Component\Console\Output\OutputInterface;
 
-  class Install {
+class Install
+{
 
     protected $config;
 
-    public function __construct($config) {
-      $this->config = $config;
+    /**
+       * @var OutputInterface
+       */
+    private $output;
+
+
+    public function __construct($config, OutputInterface $output)
+    {
+        $this->config = $config;
+        $this->output = $output;
     }
 
-    public function execute() {
-        $this->log('Running Configure Script');
+    public function execute()
+    {
+        $this->output->writeln("<info>Starting <comment>install</comment></info>");
         $this->deleteCache();
+        $this->tableCreation();
     }
 
-    protected function log($text) {
+    protected function log($text)
+    {
         echo "$text\n";
-      }
+    }
 
     /**
      * Performs the initial table creation for Matomo, if needed
      */
-    protected function tableCreation() {
-        $this->log('Ensuring Tables are Created');
+    protected function tableCreation()
+    {
         $tablesInstalled = DbHelper::getTablesInstalled();
-        if (count($tablesInstalled) === 0) {
-            echo "no tables exists";
+        $numberOfTables = sizeof($tablesInstalled);
+        $version = DbHelper::getInstallVersion();
+        $db_name = Schema::getInstance()->
+
+
+        if($numberOfTables >= 0) {
+
+            $this->output->writeln("<info>  Database tables <comment>exists</comment> with $numberOfTables tables</info>");
+            $this->output->writeln("<info>  Version installed is <comment>$version</comment></info>");
           //DbHelper::createTables();
           //DbHelper::createAnonymousUser();
           //$this->updateComponents();
         }
-      }
+    }
 
     /**
      * Delete all cache data
      */
-    private function deleteCache() {
-        $this->log('Delete Cache');
+    private function deleteCache()
+    {
+        $this->output->writeln("<info>  Deleting <comment>cache</comment></info>");
         Filesystem::deleteAllCacheOnUpdate();
-      }
-    private function isMatomoInstalled() {
-
     }
-  }
+    private function isMatomoInstalled()
+    {
+    }
+}

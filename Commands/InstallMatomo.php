@@ -6,7 +6,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-namespace Piwik\Plugins\Install\Commands;
+namespace Piwik\Plugins\MatomoExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,8 +27,11 @@ use Piwik\Plugin\Manager;
 use Piwik\Container\StaticContainer;
 use Piwik\Option;
 
-use Piwik\Plugins\Install\Lib\Install;
+use Piwik\Plugins\MatomoExtraTools\Lib\Install;
 
+if (file_exists(PIWIK_DOCUMENT_ROOT . '/bootstrap.php')) {
+    require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
+}
 
 /**
  * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on
@@ -53,7 +56,7 @@ To run:
 To reinstall site - warning - this will remove your current sites db:
 <info>%command.name% --re-install</info>';
         $this->setHelp($HelpText);
-        $this->setName('install:matomo');
+        $this->setName('matomo:install');
         $this->setDescription('Install Matomo');
         $this->addOption('name', null, InputOption::VALUE_REQUIRED, 'Your name:');
     }
@@ -66,12 +69,11 @@ To reinstall site - warning - this will remove your current sites db:
 
         $name = $input->getOption('name');
         $config = [];
-        $install = new Install($config);
+        $install = new Install($config, $output);
 
         $message = sprintf('<info>InstallMatomo: %s</info>', $name);
         $output->writeln($message);
 
         $install->execute();
-
     }
 }

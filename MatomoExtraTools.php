@@ -6,8 +6,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-namespace Piwik\Plugins\Install;
+namespace Piwik\Plugins\MatomoExtraTools;
 
-class Install extends \Piwik\Plugin
+class MatomoExtraTools extends \Piwik\Plugin
 {
 }
