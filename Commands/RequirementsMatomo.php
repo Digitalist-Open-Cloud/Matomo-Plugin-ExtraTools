@@ -12,12 +12,7 @@ use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Piwik\Container\StaticContainer;
-use Piwik\Plugins\Diagnostics\DiagnosticService;
-use Piwik\SettingsPiwik;
-use Symfony\Component\Console\Helper\Table;
 use Piwik\Plugins\MatomoExtraTools\Lib\Requirements;
-
 
 if (file_exists(PIWIK_DOCUMENT_ROOT . '/bootstrap.php')) {
     require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
@@ -65,5 +60,4 @@ To run:
         $check = new Requirements($config, $output);
         $check->execute();
     }
-    
 }

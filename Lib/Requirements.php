@@ -8,8 +8,6 @@ use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\SettingsPiwik;
 use Symfony\Component\Console\Helper\Table;
 
-
-
 class Requirements
 {
 

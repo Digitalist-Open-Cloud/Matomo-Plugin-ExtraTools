@@ -12,20 +12,9 @@ use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Piwik\ErrorHandler;
-use Piwik\ExceptionHandler;
-use Piwik\FrontController;
-use Piwik\Access;
-use Piwik\Common;
-use Piwik\Plugins\UsersManager\API as APIUsersManager;
-use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Config;
-use Piwik\Filesystem;
-use Piwik\DbHelper;
-use Piwik\Updater;
-use Piwik\Plugin\Manager;
-use Piwik\Container\StaticContainer;
-use Piwik\Option;
+use Piwik\Plugins\MatomoExtraTools\Lib\Drop;
+use Piwik\Plugins\MatomoExtraTools\Lib\Create;
 
 use Piwik\Plugins\MatomoExtraTools\Lib\Install;
 
@@ -58,7 +47,12 @@ To reinstall site - warning - this will remove your current sites db:
         $this->setHelp($HelpText);
         $this->setName('matomo:install');
         $this->setDescription('Install Matomo');
-        $this->addOption('name', null, InputOption::VALUE_REQUIRED, 'Your name:');
+        $this->addOption(
+            'install-file',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'Install from this file'
+        );
     }
 
     /**
@@ -66,14 +60,27 @@ To reinstall site - warning - this will remove your current sites db:
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $name = $input->getOption('install-file');
+        $configs = Config::getInstance();
+        // Only supporting local config.
+        $db_configs = $configs->getFromLocalConfig('database');
 
-        $name = $input->getOption('name');
-        $config = [];
+        $config = [
+            'db_host' =>  $db_configs['host'],
+            'db_user' => $db_configs['username'],
+            'db_pass' => $db_configs['password'],
+            'db_name' =>  $db_configs['dbname'],
+        ];
+
+        $drop = new Drop($config, $output);
+        $drop->execute();
+
+        $create = new Create($config, $output);
+        $create->execute();
+
         $install = new Install($config, $output);
 
-        $message = sprintf('<info>InstallMatomo: %s</info>', $name);
-        $output->writeln($message);
-
+        $output->writeln("<info>Install Matomo</info>");
         $install->execute();
     }
 }
