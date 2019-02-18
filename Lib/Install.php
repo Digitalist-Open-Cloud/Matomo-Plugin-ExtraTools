@@ -8,6 +8,7 @@
   use Piwik\Plugins\LanguagesManager\Model as LanguageManagerInstall;
   use Piwik\Plugins\SegmentEditor\Model as SegmentInstall;
   use Piwik\Plugins\Dashboard\Model as DashboardInstall;
+  use Piwik\Plugins\ScheduledReports\Model as ScheduledReportsInstall;
   use Symfony\Component\Console\Output\OutputInterface;
   use Piwik\Config;
   use Piwik\Common;
@@ -47,7 +48,7 @@ class Install
         $this->createSuperUser('admin', 'admin1234', 'mikkeschiren@foo.com');
         $this->addWebsite('Foo', 'http://bar.foo');
         $this->finish();
-        $this->setupPlugins();
+        #$this->setupPlugins();
     }
 
 
@@ -229,6 +230,10 @@ class Install
         $segment::install();
         $dashboard = new DashboardInstall();
         $dashboard::install();
+        $scheduledreports = new ScheduledReportsInstall();
+        $scheduledreports::install();
+
+
 
         $this->log('Finalising primary configurationprocedure');
         Manager::getInstance()->loadPluginTranslations();
@@ -310,15 +315,21 @@ class Install
         $this->log('Setting up Extra Plugins');
         echo exec("php " . PIWIK_DOCUMENT_ROOT . "/console core:clear-caches")
             . "\n";
-        if (array_key_exists('Plugins', $this->config) && is_array($this->config['Plugins'])) {
+
+
+
+
             $config = Config::getInstance();
-            foreach ($config->PluginsInstalled as $pi_arr) {
+            foreach ($this->config->getFromLocalConfig('Plugins') as $pi_arr) {
                 foreach ($pi_arr as $pi) {
+
                     $config->Plugins[] = $pi;
                 }
             }
             // Now go and activate them
-            foreach ($this->config['Plugins'] as $plugin_txt) {
+            foreach ($config->Plugins as $plugin_txt) {
+
+                var_dump('foo');
                 echo exec(
                     "php " . PIWIK_DOCUMENT_ROOT . "/console plugin:activate "
                         . $plugin_txt
@@ -330,7 +341,6 @@ class Install
             // And Update Core
             // TODO: Update core exists on several places, this should be consolidated
             exec("php " . PIWIK_DOCUMENT_ROOT . "/console core:update --yes");
-        }
     }
 
     /**
