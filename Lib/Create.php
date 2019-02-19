@@ -33,13 +33,14 @@ class Create
             "mysqladmin -u $db_user -h $db_host -p$db_pass create $db_name --force"
         );
         $drop->enableOutput();
-
         $drop->run();
-        echo $drop->getOutput();
+
         if (!$drop->isSuccessful()) {
             throw new ProcessFailedException($drop);
         } else {
-            $this->output->writeln("<info>Db $db_name created</info>");
+            $text = 'Database "%s" created';
+            $message = sprintf($text, $db_name);
+            $this->output->writeln("<info>$message</info>");
         }
     }
 }

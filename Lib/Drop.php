@@ -33,13 +33,14 @@ class Drop
             "mysqladmin -u $db_user -h $db_host -p$db_pass drop $db_name --force"
         );
         $drop->enableOutput();
-
         $drop->run();
-        echo $drop->getOutput();
+        $message = $drop->getOutput();
         if (!$drop->isSuccessful()) {
+            $message = $drop->getErrorOutput();
+            $this->output->writeln("<error>$message</error>");
             throw new ProcessFailedException($drop);
         } else {
-            $this->output->writeln("<info>Db $db_name dropped</info>");
+            $this->output->writeln("<info>$message</info>");
         }
     }
 }

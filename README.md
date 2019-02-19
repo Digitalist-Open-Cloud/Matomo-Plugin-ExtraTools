@@ -22,6 +22,24 @@ Introducing new console commands:
 optional (upgrade console):
 * `composer require symfony/console:^3.4`
 
+## Config
+Activate MatomExtraTools - in UI, or in the console:
+``` 
+console plugin:activate MatomoExtraTools
+```
+
+Set up a db backup path, use the console (use the path you desire):
+```
+./console config:set 'MatomoExtraTools.db_backup_path="/var/www/html/tmp"'
+```
+Or add it to config.ini.php:
+```
+[MatomoExtraTools]
+db_backup_path = "/var/www/html/tmp"
+
+```
+
+
 ## Commands
 
 ### config:get
@@ -44,24 +62,82 @@ Imports database dump to database defined in config.ini.php, so if
 you already have a installation - it overwrites it.
 
 ### matomo:install
-Not done yet, so does not work.
+Installs Matamo. Wipes the current installation - as default it uses settings in 
+your config.ini.php file - but all values could be overriden with arguments or
+environment variables.
+
+#### Requirements
+
+Matomo needs a MySQL/MariaDB host, with a user setup that is allowed to drop 
+that db.
+The first user is created as a super user and it is need to have one to 
+set up Matomo. If you do not add values in environment variables or options to 
+matomo:install command, it will use the defaults for the user - so important 
+that you change that users password after install.
+Matomo also creates a first site to track, this also has default values that
+you could override with environment variables or options.
+
+You could also use a json-file for configuration - like all the above 
+mentioned - and for installing plugins. An example json-file could be found in 
+teh docs folder for this plugin.
+
+#### Environment variables
+```
+MATOMO_DB_USERNAME
+MATOMO_DB_PASSWORD
+MATOMO_DB_HOST
+MATOMO_DB_NAME
+
+MATOMO_FIRST_USER_NAME
+MATOMO_FIRST_USER_EMAIL
+MATOMO_FIRST_USER_PASSWORD
+
+MATOMO_FIRST_SITE_NAME
+MATOMO_FIRST_SITE_URL
+```
+
+#### Example install 1
+```
+console matomo:install --db-username=myuser --db-pass=password \
+  --db-host=localhost --db-name=matomo --first-site-name=Foo \
+  --first-site-url=https//foo.bar --first-user='Mr Foo Bar' \
+  --first-user-email= foo@bar.com --first-user-pass=secret
+```
+#### Example install 2
+Using environment variables, docker-compose.yml example.
+```
+environment:
+      - MATOMO_DB_USERNAME=myuser
+      - MATOMO_DB_PASSWORD=secret
+      - MATOMO_DB_HOST=mysql
+      - MATOMO_DB_NAME=matomo
+      - MATOMO_FIRST_USER_NAME=Mr Foo Bar
+      - MATOMO_FIRST_USER_EMAIL=foo@bar.com
+      - MATOMO_FIRST_USER_PASSWORD=secret
+      - MATOMO_FIRST_SITE_NAME=Foo
+      - MATOMO_FIRST_SITE_URL=https://foo.bar
+```
+
+#### Example install 3
+``` 
+matom-install --install-file=install,json
+```
+
+
+#### Order of values
+Highest number = takes over. If you have you mysql server settings in environment 
+variables and provide the option --db-username=myuser, the latter is used for the
+db username.
+
+1) config.ini.php (created when you install the first time)
+2) Environment variable
+3) Option (matomo:install --db-username=myuser)
+4) File overrides (matom-install --install-file=install.json)
 
 ### matomo:requirements
 Check that all requirements, mandatory and optional, are in place.
 Normally throws a notice for mod_pagespeed check.
 @todo: Look into what needs to be done in core for the mod_pagespeed check.
-
-## Config
-To set a db backup path, use the console (use the path you desire):
-```
-./console config:set 'MatomoExtraTools.db_backup_path="/var/www/html/tmp"'
-```
-Or add it to config.ini.php:
-```
-[MatomoExtraTools]
-db_backup_path = "/var/www/html/tmp"
-
-```
 
 ## CAUTION!
 `matamo:install` wipes your current install if you use the `--new` argument.

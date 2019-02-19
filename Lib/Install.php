@@ -4,27 +4,34 @@
 
   use Piwik\Filesystem;
   use Piwik\DbHelper;
+  use Piwik\Db;
   use Piwik\Db\Schema;
-  use Piwik\Plugins\LanguagesManager\Model as LanguageManagerInstall;
+  use Piwik\Plugins\LanguagesManager\Model as LanguagesManagerInstall;
   use Piwik\Plugins\SegmentEditor\Model as SegmentInstall;
   use Piwik\Plugins\Dashboard\Model as DashboardInstall;
   use Piwik\Plugins\ScheduledReports\Model as ScheduledReportsInstall;
-  use Symfony\Component\Console\Output\OutputInterface;
+  use Piwik\Plugins\PrivacyManager\PrivacyManager as PrivacyManagerInstall;
   use Piwik\Config;
   use Piwik\Common;
   use Piwik\Access;
   use Piwik\Updater;
   use Piwik\Plugins\UsersManager\API as APIUsersManager;
+  use Piwik\Plugins\MatomoExtraTools\Lib\CliManager;
   use Piwik\Plugin\Manager;
   use Piwik\Plugins\SitesManager\API as APISitesManager;
   use Piwik\Version;
   use Piwik\Option;
   use Piwik\Plugins\LanguagesManager\LanguagesManager;
+  use Symfony\Component\Console\Output\OutputInterface;
+  use Piwik\Plugins\MatomoExtraTools\Lib\Requirements;
 
-class Install
+
+  class Install
 {
 
     protected $config;
+    protected $fileconfig;
+    protected $options;
 
     /**
        * @var OutputInterface
@@ -32,43 +39,91 @@ class Install
     private $output;
 
 
-    public function __construct($config, OutputInterface $output)
+    public function __construct($options, OutputInterface $output, $fileconfig = null)
     {
         $this->config = Config::getInstance();
+        $this->options = $options;
         $this->output = $output;
+        $this->fileconfig = $fileconfig;
     }
 
     public function execute()
     {
+        $options = $this->options;
+        $file_config = false;
+
+        if (isset($this->fileconfig)) {
+          $fileconfig = $this->fileconfig->Config;
+        }
+
+        $first_user = $options['first-user'];
+
+        if (isset($fileconfig['first-user'])) {
+            $first_user = $fileconfig['first-user'];
+        }
+
+        $first_user_pass = $options['first-user-password'];
+        if (isset($fileconfig['first-user-password'])) {
+            $first_user_pass = $fileconfig['first-user-password'];
+        }
+
+        $first_user_email = $options['first-user-email'];
+        if (isset($fileconfig['first-user-email'])) {
+            $first_user_pass = $fileconfig['first-user-email'];
+        }
+
+        $first_site_name = $options['first-site-name'];
+        if (isset($fileconfig['first-site-name'])) {
+            $first_site_name = $fileconfig['first-site-name'];
+        }
+
+        $first_site_url = $options['first-site-url'];
+        if (isset($fileconfig['first-site-url'])) {
+            $first_site_name = $fileconfig['first-site-url'];
+        }
+
         $this->output->writeln("<info>Starting <comment>install</comment></info>");
+
         $this->deleteCache();
         $this->initDBConnection();
+
         $this->tableCreation();
         $this->saveLanguage('en');
-        $this->createSuperUser('admin', 'admin1234', 'mikkeschiren@foo.com');
-        $this->addWebsite('Foo', 'http://bar.foo');
+        # Environment check can not be used right now. It has a dependency on being installed.
+        $this->checkEnvironment();
+        $this->createSuperUser("$first_user", "$first_user_pass", "$first_user_email");
+        $this->addWebsite("$first_site_name", "$first_site_url");
         $this->finish();
-        #$this->setupPlugins();
+        $this->login($first_user, $first_user_pass);
+       # $this->setupPlugins();
+    }
+
+      /**
+       * @throws \DI\NotFoundException
+       */
+    protected function checkEnvironment() {
+        $this->log("Checking environment.");
+        $check = new Requirements($this->output);
+        if ($check->hasErrors()) {
+            $this->log("<error>Errors found! They must be fixed before Matomo could be installed.</error>");
+            exit;
+        } else {
+            $this->log("<comment>No environment errors found</comment>");
+        }
     }
 
 
-    /**
-     * Initialises and saves the database connection to Matomo
-     * [database] should be in config. Should be an array with keys [host],
-     * [adapter], [username], [password], [dbname] and [tables_prefix]
-     * TODO: Perhaps try to create database schema if it doesn't exist
-     */
-    protected function initDBConnection()
+      /**
+       * Initiate DB connection.
+       */
+    protected function  initDBConnection()
     {
         $this->log('Initialising Database Connections');
-        $config = Config::getInstance();
-
-
+        $config = $this->config;
 
         $config->General['session_save_handler'] = 'dbtable';
         $config->General['salt'] = Common::generateUniqId();
         $config->General['installation_in_progress'] = 1;
-        //$config->database = $this->config['database'];
         // Connect to the database with retry timeout so any provisioning scripts & DB setup scripts are given a chance
         $retries = [10, 20, 30, 40, 50, 60, 70, 80];
         foreach ($retries as $retry_timeout_index => $retry_timeout) {
@@ -87,20 +142,22 @@ class Install
             $config->database['charset'] = 'utf8';
         }
         $config->forceSave();
+
+        Db::createDatabaseObject($config->database);
     }
 
-
-
-
+      /**
+       * Write an output log.
+       * @param $text string
+       */
     protected function log($text)
     {
-        echo "$text\n";
+        $this->output->writeln("<info>$text</info>");
     }
     
 
-
     /**
-     * Performs the initial table creation for Matomo, if needed
+     * Creates core database tables.
      */
     protected function tableCreation()
     {
@@ -111,19 +168,14 @@ class Install
             DbHelper::createAnonymousUser();
             DbHelper::recordInstallVersion();
             $this->updateComponents();
-
             Updater::recordComponentSuccessfullyUpdated('core', Version::VERSION);
-
-
-            // $this->updateComponents();
         }
     }
 
     /**
-     * Creates the default superuser, if needed
-     * [login], [password] and [email] should all be set in the config
+     * Creates the first superuser.
      */
-    protected function createSuperUser($user, $pass, $email)
+    protected function createSuperUser($user = 'admin', $pass = 'admin', $email = 'admin@example.com')
     {
         $config_arr = [
             'login' => $user,
@@ -131,7 +183,7 @@ class Install
             'email' => $email,
         ];
 
-        $this->log('Ensuring Users get Created');
+        $this->log('Creating Super user');
         Access::doAsSuperUser(
             function () use ($config_arr) {
                 $api = APIUsersManager::getInstance();
@@ -149,7 +201,12 @@ class Install
         );
     }
 
-
+      /**
+       * Update components if needed.
+       *
+       * @return mixed
+       * @throws \Exception
+       */
     protected function updateComponents()
     {
         $this->log('Updating Components');
@@ -171,25 +228,19 @@ class Install
      */
     private function deleteCache()
     {
-        $this->output->writeln("<info>  Deleting <comment>cache</comment></info>");
+        $this->output->writeln("<info>Deleting <comment>cache</comment></info>");
         Filesystem::deleteAllCacheOnUpdate();
     }
-    private function isMatomoInstalled()
-    {
-    }
-
 
     /**
-     * Sets up the initial website, if applicable, (site ID 1) to track
-     * [site_name], [site_url] and [base_domain] should all be set in config
+     * Sets up the initial website.
      */
-    protected function addWebsite($name, $url)
+    protected function addWebsite($name = 'Foo site', $url = 'http://foo.bar')
     {
-
         $config_arr = [
           'site_name' => $name,
           'site_url' => $url,
-          'base_domain' => '0.0.0.0',
+          'base_domain' => $_SERVER['HTTP_HOST'],
         ];
 
         $this->log('Adding Primary Website');
@@ -219,43 +270,75 @@ class Install
 
     /**
      * Finishes the installation. Removes 'installation_in_progress' in
-     * the config file and updates core.
+     * the config file, do some uninstall/install on problematic plugins and updates core.
      */
     protected function finish()
     {
+        // For some reason - these plugins are problematic in automatic install, therefor they are always installed in
+        // this way.
+        // @todo: Solve this in a non hacky way.
 
-        $language_manager = new LanguageManagerInstall();
-        $language_manager::install();
-        $segment = new SegmentInstall();
-        $segment::install();
-        $dashboard = new DashboardInstall();
-        $dashboard::install();
-        $scheduledreports = new ScheduledReportsInstall();
-        $scheduledreports::install();
+        $config = $this->config;
 
+        $installed_plugins = $config->PluginsInstalled;
 
+        foreach ($installed_plugins['PluginsInstalled'] as $installed_plugin) {
+            $this->log("Checking $installed_plugin");
+
+            if ($installed_plugin == 'LanguagesManager') {
+                $languages_manager = new LanguagesManagerInstall();
+                $languages_manager::install();
+            }
+            if ($installed_plugin == 'SegmentEditor') {
+                $segment = new SegmentInstall();
+                $segment::install();
+            }
+            if ($installed_plugin == 'Dashboard') {
+                $dashboard = new DashboardInstall();
+                $dashboard::install();
+            }
+            if ($installed_plugin == 'ScheduledReports') {
+                $scheduledreports = new ScheduledReportsInstall();
+                $scheduledreports::install();
+            }
+            if ($installed_plugin == 'PrivacyManager') {
+                $privacy_manager = new PrivacyManagerInstall();
+                $privacy_manager->install();
+            }
+            // Special, special snowflake....
+            if ($installed_plugin == 'CustomVariables') {
+                Manager::getInstance()->deactivatePlugin('CustomVariables');
+                Manager::getInstance()->unloadPlugin('CustomVariables');
+                CliManager::getInstance()->uninstallPlugin('CustomVariables');
+                Manager::getInstance()->activatePlugin('CustomVariables');
+            }
+        }
+        unset(
+            $installed_plugin,
+            $installed_plugins
+        );
 
         $this->log('Finalising primary configurationprocedure');
         Manager::getInstance()->loadPluginTranslations();
-
-
-        Manager::getInstance()->loadPlugin('LanguagesManager');
-        Manager::getInstance()->activatePlugin('LanguagesManager');
-        //Manager::getInstance()->deactivatePlugin('LanguagesManager');
         Manager::getInstance()->installLoadedPlugins();
         Manager::getInstance()->loadActivatedPlugins();
         Manager::getInstance()->installLoadedPlugins();
-        //Manager::getInstance()->activatePlugin('LanguagesManager');
 
-        $config = Config::getInstance();
-        unset($config->General['installation_in_progress']);
-        unset($config->database['adapter']);
+        unset(
+            $config->General['installation_in_progress'],
+            $config->database['adapter']
+        );
 
         $config->forceSave();
         // Put in Activated plugins
-        Manager::getInstance()->loadActivatedPlugins();
-    }
+        CliManager::getInstance()->loadActivatedPlugins();
 
+        // @todo: Do with Updater class instead.
+        exec(
+            "php " . PIWIK_DOCUMENT_ROOT . "/console core:update --yes"
+        );
+        $this->log("<comment>We are done! Welcome to Matomo!</comment>");
+    }
 
     /**
      * Extract host from URL
@@ -316,20 +399,15 @@ class Install
         echo exec("php " . PIWIK_DOCUMENT_ROOT . "/console core:clear-caches")
             . "\n";
 
-
-
-
             $config = Config::getInstance();
-            foreach ($this->config->getFromLocalConfig('Plugins') as $pi_arr) {
-                foreach ($pi_arr as $pi) {
-
-                    $config->Plugins[] = $pi;
-                }
+        foreach ($this->config->getFromLocalConfig('Plugins') as $pi_arr) {
+            foreach ($pi_arr as $pi) {
+                $config->Plugins[] = $pi;
             }
+        }
             // Now go and activate them
-            foreach ($config->Plugins as $plugin_txt) {
-
-                var_dump('foo');
+        foreach ($config->Plugins as $plugin_txt) {
+            if (is_string($plugin_txt)) {
                 echo exec(
                     "php " . PIWIK_DOCUMENT_ROOT . "/console plugin:activate "
                         . $plugin_txt
@@ -337,6 +415,7 @@ class Install
                 $config->PluginsInstalled[] = $plugin_txt;
                 $config->Plugins[] = $plugin_txt;
             }
+        }
             $config->forceSave();
             // And Update Core
             // TODO: Update core exists on several places, this should be consolidated
@@ -350,5 +429,10 @@ class Install
     {
         $language = $lang;
         LanguagesManager::setLanguageForSession($language);
+    }
+    
+    
+    private function login($user, $pass) {
+        $this->log("Now you can login with user <comment>$user</comment> and password <comment>$pass</comment>");
     }
 }

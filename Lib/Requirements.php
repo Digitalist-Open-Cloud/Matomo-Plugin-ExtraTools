@@ -11,17 +11,14 @@ use Symfony\Component\Console\Helper\Table;
 class Requirements
 {
 
-    protected $config;
-
     /**
      * @var OutputInterface
      */
     private $output;
 
 
-    public function __construct($config, OutputInterface $output)
+    public function __construct(OutputInterface $output)
     {
-        $this->config = $config;
         $this->output = $output;
     }
 
@@ -87,5 +84,18 @@ class Requirements
         }
 
         $this->output->writeln("<info>Number of type errors: <comment>$errors</comment>. Number of type warnings: <comment>$warnings</comment></info>");
+    }
+
+    /**
+     * @return bool
+     * @throws \DI\NotFoundException
+     *
+     */
+    public function hasErrors() {
+        /** @var DiagnosticService $diagnosticService */
+        $diagnosticService = StaticContainer::get('Piwik\Plugins\Diagnostics\DiagnosticService');
+        $diagnosticReport = $diagnosticService->runDiagnostics();
+        return $diagnosticReport->hasErrors();
+
     }
 }
