@@ -26,8 +26,7 @@
 
   use Piwik\Plugins\ExtraTools\Lib\Requirements;
 
-
-  class Install
+class Install
 {
 
     protected $config;
@@ -109,10 +108,11 @@
        # $this->setupPlugins();
     }
 
-      /**
+    /**
        * @throws \DI\NotFoundException
        */
-    protected function checkEnvironment() {
+    protected function checkEnvironment()
+    {
         $this->log("Checking environment.");
         $check = new Requirements($this->output);
         if ($check->hasErrors()) {
@@ -124,10 +124,10 @@
     }
 
 
-      /**
+    /**
        * Initiate DB connection.
        */
-    protected function  initDBConnection()
+    protected function initDBConnection()
     {
         $this->log('Initialising Database Connections');
         $config = $this->config;
@@ -157,7 +157,7 @@
         Db::createDatabaseObject($config->database);
     }
 
-      /**
+    /**
        * Write an output log.
        * @param $text string
        */
@@ -217,7 +217,7 @@
         );
     }
 
-      /**
+    /**
        * Update components if needed.
        *
        * @return mixed
@@ -448,7 +448,8 @@
     }
     
     
-    private function login($user, $pass) {
+    private function login($user, $pass)
+    {
         $this->log("Now you can login with user <comment>$user</comment> and password <comment>$pass</comment>");
     }
 }

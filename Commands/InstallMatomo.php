@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Piwik\Config;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Piwik\Plugins\ExtraTools\Lib\Drop;
 use Piwik\Plugins\ExtraTools\Lib\Create;
 use stdClass;
@@ -141,6 +141,13 @@ environment:
             InputOption::VALUE_NONE,
             'Adds timestamp to the log'
         );
+        $this->addOption(
+            'force',
+            null,
+            InputOption::VALUE_NONE,
+            'force installing without asking',
+            null
+        );
     }
 
     /**
@@ -160,6 +167,7 @@ environment:
         $db_host = $input->getOption('db-host');
         $db_name = $input->getOption('db-name');
         $timestamp = $input->getOption('timestamp') ? true : false;
+        $force = $input->getOption('force');
 
         $env_timestamp = getenv('MATOMO_LOG_TIMESTAMP');
         if (isset($env_timestamp)) {
@@ -189,21 +197,35 @@ environment:
             'db_name' => $db_name,
         ];
 
-        $drop = new Drop($config, $output);
-        $drop->execute();
+        if ($force === false) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion('Are you really sure you would like to install Matomo - if you have an installation already, it will be wiped? ', false);
+            if (!$helper->ask($input, $output, $question)) {
+                return;
+            } else {
+                $force = true;
+            }
+        }
 
-        $create = new Create($config, $output);
-        $create->execute();
+        if ($force === true) {
+            $drop = new Drop($config, $output);
+            $drop->execute();
 
-        $install = new Install($options, $output, $file_config);
+            $create = new Create($config, $output);
+            $create->execute();
 
-        $output->writeln("<info><comment>Installing Matomo</comment></info>");
-        $install->execute();
+            $install = new Install($options, $output, $file_config);
+
+            $output->writeln("<info><comment>Installing Matomo</comment></info>");
+            $install->execute();
+        }
     }
 
-    private function readconf($file) {
+    private function readconf($file)
+    {
         $json = json_decode(
-            file_get_contents($file), TRUE
+            file_get_contents($file),
+            true
         );
         switch (json_last_error()) {
             case JSON_ERROR_NONE:
@@ -250,14 +272,14 @@ environment:
         return $json;
     }
 
-    private function fileConfig($file) {
+    private function fileConfig($file)
+    {
         if (file_exists($file)) {
             $config = new stdClass();
             $config->Config = $this->readconf($file);
             return $config;
         }
         return false;
-
     }
     /**
      * Write an output log.

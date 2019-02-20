@@ -91,11 +91,11 @@ class Requirements
      * @throws \DI\NotFoundException
      *
      */
-    public function hasErrors() {
+    public function hasErrors()
+    {
         /** @var DiagnosticService $diagnosticService */
         $diagnosticService = StaticContainer::get('Piwik\Plugins\Diagnostics\DiagnosticService');
         $diagnosticReport = $diagnosticService->runDiagnostics();
         return $diagnosticReport->hasErrors();
-
     }
 }

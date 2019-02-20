@@ -119,7 +119,7 @@ environment:
 
 #### Example install 3
 ``` 
-matom-install --install-file=install,json
+matom-install --install-file=install.json
 ```
 
 
@@ -133,16 +133,28 @@ db username.
 3) Option (matomo:install --db-username=myuser)
 4) File overrides (matom-install --install-file=install.json)
 
+**The --install-file option is still work in progress - it does not yet support 
+installation of plugins - for now only plugins listed in configi.ini.php will
+be installed !!**
+
+
 ### matomo:requirements
 Check that all requirements, mandatory and optional, are in place.
 Normally throws a notice for mod_pagespeed check.
 @todo: Look into what needs to be done in core for the mod_pagespeed check.
 
 ## CAUTION!
-`matamo:install` wipes your current install without asking for permission.
+`matamo:install` wipes your current installation.
 `database:drop` - as it says - drops the entire db, make a backup first if you 
 want to save you data, and check if it's ok.
 `database:import` - writes over your current database.
 
 This plugin comes with **no** guarantees. But it's free and open source. 
 So, let's make it better!
+
+## Thank you!
+This plugin is based on work done by [Ben Evans](https://github.com/nebev) in 
+https://github.com/nebev/piwik-cli-setup, and also reusing code in Matomo
+core.
+
+
