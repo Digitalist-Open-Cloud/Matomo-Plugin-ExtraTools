@@ -1,4 +1,4 @@
-# Matomo Extra Tools
+# Extra Tools (for Matomo)
 
 Some extra cli commands to help with maintaining Matomo. 
 Introducing new console commands:
