@@ -19,22 +19,19 @@ Introducing new console commands:
 * `composer require symfony/yaml:~2.6.0` (moves it from dev)
 * `composer require symfony/process:^3.4`
 
-optional (upgrade console):
-* `composer require symfony/console:^3.4`
-
 ## Config
-Activate MatomExtraTools - in UI, or in the console:
+Activate ExtraTools - in UI, or better - in the console:
 ``` 
-console plugin:activate MatomoExtraTools
+console plugin:activate ExtraTools
 ```
 
 Set up a db backup path, use the console (use the path you desire):
 ```
-./console config:set 'MatomoExtraTools.db_backup_path="/var/www/html/tmp"'
+./console config:set 'ExtraTools.db_backup_path="/var/www/html/tmp"'
 ```
-Or add it to config.ini.php:
+Or add it manualy to config.ini.php:
 ```
-[MatomoExtraTools]
+[ExtraTools]
 db_backup_path = "/var/www/html/tmp"
 
 ```
@@ -94,6 +91,8 @@ MATOMO_FIRST_USER_PASSWORD
 
 MATOMO_FIRST_SITE_NAME
 MATOMO_FIRST_SITE_URL
+
+MATOMO_LOG_TIMESTAMP (1)
 ```
 
 #### Example install 1
@@ -140,7 +139,7 @@ Normally throws a notice for mod_pagespeed check.
 @todo: Look into what needs to be done in core for the mod_pagespeed check.
 
 ## CAUTION!
-`matamo:install` wipes your current install if you use the `--new` argument.
+`matamo:install` wipes your current install without asking for permission.
 `database:drop` - as it says - drops the entire db, make a backup first if you 
 want to save you data, and check if it's ok.
 `database:import` - writes over your current database.

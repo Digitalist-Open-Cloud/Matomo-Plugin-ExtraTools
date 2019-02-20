@@ -1,6 +1,6 @@
 <?php
 
-  namespace Piwik\Plugins\MatomoExtraTools\Lib;
+  namespace Piwik\Plugins\ExtraTools\Lib;
 
   use Piwik\Filesystem;
   use Piwik\DbHelper;
@@ -16,14 +16,15 @@
   use Piwik\Access;
   use Piwik\Updater;
   use Piwik\Plugins\UsersManager\API as APIUsersManager;
-  use Piwik\Plugins\MatomoExtraTools\Lib\CliManager;
+  use Piwik\Plugins\ExtraTools\Lib\CliManager;
   use Piwik\Plugin\Manager;
   use Piwik\Plugins\SitesManager\API as APISitesManager;
   use Piwik\Version;
   use Piwik\Option;
   use Piwik\Plugins\LanguagesManager\LanguagesManager;
   use Symfony\Component\Console\Output\OutputInterface;
-  use Piwik\Plugins\MatomoExtraTools\Lib\Requirements;
+
+  use Piwik\Plugins\ExtraTools\Lib\Requirements;
 
 
   class Install
@@ -32,6 +33,7 @@
     protected $config;
     protected $fileconfig;
     protected $options;
+    protected $timestamp;
 
     /**
        * @var OutputInterface
@@ -45,15 +47,24 @@
         $this->options = $options;
         $this->output = $output;
         $this->fileconfig = $fileconfig;
+        $this->timestamp = false;
     }
 
     public function execute()
     {
         $options = $this->options;
+        if (isset($options['timestamp'])) {
+            if ($options['timestamp'] == true) {
+                $this->timestamp = true;
+            }
+        }
+
         $file_config = false;
 
         if (isset($this->fileconfig)) {
-          $fileconfig = $this->fileconfig->Config;
+            if (isset($this->fileconfig->Config)) {
+                $fileconfig = $this->fileconfig->Config;
+            }
         }
 
         $first_user = $options['first-user'];
@@ -152,7 +163,12 @@
        */
     protected function log($text)
     {
-        $this->output->writeln("<info>$text</info>");
+        $datestamp = '';
+        if ($this->timestamp == true) {
+            $datestamp = '[' .date("Y-m-d H:i:s") . '] ';
+        }
+
+        $this->output->writeln("<info>$datestamp$text</info>");
     }
     
 
@@ -161,7 +177,7 @@
      */
     protected function tableCreation()
     {
-        $this->log('Ensuring Tables are Created');
+        $this->log('Create Matomo core tables');
         $tablesInstalled = DbHelper::getTablesInstalled();
         if (count($tablesInstalled) === 0) {
             DbHelper::createTables();

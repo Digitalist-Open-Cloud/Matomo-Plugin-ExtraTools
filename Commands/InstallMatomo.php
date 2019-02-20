@@ -6,18 +6,19 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-namespace Piwik\Plugins\MatomoExtraTools\Commands;
+namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Piwik\Config;
-use Piwik\Plugins\MatomoExtraTools\Lib\Drop;
-use Piwik\Plugins\MatomoExtraTools\Lib\Create;
+use Piwik\Plugins\ExtraTools\Lib\Drop;
+use Piwik\Plugins\ExtraTools\Lib\Create;
 use stdClass;
 
-use Piwik\Plugins\MatomoExtraTools\Lib\Install;
+use Piwik\Plugins\ExtraTools\Lib\Install;
 
 if (file_exists(PIWIK_DOCUMENT_ROOT . '/bootstrap.php')) {
     require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
@@ -134,6 +135,12 @@ environment:
             'DB name',
             getenv('MATOMO_DB_NAME')
         );
+        $this->addOption(
+            'timestamp',
+            null,
+            InputOption::VALUE_NONE,
+            'Adds timestamp to the log'
+        );
     }
 
     /**
@@ -152,9 +159,15 @@ environment:
         $db_pass = $input->getOption('db-pass');
         $db_host = $input->getOption('db-host');
         $db_name = $input->getOption('db-name');
+        $timestamp = $input->getOption('timestamp') ? true : false;
 
+        $env_timestamp = getenv('MATOMO_LOG_TIMESTAMP');
+        if (isset($env_timestamp)) {
+            if ($env_timestamp == true) {
+                $timestamp = $env_timestamp;
+            }
+        }
         $file_config = $this->fileConfig($file);
-
 
         $options = [
             'first-user' => $first_user,
@@ -166,6 +179,7 @@ environment:
             'db-pass' =>  $db_pass,
             'db-host' => $db_host,
             'db-name' => $db_name,
+            'timestamp' => $timestamp,
         ];
 
         $config = [
@@ -188,10 +202,52 @@ environment:
     }
 
     private function readconf($file) {
-        $config = json_decode(
+        $json = json_decode(
             file_get_contents($file), TRUE
         );
-        return $config;
+        switch (json_last_error()) {
+            case JSON_ERROR_NONE:
+                $error = ''; // JSON is valid // No error has occurred
+                break;
+            case JSON_ERROR_DEPTH:
+                $error = 'The maximum stack depth has been exceeded.';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $error = 'Invalid or malformed JSON.';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $error = 'Control character error, possibly incorrectly encoded.';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $error = 'Syntax error, malformed JSON.';
+                break;
+            // PHP >= 5.3.3
+            case JSON_ERROR_UTF8:
+                $error = 'Malformed UTF-8 characters, possibly incorrectly encoded.';
+                break;
+            // PHP >= 5.5.0
+            case JSON_ERROR_RECURSION:
+                $error = 'One or more recursive references in the value to be encoded.';
+                break;
+            // PHP >= 5.5.0
+            case JSON_ERROR_INF_OR_NAN:
+                $error = 'One or more NAN or INF values in the value to be encoded.';
+                break;
+            case JSON_ERROR_UNSUPPORTED_TYPE:
+                $error = 'A value of a type that cannot be encoded was given.';
+                break;
+            default:
+                $error = 'Unknown JSON error occured.';
+                break;
+        }
+
+        if ($error !== '') {
+            // throw the Exception or exit // or whatever :)
+            exit($this->log("<error>$error</error>"));
+        }
+
+        // everything is OK
+        return $json;
     }
 
     private function fileConfig($file) {
@@ -202,5 +258,14 @@ environment:
         }
         return false;
 
+    }
+    /**
+     * Write an output log.
+     * @param $text string
+     */
+    protected function log($text)
+    {
+        $output = new ConsoleOutput();
+        $output->writeln("<info>$text</info>");
     }
 }

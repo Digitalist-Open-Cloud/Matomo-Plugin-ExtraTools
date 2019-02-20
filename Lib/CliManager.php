@@ -7,7 +7,7 @@
  *
  */
 
-namespace Piwik\Plugins\MatomoExtraTools\Lib;
+namespace Piwik\Plugins\ExtraTools\Lib;
 
 use Piwik\Application\Kernel\PluginList;
 use Piwik\Cache;
@@ -46,7 +46,7 @@ class CliManager
      */
     public static function getInstance()
     {
-        return StaticContainer::get('Piwik\Plugins\MatomoExtraTools\Lib\CliManager');
+        return StaticContainer::get('Piwik\Plugins\ExtraTools\Lib\CliManager');
     }
 
     protected $pluginsToLoad = array();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Piwik\Plugins\MatomoExtraTools\Lib;
+namespace Piwik\Plugins\ExtraTools\Lib;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Container\StaticContainer;

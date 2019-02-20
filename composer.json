@@ -1,0 +1,33 @@
+{
+    "name": "nodenone/ExtraTools",
+    "description": "Extra console tools for Matomo",
+    "keywords": [
+        "cli",
+        "install"
+    ],
+    "homepage": "https://github.com/nodeone/ExtraTools",
+    "version": "0.0.1",
+    "license": "GPL v3+",
+    "authors": [
+        {
+            "name": "Digitalist",
+            "email": "se.ops@digitalistgroup.com",
+            "homepage": "https://digitalist.se"
+        },
+        {
+            "name": "Mikke Schirén",
+            "email": "mikke.schiren@digitalistgroup.com",
+            "homepage": "https://digitalist.se"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "ext-json": "*",
+        "piwik/piwik": ">=3.8.0"
+    },
+    "config": {
+        "platform": {
+            "ext-json": "*"
+        }
+    }
+}

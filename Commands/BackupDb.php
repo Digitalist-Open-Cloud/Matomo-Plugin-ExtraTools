@@ -6,7 +6,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-namespace Piwik\Plugins\MatomoExtraTools\Commands;
+namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Config;
 
-use Piwik\Plugins\MatomoExtraTools\Lib\Backup;
+use Piwik\Plugins\ExtraTools\Lib\Backup;
 
 if (file_exists(PIWIK_DOCUMENT_ROOT . '/bootstrap.php')) {
     require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
@@ -74,7 +74,7 @@ You could use options to override config or environment variables:
         $backup_prefix = $input->getOption('backup-prefix');
         // check if we have db backup path in config
         $configs = Config::getInstance();
-        $matomo_tools_config = $configs->getFromLocalConfig('MatomoExtraTools');
+        $matomo_tools_config = $configs->getFromLocalConfig('ExtraTools');
         if (!isset($backup_folder)) {
             if (isset($matomo_tools_config['db_backup_path'])) {
                 $backup_folder = $matomo_tools_config['db_backup_path'];
