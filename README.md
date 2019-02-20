@@ -159,6 +159,9 @@ want to save you data, and check if it's ok.
 This plugin comes with **no** guarantees. But it's free and open source. 
 So, let's make it better!
 
+## Version supported
+This is only tested on the most recent release - then I'm writing this, it's 3.8.1.
+
 ## Thank you!
 This plugin is based on work done by [Ben Evans](https://github.com/nebev) in 
 https://github.com/nebev/piwik-cli-setup, and also reusing code in Matomo
