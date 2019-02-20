@@ -19,6 +19,13 @@ Introducing new console commands:
 * `composer require symfony/yaml:~2.6.0` (moves it from dev)
 * `composer require symfony/process:^3.4`
 
+## Install
+
+Git clone the plugin into your plugins folder:
+```
+git clone https://github.com/nodeone/extratools.git ExtraTools
+```
+
 ## Config
 Activate ExtraTools - in UI, or better - in the console:
 ``` 
