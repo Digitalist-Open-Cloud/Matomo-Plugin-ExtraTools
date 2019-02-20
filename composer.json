@@ -22,12 +22,6 @@
     ],
     "require": {
         "php": ">=7.1",
-        "ext-json": ">=7.1",
         "piwik/piwik": ">=3.8.0"
-    },
-    "config": {
-        "platform": {
-            "ext-json": ">=7.1"
-        }
     }
 }
