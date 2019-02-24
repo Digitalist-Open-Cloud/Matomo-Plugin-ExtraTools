@@ -142,11 +142,12 @@ class Install
         $config = $this->config;
         $options = $this->options;
 
+
         if (isset($options)) {
             if (isset($options['db-username'])) {
                 $config->database['username'] = $options['db-username'];
             }
-            if (isset($options['password'])) {
+            if (isset($options['db-pass'])) {
                 $config->database['password'] = $options['db-pass'];
             }
             if (isset($options['db-host'])) {
@@ -159,7 +160,6 @@ class Install
                 $config->database['tables_prefix'] = $options['db-prefix'];
             }
         }
-
 
         if (isset($fileconfig)) {
             if (isset($fileconfig['database'])) {
@@ -178,6 +178,7 @@ class Install
                 }
             }
         }
+
 
         $this->log('Initialising Database Connections');
 
@@ -460,22 +461,20 @@ class Install
     /**
      *
      */
-    protected function writeConfig() {
+    protected function writeConfig()
+    {
         $file_config = false;
         if (isset($this->fileconfig)) {
             $config_from_file = $this->fileconfig;
             if (isset($config_from_file->Config)) {
                 $fileconfig = $config_from_file->Config;
-            }
-            $general_config =  $fileconfig['General'];
-
-            if (isset($general_config )) {
-                foreach ($general_config  as $key => $value) {
-
-                    $config_write = new ConfigManipulation($this->config, $this->output);
-                    $config_write->saveConfig('General', "$key", "$value");
+                $general_config =  $fileconfig['General'];
+                if (isset($general_config)) {
+                    foreach ($general_config as $key => $value) {
+                        $config_write = new ConfigManipulation($this->config, $this->output);
+                        $config_write->saveConfig('General', "$key", "$value");
+                    }
                 }
-
             }
         }
     }
