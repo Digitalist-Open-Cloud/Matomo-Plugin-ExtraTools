@@ -32,6 +32,13 @@ The main reason to doing this plugin was to get automatic installs to work with 
 * `composer require symfony/yaml:~2.6.0` (moves it from dev)
 * `composer require symfony/process:^3.4`
 
+## Install
+
+Git clone the plugin into your plugins folder:
+```
+git clone https://github.com/nodeone/extratools.git ExtraTools
+```
+
 ## Config
 Activate ExtraTools - in UI, or better - in the console:
 ``` 
@@ -170,6 +177,9 @@ want to save you data, and check if it's ok.
 
 This plugin comes with **no** guarantees. But it's free and open source. 
 So, let's make it better!
+
+## Version supported
+This is only tested on the most recent release - then I'm writing this, it's 3.8.1.
 
 ## Thank you!
 This plugin is based on work done by [Ben Evans](https://github.com/nebev) in 
