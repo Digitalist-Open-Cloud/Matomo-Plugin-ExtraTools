@@ -24,6 +24,7 @@ use Piwik\Option;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\ExtraTools\Lib\Requirements;
+use Piwik\Plugins\ExtraTools\Lib\ConfigManipulation;
 
 class Install
 {
@@ -105,6 +106,7 @@ class Install
         $this->createSuperUser();
         $this->addWebsite();
         $this->installPlugins();
+        $this->writeConfig();
         $this->finish();
         $this->login();
        # $this->setupPlugins();
@@ -454,6 +456,30 @@ class Install
         }
     }
 
+
+    /**
+     *
+     */
+    protected function writeConfig() {
+        $file_config = false;
+        if (isset($this->fileconfig)) {
+            $config_from_file = $this->fileconfig;
+            if (isset($config_from_file->Config)) {
+                $fileconfig = $config_from_file->Config;
+            }
+            $general_config =  $fileconfig['General'];
+
+            if (isset($general_config )) {
+                foreach ($general_config  as $key => $value) {
+
+                    $config_write = new ConfigManipulation($this->config, $this->output);
+                    $config_write->saveConfig('General', "$key", "$value");
+                }
+
+            }
+        }
+    }
+
     /**
      * Finishes the installation. Removes 'installation_in_progress' in
      * the config file, do some uninstall/install on problematic plugins and updates core.
@@ -468,13 +494,6 @@ class Install
             $config->database['adapter']
         );
 
-        $config->forceSave();
-        // Put in Activated plugins
-
-        // @todo: Do with Updater class instead.
-//        exec(
-//            "php " . PIWIK_DOCUMENT_ROOT . "/console core:update --yes"
-//        );
         $config->forceSave();
         $this->log("<comment>We are done! Welcome to Matomo!</comment>");
     }
