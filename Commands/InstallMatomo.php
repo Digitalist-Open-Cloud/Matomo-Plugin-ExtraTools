@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Piwik\Plugins\ExtraTools\Lib\Drop;
 use Piwik\Plugins\ExtraTools\Lib\Create;
+use Piwik\Common;
 use stdClass;
 
 use Piwik\Plugins\ExtraTools\Lib\Install;
@@ -136,6 +137,20 @@ environment:
             getenv('MATOMO_DB_NAME')
         );
         $this->addOption(
+            'db-prefix',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'DB tables prefix',
+            getenv('MATOMO_DB_PREFIX')
+        );
+        $this->addOption(
+            'plugins',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Plugins to install (comma separated)',
+            getenv('MATOMO_PLUGINS')
+        );
+        $this->addOption(
             'timestamp',
             null,
             InputOption::VALUE_NONE,
@@ -166,6 +181,8 @@ environment:
         $db_pass = $input->getOption('db-pass');
         $db_host = $input->getOption('db-host');
         $db_name = $input->getOption('db-name');
+        $db_prefix = $input->getOption('db-prefix');
+        $plugins = $input->getOption('plugins');
         $timestamp = $input->getOption('timestamp') ? true : false;
         $force = $input->getOption('force');
 
@@ -175,6 +192,12 @@ environment:
                 $timestamp = $env_timestamp;
             }
         }
+
+        if (isset($plugins)) {
+            $plugins_to_activate = explode(',', $plugins);
+        }
+
+
         $file_config = $this->fileConfig($file);
 
         $options = [
@@ -187,7 +210,9 @@ environment:
             'db-pass' =>  $db_pass,
             'db-host' => $db_host,
             'db-name' => $db_name,
+            'db-prefix' => $db_prefix,
             'timestamp' => $timestamp,
+            'plugins' => $plugins,
         ];
 
         $config = [
@@ -227,6 +252,13 @@ environment:
             file_get_contents($file),
             true
         );
+
+        if (Common::hasJsonErrorOccurred()) {
+            throw new \Exception(
+                $this->log("<error>" . Common::getLastJsonError() . "</error>")
+            );
+        }
+       /*
         switch (json_last_error()) {
             case JSON_ERROR_NONE:
                 $error = ''; // JSON is valid // No error has occurred
@@ -267,7 +299,7 @@ environment:
             // throw the Exception or exit // or whatever :)
             exit($this->log("<error>$error</error>"));
         }
-
+*/
         // everything is OK
         return $json;
     }

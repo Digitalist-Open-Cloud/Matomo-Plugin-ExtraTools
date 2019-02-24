@@ -2,6 +2,7 @@
 
 Some extra cli commands to help with maintaining Matomo. 
 Introducing new console commands:
+
 * `config:get`
 * `database:backup`
 * `database:create`
@@ -10,7 +11,19 @@ Introducing new console commands:
 * `matomo:install`
 * `matomo:requirements`
 
+## Background
+
+The main reason to doing this plugin was to get automatic installs to work with Matomo, including automatic updates -  and version controlled deliveries with configuration in json or yaml. 
+
+## Plan
+
+* Get installation to work with a *.json file with all the settings that should be installed (partly done)
+* Get updates done with a *.json (not started)
+* Add support for yaml besides json for install and updates.
+* Add PHPUnit tests to cover at least 70% (goal for stable release is 100%)
+
 ## Dependencies
+
 ### On host:
 * mysql-client (for database tasks)
 
@@ -95,14 +108,31 @@ MATOMO_FIRST_SITE_URL
 MATOMO_LOG_TIMESTAMP (1)
 ```
 
-#### Example install 1
+
+#### Installation preparation
+If you have a config.ini.php in the config dir - delete it.
+Run:
+```
+./console plugin:activate ExtraTools
+
+```
+
+Then follow one of the Examples below:
+
+
+#### Example install 1 (recomended)
+``` 
+matom-install --install-file=install.json
+```
+
+#### Example install 2
 ```
 console matomo:install --db-username=myuser --db-pass=password \
   --db-host=localhost --db-name=matomo --first-site-name=Foo \
   --first-site-url=https//foo.bar --first-user='Mr Foo Bar' \
   --first-user-email= foo@bar.com --first-user-pass=secret
 ```
-#### Example install 2
+#### Example install 3
 Using environment variables, docker-compose.yml example.
 ```
 environment:
@@ -117,12 +147,6 @@ environment:
       - MATOMO_FIRST_SITE_URL=https://foo.bar
 ```
 
-#### Example install 3
-``` 
-matom-install --install-file=install.json
-```
-
-
 #### Order of values
 Highest number = takes over. If you have you mysql server settings in environment 
 variables and provide the option --db-username=myuser, the latter is used for the
@@ -132,11 +156,6 @@ db username.
 2) Environment variable
 3) Option (matomo:install --db-username=myuser)
 4) File overrides (matom-install --install-file=install.json)
-
-**The --install-file option is still work in progress - it does not yet support 
-installation of plugins - for now only plugins listed in configi.ini.php will
-be installed !!**
-
 
 ### matomo:requirements
 Check that all requirements, mandatory and optional, are in place.
