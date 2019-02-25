@@ -21,9 +21,6 @@ use stdClass;
 
 use Piwik\Plugins\ExtraTools\Lib\Install;
 
-if (file_exists(PIWIK_DOCUMENT_ROOT . '/bootstrap.php')) {
-    require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
-}
 
 /**
  * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on
@@ -43,25 +40,10 @@ class InstallMatomo extends ConsoleCommand
 
         $HelpText = 'The <info>%command.name%</info> command will install Matomo.
 <comment>Samples:</comment>
-Example 1:
-<info>> %command.name% --db-username=myuser --db-pass=password \
-  --db-host=localhost --db-name=matomo --first-site-name=Foo \
-  --first-site-url=https//foo.bar --first-user=\'Mr Foo Bar\' \
-  --first-user-email= foo@bar.com --first-user-pass=secret</info>
-Example 2 (using environment variables, docker-compose.yml example):
+Example:
+<info> %command.name% --install-file=install.json</info>
 <info>
-environment:
-      - MATOMO_DB_USERNAME=myuser
-      - MATOMO_DB_PASSWORD=secret
-      - MATOMO_DB_HOST=mysql
-      - MATOMO_DB_NAME=matomo
-      - MATOMO_FIRST_USER_NAME=Mr Foo Bar
-      - MATOMO_FIRST_USER_EMAIL=foo@bar.com
-      - MATOMO_FIRST_USER_PASSWORD=secret
-      - MATOMO_FIRST_SITE_NAME=Foo
-      - MATOMO_FIRST_SITE_URL=https://foo.bar
---
-> %command.name% 
+ See more examples in README.md
 </info>  
   ';
         $this->setHelp($HelpText);
@@ -166,7 +148,7 @@ environment:
     }
 
     /**
-     * Execute the command like: ./console install:install-matomo --new
+     * Execute the command like: ./console install:install-matomo
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -191,10 +173,6 @@ environment:
             if ($env_timestamp == true) {
                 $timestamp = $env_timestamp;
             }
-        }
-
-        if (isset($plugins)) {
-            $plugins_to_activate = explode(',', $plugins);
         }
 
 

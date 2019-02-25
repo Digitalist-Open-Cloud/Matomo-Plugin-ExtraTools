@@ -16,9 +16,6 @@ use Piwik\Config;
 
 use Piwik\Plugins\ExtraTools\Lib\Backup;
 
-if (file_exists(PIWIK_DOCUMENT_ROOT . '/bootstrap.php')) {
-    require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
-}
 
 /**
  * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on

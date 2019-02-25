@@ -15,9 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Config;
 use Symfony\Component\Yaml\Yaml;
 
-if (file_exists(PIWIK_DOCUMENT_ROOT . '/bootstrap.php')) {
-    require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
-}
 
 /**
  * Get config for a section.

@@ -6,25 +6,17 @@ use Piwik\Filesystem;
 use Piwik\DbHelper;
 use Piwik\Db;
 use Piwik\Db\Schema;
-use Piwik\Plugins\LanguagesManager\Model as LanguagesManagerInstall;
-use Piwik\Plugins\SegmentEditor\Model as SegmentInstall;
-use Piwik\Plugins\Dashboard\Model as DashboardInstall;
-use Piwik\Plugins\ScheduledReports\Model as ScheduledReportsInstall;
-use Piwik\Plugins\PrivacyManager\PrivacyManager as PrivacyManagerInstall;
 use Piwik\Config;
 use Piwik\Common;
 use Piwik\Access;
 use Piwik\Updater;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
-use Piwik\Plugins\ExtraTools\Lib\CliManager;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Version;
 use Piwik\Option;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
-use Piwik\Plugins\ExtraTools\Lib\Requirements;
-use Piwik\Plugins\ExtraTools\Lib\ConfigManipulation;
 
 class Install
 {
