@@ -21,7 +21,6 @@ use stdClass;
 
 use Piwik\Plugins\ExtraTools\Lib\Install;
 
-
 /**
  * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on
  * http://developer.piwik.org/guides/piwik-on-the-command-line
@@ -139,6 +138,12 @@ Example:
             'Adds timestamp to the log'
         );
         $this->addOption(
+            'do-not-drop-db',
+            null,
+            InputOption::VALUE_NONE,
+            'Do not drop database'
+        );
+        $this->addOption(
             'force',
             null,
             InputOption::VALUE_NONE,
@@ -153,7 +158,6 @@ Example:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $file = $input->getOption('install-file');
-
         $first_user = $input->getOption('first-user');
         $first_user_email = $input->getOption('first-user-email');
         $first_user_password = $input->getOption('first-user-pass');
@@ -166,6 +170,7 @@ Example:
         $db_prefix = $input->getOption('db-prefix');
         $plugins = $input->getOption('plugins');
         $timestamp = $input->getOption('timestamp') ? true : false;
+        $dontdropdb = $input->getOption('do-not-drop-db') ? true : false;
         $force = $input->getOption('force');
 
         $env_timestamp = getenv('MATOMO_LOG_TIMESTAMP');
@@ -190,7 +195,7 @@ Example:
             'db-name' => $db_name,
             'db-prefix' => $db_prefix,
             'timestamp' => $timestamp,
-            'plugins' => $plugins,
+            'plugins' => $plugins
         ];
 
         $config = [
@@ -211,11 +216,12 @@ Example:
         }
 
         if ($force === true) {
-            $drop = new Drop($config, $output);
-            $drop->execute();
-
-            $create = new Create($config, $output);
-            $create->execute();
+            if ($dontdropdb === false) {
+                $drop = new Drop($config, $output);
+                $drop->execute();
+                $create = new Create($config, $output);
+                $create->execute();
+            }
 
             $install = new Install($options, $output, $file_config);
 

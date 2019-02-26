@@ -1,7 +1,7 @@
 {
     "name": "ExtraTools",
     "description": "Some extra tools",
-    "version": "0.1-alpha3",
+    "version": "0.1-alpha5",
     "theme": false,
     "require": {
         "matomo": ">=3.8.1-stable,<4.0.0-b1"
