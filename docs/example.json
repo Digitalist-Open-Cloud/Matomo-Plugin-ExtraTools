@@ -66,6 +66,12 @@
         "Marketplace",
         "ProfessionalServices"
     ],
+    "PluginsUnInstalled": [
+        "ExamplePlugin",
+        "ExampleAPI",
+        "Provider",
+        "Feedback"
+    ],
     "User": {
         "username": "Foo",
         "pass": "mypass",

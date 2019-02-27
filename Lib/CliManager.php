@@ -424,25 +424,13 @@ class CliManager
         SettingsStorage\Backend\PluginSettingsTable::removeAllSettingsForPlugin($pluginName);
         SettingsStorage\Backend\MeasurableSettingsTable::removeAllSettingsForPlugin($pluginName);
 
-        $this->executePluginDeactivate($pluginName);
-        $this->executePluginUninstall($pluginName);
 
-        $this->removePluginFromPluginsInstalledConfig($pluginName);
-
-        $this->unloadPluginFromMemory($pluginName);
-
-        $this->removePluginFromConfig($pluginName);
-        $this->removeInstalledVersionFromOptionTable($pluginName);
-        $this->clearCache($pluginName);
-
-        if ($delete == true) {
-            self::deletePluginFromFilesystem($pluginName);
-            if ($this->isPluginInFilesystem($pluginName)) {
-                return false;
-            }
-        }
-
-
+                $this->executePluginDeactivate($pluginName);
+                $this->executePluginUninstall($pluginName);
+                $this->unloadPluginFromMemory($pluginName);
+                $this->removePluginFromConfig($pluginName);
+                $this->removeInstalledVersionFromOptionTable($pluginName);
+                $this->clearCache($pluginName);
         /**
          * Event triggered after a plugin has been uninstalled.
          *
@@ -1125,8 +1113,11 @@ class CliManager
      */
     public function getInstalledPluginsName()
     {
-        $pluginNames = Config::getInstance()->PluginsInstalled['PluginsInstalled'];
-        return $pluginNames;
+
+        $pluginNames = Config::getInstance()->PluginsInstalled;
+        if (isset($pluginNames)) {
+            return $pluginNames;
+        }
     }
 
     /**
@@ -1241,8 +1232,9 @@ class CliManager
      */
     private function removePluginFromPluginsInstalledConfig($pluginName)
     {
-        $pluginsInstalled = Config::getInstance()->PluginsInstalled['PluginsInstalled'];
+        $pluginsInstalled = Config::getInstance()->PluginsInstalled;
         $key = array_search($pluginName, $pluginsInstalled);
+
         if ($key !== false) {
             unset($pluginsInstalled[$key]);
         }

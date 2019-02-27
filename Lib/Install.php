@@ -98,6 +98,7 @@ class Install
         $this->createSuperUser();
         $this->addWebsite();
         $this->installPlugins();
+        $this->unInstallPlugins();
         $this->writeConfig();
         $this->finish();
         $this->login();
@@ -449,13 +450,45 @@ class Install
         }
     }
 
+    protected function unInstallPlugins()
+    {
+
+        $config = $this->config;
+        $pluginsInstalled = $config->PluginsInstalled;
+
+        CliManager::getInstance()->loadActivatedPlugins();
+        $activated = CliManager::getInstance()->getActivatedPlugins();
+
+        $all_active = array_unique(array_merge($pluginsInstalled, $activated), SORT_REGULAR);
+
+
+        $fileconfig = false;
+        if (isset($this->fileconfig)) {
+            $config_from_file = $this->fileconfig;
+            if (isset($config_from_file->Config)) {
+                $fileconfig = $config_from_file->Config;
+            }
+            if (isset($fileconfig['PluginsUnInstalled'])) {
+                $uninstallplugins = $fileconfig['PluginsUnInstalled'];
+            }
+            if (isset($uninstallplugins)) {
+                foreach ($uninstallplugins as $plugin) {
+                    if (in_array($plugin, $all_active)) {
+                        CliManager::getInstance()->deactivatePlugin($plugin);
+                        CliManager::getInstance()->uninstallPlugin($plugin);
+                        $this->log("Deactivated $plugin");
+                    }
+                }
+            }
+        }
+    }
 
     /**
      *
      */
     protected function writeConfig()
     {
-        $file_config = false;
+        $fileconfig = false;
         if (isset($this->fileconfig)) {
             $config_from_file = $this->fileconfig;
             if (isset($config_from_file->Config)) {
