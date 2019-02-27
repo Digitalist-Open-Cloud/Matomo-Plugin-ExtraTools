@@ -82,8 +82,14 @@
         "dname": "matomo",
         "tables_prefix": "foobar_"
     },
-    "General": {
-        "session_save_handler": "dbtable",
-        "foo_bar": "bar"
+    "Config": {
+        "General": {
+            "session_save_handler": "dbtable",
+            "foo": "bar",
+            "enable_trusted_host_check": 0
+        },
+        "Zebra": {
+            "bar": "foo"
+        }
     }
 }

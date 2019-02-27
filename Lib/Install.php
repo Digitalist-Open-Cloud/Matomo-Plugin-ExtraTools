@@ -460,11 +460,13 @@ class Install
             $config_from_file = $this->fileconfig;
             if (isset($config_from_file->Config)) {
                 $fileconfig = $config_from_file->Config;
-                $general_config =  $fileconfig['General'];
-                if (isset($general_config)) {
-                    foreach ($general_config as $key => $value) {
-                        $config_write = new ConfigManipulation($this->config, $this->output);
-                        $config_write->saveConfig('General', "$key", "$value");
+                $configarray =  $fileconfig['Config'];
+                if (isset($configarray)) {
+                    foreach ($configarray as $key => $values) {
+                        foreach ($values as $setting => $value) {
+                            $config_write = new ConfigManipulation($this->config, $this->output);
+                            $config_write->saveConfig("$key", "$setting", "$value");
+                        }
                     }
                 }
             }
