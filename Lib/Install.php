@@ -17,6 +17,7 @@ use Piwik\Version;
 use Piwik\Option;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
+use Piwik\Plugins\ExtraTools\Lib\Site;
 
 class Install
 {
@@ -85,6 +86,8 @@ class Install
         if (isset($fileconfig['first-site-url'])) {
             $first_site_name = $fileconfig['first-site-url'];
         }
+        $dontdrobdb = $options['do-not-drop-db'];
+
 
         $this->output->writeln("<info>Starting <comment>install</comment></info>");
 
@@ -94,15 +97,18 @@ class Install
         $this->tableCreation();
         $this->saveLanguage('en');
         # Environment check can not be used right now. It has a dependency on being installed.
-      //  $this->checkEnvironment();
+        //  $this->checkEnvironment();
+        if ($dontdrobdb === false) {
+            // Do not create a new default site if not dropping db.
+            $this->addWebsite();
+        }
         $this->createSuperUser();
-        $this->addWebsite();
         $this->installPlugins();
         $this->unInstallPlugins();
         $this->writeConfig();
+        //$this->setGeo();
         $this->finish();
         $this->login();
-       # $this->setupPlugins();
     }
 
     /**
@@ -349,18 +355,18 @@ class Install
     {
         // defaults if nothing is overridden
         $site = [
-            'name' => "Example",
-            'url' => "http://example.com",
+            'siteName' => "Example",
+            'urls' => ["http://example.com"],
         ];
 
         $options = $this->options;
-        $file_config = false;
+        $fileconfig = false;
 
         if (isset($options ["first-site-name"])) {
-            $site['name'] = $options ["first-site-name"];
+            $site['siteName'] = $options ["first-site-name"];
         }
         if (isset($options ["first-site-url"])) {
-            $site['url'] = $options ["first-site-url"];
+            $site['urls'][] = $options ["first-site-url"];
         }
 
         if (isset($this->fileconfig)) {
@@ -372,24 +378,20 @@ class Install
         if (isset($fileconfig['Site'])) {
             $site_from_file = $fileconfig['Site'];
             if (isset($site_from_file['name'])) {
-                $site['name'] = $site_from_file['name'];
+                $site['siteName'] = $site_from_file['name'];
             }
             if (isset($site_from_file['url'])) {
-                $site['url'] = $site_from_file['url'];
+                $site['urls'][] = $site_from_file['url'];
             }
         }
 
         $this->log('Adding Primary Website');
-        $result = Access::doAsSuperUser(
-            function () use ($site) {
-                return APISitesManager::getInstance()->addSite(
-                    $site['name'],
-                    $site['url'],
-                    0
-                );
-            }
-        );
-        $name = $site['name'];
+
+
+        $create_site = new Site($site);
+        $add_site = $create_site->add();
+
+        $name = $site['siteName'];
         $this->log("Added site  $name ");
 
         $trustedHosts = [];
@@ -398,13 +400,13 @@ class Install
                 $_SERVER['SERVER_NAME'],
             ];
         }
-
-
-        if (($host = $this->extractHost(urldecode($site['url'])))
-            !== false
-        ) {
-            $trustedHosts[] = $host;
+        $urls = $site['urls'];
+        foreach ($urls as $url) {
+            if ($host = $this->extractHost(urldecode($url) !== false)) {
+                $trustedHosts[] = $host;
+            }
         }
+
         $general = Config::getInstance()->General;
         $general['trusted_hosts'] = $trustedHosts;
         Config::getInstance()->General = $general;
@@ -417,7 +419,7 @@ class Install
 
         $config = $this->config;
         $installed_plugins = $config->PluginsInstalled;
-        $file_config = false;
+        $fileconfig = false;
         $options = $this->options;
         $option_plugins = $options['plugins'];
 
@@ -460,7 +462,6 @@ class Install
         $activated = CliManager::getInstance()->getActivatedPlugins();
 
         $all_active = array_unique(array_merge($pluginsInstalled, $activated), SORT_REGULAR);
-
 
         $fileconfig = false;
         if (isset($this->fileconfig)) {
@@ -556,12 +557,36 @@ class Install
      */
     protected function setGeo()
     {
-        $this->log('Setting Geolocation');
+
+        $config = $this->config;
+        $fileconfig = false;
+        $geo_provider = 'geoip_pecl';
+        if (isset($this->fileconfig)) {
+            $config_from_file = $this->fileconfig;
+            if (isset($config_from_file->Config)) {
+                $fileconfig = $config_from_file->Config;
+                if (isset($fileconfig['geo_provider'])) {
+                    $geo_provider = $fileconfig['geo_provider'];
+                }
+            }
+        }
+
+
+        $this->log('Setting Geoprovider');
+
+        //$config->['geo_provider'] = $geo_provider;
+        $config['geo_provider'] = $geo_provider;
+        $config->forceSave();
+
+    //    $config_write = new ConfigManipulation($this->config, $this->output);
+     //   $config_write->saveConfig("General", "geo_provider", "$geo_provider");
+
+/*
         Option::set(
             'usercountry.location_provider',
-            $this->config['geo_provider']
+            $geo_provider
         );
-        if ($this->config['geo_provider'] === 'geoip_pecl') {
+        if ($geo_provider === 'geoip_pecl') {
             Option::set('geoip.isp_db_url', '');
             Option::set(
                 'geoip.loc_db_url',
@@ -570,41 +595,9 @@ class Install
             Option::set('geoip.org_db_url', '');
             Option::set('geoip.updater_period', 'month');
         }
+*/
     }
 
-    /**
-     * Setup plugins
-     * [plugins] in config should be text based and already extracted in the
-     * plugins piwik directory
-     */
-    protected function setupPlugins()
-    {
-        $this->log('Setting up Extra Plugins');
-        echo exec("php " . PIWIK_DOCUMENT_ROOT . "/console core:clear-caches")
-            . "\n";
-
-            $config = Config::getInstance();
-        foreach ($this->config->getFromLocalConfig('Plugins') as $pi_arr) {
-            foreach ($pi_arr as $pi) {
-                $config->Plugins[] = $pi;
-            }
-        }
-            // Now go and activate them
-        foreach ($config->Plugins as $plugin_txt) {
-            if (is_string($plugin_txt)) {
-                echo exec(
-                    "php " . PIWIK_DOCUMENT_ROOT . "/console plugin:activate "
-                        . $plugin_txt
-                ) . "\n";
-                $config->PluginsInstalled[] = $plugin_txt;
-                $config->Plugins[] = $plugin_txt;
-            }
-        }
-            $config->forceSave();
-            // And Update Core
-            // TODO: Update core exists on several places, this should be consolidated
-            exec("php " . PIWIK_DOCUMENT_ROOT . "/console core:update --yes");
-    }
 
     /**
      * Save language selection in session-store

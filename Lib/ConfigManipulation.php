@@ -24,7 +24,8 @@ class ConfigManipulation
         $this->output = $output;
     }
 
-    public function saveConfig($section, $key, $value) {
+    public function saveConfig($section, $key, $value)
+    {
 
         $manipulations = [];
         $isSingleAssignment = !empty($section) && !empty($key) && $value !== false;
@@ -38,5 +39,4 @@ class ConfigManipulation
         }
         $config->forceSave();
     }
-
 }

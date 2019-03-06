@@ -9,7 +9,8 @@ Introducing new console commands:
 * `database:drop`
 * `database:import`
 * `matomo:install`
-* `matomo:requirements`
+* `matomo:requirements` (does not work right now)
+* `site:add`
 
 ## Background
 
@@ -59,29 +60,33 @@ db_backup_path = "/var/www/html/tmp"
 
 ## Commands
 
-### config:get
+### `config:get`
 Gets a section config.
 @todo - make this more like config:set - so you have more options.
 
-### database:backup
+### `database:backup`
 Backups the db. 
 
-### database:create
+### `database:create`
 Creates the db defined i config.ini.php.
 Adding the --force flag stops the command for asking questions.
 
-### database:drop
+### `database:drop`
 Drops the db defined i config.ini.php - backup first if needed.
 Adding the --force flag stops the command for asking questions.
 
-### database:import
+### `database:import`
 Imports database dump to database defined in config.ini.php, so if
 you already have a installation - it overwrites it.
 
-### matomo:install
+### `matomo:install`
 Installs Matamo. Wipes the current installation - as default it uses settings in 
 your config.ini.php file - but all values could be overriden with arguments or
 environment variables.
+
+### `site:add`
+
+Adds a new site to track.
 
 #### Requirements
 
@@ -96,10 +101,10 @@ you could override with environment variables or options.
 
 You could also use a json-file for configuration - like all the above 
 mentioned - and for installing plugins. An example json-file could be found in 
-teh docs folder for this plugin.
+the docs folder for this plugin.
 
 #### Environment variables
-```
+```bash
 MATOMO_DB_USERNAME
 MATOMO_DB_PASSWORD
 MATOMO_DB_HOST
@@ -119,8 +124,9 @@ MATOMO_LOG_TIMESTAMP (1)
 #### Installation preparation
 If you have a config.ini.php in the config dir - delete it.
 Run:
-```
-./console plugin:activate ExtraTools
+
+```bash
+console plugin:activate ExtraTools
 
 ```
 
@@ -129,7 +135,7 @@ Then follow one of the Examples below:
 
 #### Example install 1 (recomended)
 ``` 
-matom-install --install-file=install.json
+console matom-install --install-file=install.json
 ```
 
 #### Example install 2
@@ -185,5 +191,3 @@ This is only tested on the most recent release - then I'm writing this, it's 3.8
 This plugin is based on work done by [Ben Evans](https://github.com/nebev) in 
 https://github.com/nebev/piwik-cli-setup, and also reusing code in Matomo
 core.
-
-

@@ -195,7 +195,8 @@ Example:
             'db-name' => $db_name,
             'db-prefix' => $db_prefix,
             'timestamp' => $timestamp,
-            'plugins' => $plugins
+            'plugins' => $plugins,
+            'do-not-drop-db' => $dontdropdb
         ];
 
         $config = [

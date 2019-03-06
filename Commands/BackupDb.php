@@ -16,7 +16,6 @@ use Piwik\Config;
 
 use Piwik\Plugins\ExtraTools\Lib\Backup;
 
-
 /**
  * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on
  * http://developer.piwik.org/guides/piwik-on-the-command-line

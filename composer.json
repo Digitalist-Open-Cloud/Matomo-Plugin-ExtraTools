@@ -1,11 +1,11 @@
 {
-    "name": "nodenone/extratools",
+    "name": "digitalist-se/extratools",
     "description": "Extra console tools for Matomo",
     "keywords": [
         "cli",
         "install"
     ],
-    "homepage": "https://github.com/nodeone/ExtraTools",
+    "homepage": "https://github.com/digitalist-se/extratools",
     "version": "0.1-alpha7",
     "license": "GPL-3.0-or-later",
     "authors": [

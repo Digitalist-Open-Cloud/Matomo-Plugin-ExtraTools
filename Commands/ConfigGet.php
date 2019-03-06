@@ -15,7 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Config;
 use Symfony\Component\Yaml\Yaml;
 
-
 /**
  * Get config for a section.
  */
