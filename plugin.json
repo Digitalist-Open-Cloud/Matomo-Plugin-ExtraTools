@@ -1,10 +1,10 @@
 {
     "name": "ExtraTools",
     "description": "Some extra tools",
-    "version": "0.1.0-alpha",
+    "version": "0.1.0-alpha1",
     "theme": false,
     "require": {
-        "matomo": ">=3.8.0-stable,<4.0.0-b1"
+        "piwik": ">=3.8.0-stable,<4.0.0-b1"
     },
     "authors": [
         {
