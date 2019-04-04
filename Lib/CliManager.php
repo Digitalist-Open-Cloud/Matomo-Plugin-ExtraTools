@@ -108,7 +108,7 @@ class CliManager
         $pluginsToLoad = $this->getActivatedPluginsFromConfig();
         if (!SettingsPiwik::isInternetEnabled()) {
             $pluginsToLoad = array_filter($pluginsToLoad, function ($name) {
-                $plugin = Manager::makePluginClass($name);
+                $plugin = CliManager::makePluginClass($name);
                 return !$plugin->requiresInternetConnection();
             });
         }
