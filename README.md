@@ -86,6 +86,8 @@ Installs Matamo. Wipes the current installation - as default it uses settings in
 your config.ini.php file - but all values could be overriden with arguments or
 environment variables.
 
+If you have a license for Matomo Premium plugins, set the environment variable `MATOMO_LICENSE` with the correct license token. The environment variable is set as a normal environment variable, in shell using export, in a docker-compose file, the environment array etc. If the variable is set, Matomo will have the license key set on install.
+
 ### `site:add`
 
 Adds a new site to track.

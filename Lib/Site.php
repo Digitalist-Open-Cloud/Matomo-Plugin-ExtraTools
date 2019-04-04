@@ -64,4 +64,14 @@ class Site
         );
         return $result;
     }
+    public function list()
+    {
+        $list = APISitesManager::getInstance()->getAllSitesId();
+
+        foreach ($list as $id) {
+            $site_name[] = APISitesManager::getInstance()->getSiteFromId($id);
+        }
+
+        return $site_name;
+    }
 }

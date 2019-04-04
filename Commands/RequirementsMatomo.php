@@ -55,9 +55,7 @@ To run:
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = [];
-        
-        $check = new Requirements($config, $output);
+        $check = new Requirements($output);
         $check->execute();
     }
 }

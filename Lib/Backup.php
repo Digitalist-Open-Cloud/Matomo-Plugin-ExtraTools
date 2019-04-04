@@ -35,7 +35,7 @@ class Backup
         $timestamp = date("Ymd-His");
         $backup = new Process\Process(
             "mysqldump -u $db_user -h $db_host -p$db_pass $db_name --add-drop-table >" .
-            "$backup_folder/$prefix-$timestamp.sql"
+            "$backup_folder/$prefix-$timestamp.sql" . " 2> >(grep -v \"Using a password\")"
         );
         $backup->enableOutput();
 

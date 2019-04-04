@@ -9,6 +9,8 @@ use Piwik\Db\Schema;
 use Piwik\Config;
 use Piwik\Common;
 use Piwik\Access;
+use Piwik\Plugins\TagManager\API as TagManagerAPI;
+use Piwik\Plugins\TagManager\Configuration as TagManagerConfiguration;
 use Piwik\Updater;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
 use Piwik\Plugin\Manager;
@@ -18,6 +20,8 @@ use Piwik\Option;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\ExtraTools\Lib\Site;
+use Piwik\Plugins\Marketplace\LicenseKey;
+
 
 class Install
 {
@@ -26,6 +30,7 @@ class Install
     protected $options;
     protected $timestamp;
     protected $user;
+    protected $licensekey;
 
    /**
     * @var OutputInterface
@@ -33,7 +38,7 @@ class Install
     private $output;
 
 
-    public function __construct($options, OutputInterface $output, $fileconfig = null, $user = null)
+    public function __construct($options, OutputInterface $output, $fileconfig = null, $user = null, $licensekey = null)
     {
         $this->config = Config::getInstance();
         $this->options = $options;
@@ -41,6 +46,7 @@ class Install
         $this->fileconfig = $fileconfig;
         $this->timestamp = false;
         $this->user = $user;
+        $this->licensekey = getenv('MATOMO_LICENSE');
     }
 
     public function execute()
@@ -108,7 +114,15 @@ class Install
         $this->writeConfig();
         //$this->setGeo();
         $this->finish();
+        $this->saveLicenseKey();
         $this->login();
+    }
+
+
+
+    protected function saveLicenseKey() {
+        $license = new LicenseKey();
+        $license->set($this->licensekey);
     }
 
     /**
@@ -231,7 +245,7 @@ class Install
         }
         $this->output->writeln("<info>$datestamp$text</info>");
     }
-    
+
 
     /**
      * Creates core database tables.
@@ -441,6 +455,11 @@ class Install
             }
             if (isset($installplugins)) {
                 foreach ($installplugins as $plugin) {
+
+                    if ($plugin == 'TagManager') {
+                        $this->installTagManager();
+                    }
+
                     Manager::getInstance()->activatePlugin($plugin);
                     $this->log("Activated $plugin");
                 }
@@ -450,6 +469,14 @@ class Install
                 $config->PluginsInstalled = $installplugins;
             }
         }
+    }
+
+    public function installTagManager() {
+        $tagmanager = new TagManagerConfiguration();
+        $tagmanager->install();
+        Manager::getInstance()->activatePlugin('TagManager');
+        $this->log("Activated TagManager");
+
     }
 
     protected function unInstallPlugins()

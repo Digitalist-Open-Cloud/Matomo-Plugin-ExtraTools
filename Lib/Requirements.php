@@ -49,10 +49,6 @@ class Requirements
         $warnings =  $diagnosticReport->getWarningCount();
 
         $table = new Table($this->output);
-        $table->setColumnWidth(0, 20);
-        $table->setColumnWidth(1, 8);
-        $table->setColumnWidth(2, 40);
-
         $table->setHeaders(['Test', 'Result', 'Output']);
         foreach ($results as $result) {
             foreach ($result->getItems() as $item) {
@@ -67,9 +63,7 @@ class Requirements
         $results = $diagnosticReport->getOptionalDiagnosticResults();
 
         $table = new Table($output);
-        $table->setColumnWidth(0, 20);
-        $table->setColumnWidth(1, 8);
-        $table->setColumnWidth(2, 40);
+
         $table->setHeaders(['Test', 'Result', 'Output']);
         foreach ($results as $result) {
             foreach ($result->getItems() as $item) {

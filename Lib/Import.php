@@ -31,15 +31,15 @@ class Import
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
 
-        $backup = new Process\Process(
+        $import = new Process\Process(
             "mysql -u $db_user -h $db_host -p$db_pass $db_name < $backup_path"
         );
-        $backup->enableOutput();
+        $import->enableOutput();
 
-        $backup->run();
-        echo $backup->getOutput();
-        if (!$backup->isSuccessful()) {
-            throw new ProcessFailedException($backup);
+        $import->run();
+        echo $import->getOutput();
+        if (!$import->isSuccessful()) {
+            throw new ProcessFailedException($import);
         } else {
             $this->output->writeln("<info>Import done</info>");
         }
