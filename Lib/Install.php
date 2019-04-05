@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\ExtraTools\Lib\Site;
 use Piwik\Plugins\Marketplace\LicenseKey;
 
+use Piwik\Plugins\ExtraTools\Lib\ConfigManipulation;
 
 class Install
 {
@@ -120,7 +121,8 @@ class Install
 
 
 
-    protected function saveLicenseKey() {
+    protected function saveLicenseKey()
+    {
         $license = new LicenseKey();
         $license->set($this->licensekey);
     }
@@ -455,7 +457,6 @@ class Install
             }
             if (isset($installplugins)) {
                 foreach ($installplugins as $plugin) {
-
                     if ($plugin == 'TagManager') {
                         $this->installTagManager();
                     }
@@ -471,12 +472,12 @@ class Install
         }
     }
 
-    public function installTagManager() {
+    public function installTagManager()
+    {
         $tagmanager = new TagManagerConfiguration();
         $tagmanager->install();
         Manager::getInstance()->activatePlugin('TagManager');
         $this->log("Activated TagManager");
-
     }
 
     protected function unInstallPlugins()

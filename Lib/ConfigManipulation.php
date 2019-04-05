@@ -30,7 +30,11 @@ class ConfigManipulation
         $manipulations = [];
         $isSingleAssignment = !empty($section) && !empty($key) && $value !== false;
         if ($isSingleAssignment) {
-            $manipulations[] = new ConfigSettingManipulation($section, $key, $value);
+            if (is_array($section)) {
+                $manipulations[] = new ConfigSettingManipulation($section, $key, $value, true);
+            } else {
+                $manipulations[] = new ConfigSettingManipulation($section, $key, $value);
+            }
         }
 
         $config = Config::getInstance();
