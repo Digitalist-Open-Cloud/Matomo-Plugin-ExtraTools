@@ -9,11 +9,10 @@ use Piwik\Db\Schema;
 use Piwik\Config;
 use Piwik\Common;
 use Piwik\Access;
-use Piwik\Plugins\TagManager\API as TagManagerAPI;
-use Piwik\Plugins\TagManager\Configuration as TagManagerConfiguration;
 use Piwik\Updater;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
 use Piwik\Plugin\Manager;
+use Piwik\Plugin;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Version;
 use Piwik\Option;
@@ -21,6 +20,13 @@ use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\ExtraTools\Lib\Site;
 use Piwik\Plugins\Marketplace\LicenseKey;
+use Piwik\Container\StaticContainer;
+use Piwik\Plugins\TagManager\Model\Container\StaticContainerIdGenerator;
+use Piwik\Plugins\TagManager\Context\WebContext;
+use Piwik\Plugins\TagManager\Dao\ContainersDao;
+use Piwik\Plugins\TagManager\API as TagAPI;
+use Piwik\Plugins\TagManager\TagManager;
+use Piwik\Plugins\TagManager\Model\Container;
 
 use Piwik\Plugins\ExtraTools\Lib\ConfigManipulation;
 
@@ -32,6 +38,11 @@ class Install
     protected $timestamp;
     protected $user;
     protected $licensekey;
+
+    /**
+     * @var API
+     */
+    private $api;
 
    /**
     * @var OutputInterface
@@ -456,29 +467,30 @@ class Install
                 $plugins_to_activate[] = explode(',', $option_plugins);
             }
             if (isset($installplugins)) {
+                $install_tag_manager = false;
                 foreach ($installplugins as $plugin) {
                     if ($plugin == 'TagManager') {
-                        $this->installTagManager();
+                            $install_tag_manager = true;
+                            unset($plugin);
                     }
-
-                    Manager::getInstance()->activatePlugin($plugin);
-                    $this->log("Activated $plugin");
+                    if (isset($plugin)) {
+                        Manager::getInstance()->activatePlugin($plugin);
+                        $this->log("Activated $plugin");
+                    }
                 }
                 Manager::getInstance()->loadPluginTranslations();
                 Manager::getInstance()->loadActivatedPlugins();
                 Manager::getInstance()->installLoadedPlugins();
                 $config->PluginsInstalled = $installplugins;
+                if ($install_tag_manager == true) {
+                    $dao = new ContainersDao();
+                    $dao->install();
+                    $this->log("Activated TagManager (needs to be activated in UI)");
+                }
             }
         }
     }
 
-    public function installTagManager()
-    {
-        $tagmanager = new TagManagerConfiguration();
-        $tagmanager->install();
-        Manager::getInstance()->activatePlugin('TagManager');
-        $this->log("Activated TagManager");
-    }
 
     protected function unInstallPlugins()
     {

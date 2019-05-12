@@ -68,8 +68,7 @@ You could use options to override config or environment variables:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ids = [];
-       $list = new ListArchives($ids);
-       echo $list->getNumProcessedWebsites();
-
+        $list = new ListArchives($ids);
+        echo $list->getNumProcessedWebsites();
     }
 }
