@@ -384,8 +384,6 @@ class Install
         $options = $this->options;
         $fileconfig = false;
 
-
-
         if (isset($options ["first-site-name"])) {
             $site['siteName'] = $options ["first-site-name"];
         }
