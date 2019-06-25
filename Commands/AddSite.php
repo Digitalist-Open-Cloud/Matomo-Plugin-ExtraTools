@@ -182,7 +182,7 @@ You could use options to override config or environment variables:
 
         $site = [
             'siteName' => $siteName,
-            'urls' => $url,
+            'urls' => $urls,
             'ecommerce' => $ecommerce,
             'siteSearch' => $siteSearch,
             'searchKeywordParameters' => $searchKeywordParameters,
