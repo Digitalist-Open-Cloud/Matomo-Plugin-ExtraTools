@@ -19,6 +19,7 @@ class Site
     {
         $site = $this->site;
 
+
         $result = Access::doAsSuperUser(
             function () use ($site) {
                 $siteName = false;
@@ -40,6 +41,8 @@ class Site
                 $excludeUnknownUrls  = null;
                 $site = $this->site;
                 $extract = extract($site);
+
+
                 return APISitesManager::getInstance()->addSite(
                     $siteName,
                     $urls,

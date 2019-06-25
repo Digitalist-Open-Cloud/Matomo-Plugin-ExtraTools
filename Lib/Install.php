@@ -102,7 +102,7 @@ class Install
 
         $first_site_url = $options['first-site-url'];
         if (isset($fileconfig['first-site-url'])) {
-            $first_site_name = $fileconfig['first-site-url'];
+            $first_site_url = $fileconfig['first-site-url'];
         }
         $dontdrobdb = $options['do-not-drop-db'];
 
@@ -380,19 +380,17 @@ class Install
      */
     protected function addWebsite()
     {
-        // defaults if nothing is overridden
-        $site = [
-            'siteName' => "Example",
-            'urls' => ["http://example.com"],
-        ];
 
         $options = $this->options;
         $fileconfig = false;
+
+
 
         if (isset($options ["first-site-name"])) {
             $site['siteName'] = $options ["first-site-name"];
         }
         if (isset($options ["first-site-url"])) {
+            unset($site['urls']);
             $site['urls'][] = $options ["first-site-url"];
         }
 
@@ -402,18 +400,25 @@ class Install
                 $fileconfig = $config_from_file->Config;
             }
         }
+
         if (isset($fileconfig['Site'])) {
             $site_from_file = $fileconfig['Site'];
             if (isset($site_from_file['name'])) {
                 $site['siteName'] = $site_from_file['name'];
             }
             if (isset($site_from_file['url'])) {
+                unset($site['urls']);
                 $site['urls'][] = $site_from_file['url'];
             }
         }
+        if (!isset($site['urls'])) {
+            $site['urls'] = ["https://example.com"];
+        }
+        if (!isset($site['siteName'])) {
+            $site['siteName'] =  "Example";
+        }
 
         $this->log('Adding Primary Website');
-
 
         $create_site = new Site($site);
         $add_site = $create_site->add();
