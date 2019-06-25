@@ -13,6 +13,7 @@ Introducing new console commands:
 * `matomo:install`
 * `matomo:requirements` (does not work right now)
 * `site:add`
+* `site:list`
 
 ## Background
 
@@ -91,6 +92,10 @@ If you have a license for Matomo Premium plugins, set the environment variable `
 ### `site:add`
 
 Adds a new site to track.
+
+### `site:list`
+
+List sites, with the optional format argument - supported output is text(default), json and yaml.
 
 #### Requirements
 
