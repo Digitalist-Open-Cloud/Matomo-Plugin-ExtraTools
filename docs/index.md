@@ -1,5 +1,3 @@
-# NOT READY YET FOR PRODUCTION USE
-
 # Extra Tools (for Matomo)
 
 Some extra cli commands to help with maintaining Matomo. 

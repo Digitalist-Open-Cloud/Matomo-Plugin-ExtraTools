@@ -40,7 +40,6 @@ class Site
                 $excludeUnknownUrls  = null;
                 $site = $this->site;
                 $extract = extract($site);
-                // var_dump($site);
                 return APISitesManager::getInstance()->addSite(
                     $siteName,
                     $urls,

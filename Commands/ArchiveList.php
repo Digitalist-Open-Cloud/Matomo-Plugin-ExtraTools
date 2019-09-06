@@ -41,7 +41,7 @@ You could use options to override config or environment variables:
 <info>%command.name% --db-backup-path=/tmp/foo</info>';
         $this->setHelp($HelpText);
         $this->setName('archive:list');
-        $this->setDescription('Backup database');
+        $this->setDescription('List running archivers (does not work yet)');
         $this->setDefinition(
             [
                 new InputOption(

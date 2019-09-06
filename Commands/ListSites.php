@@ -12,13 +12,12 @@ use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\ExtraTools\Lib\Site;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Piwik\Plugins\SitesManager\API as APISitesManager;
 
-use Piwik\Plugins\ExtraTools\Lib\Drop;
-
+/**
+ * List sites.
+ */
 class ListSites extends ConsoleCommand
 {
-
     protected function configure()
     {
         $HelpText = 'The <info>%command.name%</info> will list all sites you have.
@@ -31,14 +30,17 @@ To run:
     }
 
     /**
-     * Execute the command like: ./console backup:db"
+     * Execute the command like: ./console site:list"
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+
         $list = new Site(null);
         $sites = $list->list();
+
         foreach ($sites as $site) {
-            $id = $site['idsite'];
+            echo $site['name'] . ' (' .$site['idsite'] . ")\n";
         }
     }
 }
