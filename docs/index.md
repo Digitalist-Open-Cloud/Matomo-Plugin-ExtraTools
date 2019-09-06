@@ -11,6 +11,7 @@ Introducing new console commands:
 * `matomo:install`
 * `matomo:requirements` (does not work right now)
 * `site:add`
+* `site:list`
 
 ## Background
 
@@ -89,6 +90,10 @@ If you have a license for Matomo Premium plugins, set the environment variable `
 ### `site:add`
 
 Adds a new site to track.
+
+### `site:list`
+
+List sites, with the optional format argument - supported output is text(default), json and yaml.
 
 #### Requirements
 
@@ -187,7 +192,8 @@ This plugin comes with **no** guarantees. But it's free and open source.
 So, let's make it better!
 
 ## Version supported
-This is only tested on the most recent release - then I'm writing this, it's 3.8.1.
+This is tested from version 3.8.1, and should work with the latest stable 
+(as of writing, that is 3.9.1)
 
 ## Thank you!
 This plugin is based on work done by [Ben Evans](https://github.com/nebev) in 

@@ -24,7 +24,7 @@ class AddSite extends ConsoleCommand
         $HelpText = 'The <info>%command.name%</info> command will add new site.
 <comment>Samples:</comment>
 To run:
-<info>%command.name% --name=Foo --url=https://foo.bar</info>
+<info>%command.name% --name=Foo --urls=https://foo.bar</info>
 You could use options to override config or environment variables:
 <info>%command.name% --db-backup-path=/tmp/foo</info>';
         $this->setHelp($HelpText);
@@ -182,7 +182,7 @@ You could use options to override config or environment variables:
 
         $site = [
             'siteName' => $siteName,
-            'urls' => $url,
+            'urls' => $urls,
             'ecommerce' => $ecommerce,
             'siteSearch' => $siteSearch,
             'searchKeywordParameters' => $searchKeywordParameters,

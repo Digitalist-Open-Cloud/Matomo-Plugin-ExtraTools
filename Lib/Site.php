@@ -19,6 +19,7 @@ class Site
     {
         $site = $this->site;
 
+
         $result = Access::doAsSuperUser(
             function () use ($site) {
                 $siteName = false;
