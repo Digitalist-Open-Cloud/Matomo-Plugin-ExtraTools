@@ -142,7 +142,7 @@ Then follow one of the Examples below:
 
 #### Example install 1 (recomended)
 ``` 
-console matom-install --install-file=install.json
+console matomo:install --install-file=install.json
 ```
 
 #### Example install 2
@@ -150,7 +150,7 @@ console matom-install --install-file=install.json
 console matomo:install --db-username=myuser --db-pass=password \
   --db-host=localhost --db-name=matomo --first-site-name=Foo \
   --first-site-url=https//foo.bar --first-user='Mr Foo Bar' \
-  --first-user-email= foo@bar.com --first-user-pass=secret
+  --first-user-email=foo@bar.com --first-user-pass=secret
 ```
 #### Example install 3
 Using environment variables, docker-compose.yml example.
@@ -183,10 +183,10 @@ Normally throws a notice for mod_pagespeed check.
 @todo: Look into what needs to be done in core for the mod_pagespeed check.
 
 ## CAUTION!
-`matamo:install` wipes your current installation.
-`database:drop` - as it says - drops the entire db, make a backup first if you 
+* `matamo:install` wipes your current installation.
+* `database:drop` - as it says - drops the entire db, make a backup first if you 
 want to save you data, and check if it's ok.
-`database:import` - writes over your current database.
+* `database:import` - writes over your current database.
 
 This plugin comes with **no** guarantees. But it's free and open source. 
 So, let's make it better!
