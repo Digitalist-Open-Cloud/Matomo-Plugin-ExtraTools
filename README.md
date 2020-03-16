@@ -10,6 +10,7 @@ Introducing new console commands:
 * `database:import`
 * `matomo:install`
 * `matomo:requirements` (does not work right now)
+* `segment:list`
 * `site:add`
 * `site:list`
 
@@ -86,6 +87,10 @@ your config.ini.php file - but all values could be overriden with arguments or
 environment variables.
 
 If you have a license for Matomo Premium plugins, set the environment variable `MATOMO_LICENSE` with the correct license token. The environment variable is set as a normal environment variable, in shell using export, in a docker-compose file, the environment array etc. If the variable is set, Matomo will have the license key set on install.
+
+### `segment:list`
+
+List all segments, with ID, definition and date created.
 
 ### `site:add`
 
