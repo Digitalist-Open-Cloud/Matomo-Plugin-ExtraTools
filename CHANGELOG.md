@@ -2,11 +2,14 @@
 
 All notable changes to this project will be documented in this file. 
 
+> 17 March 2010
+- Added site:delete command
+#### [0.1.0-beta6](https://github.com/digitalist-se/extratools/compare/0.1.0-beta5...0.1.0-beta6)
+
+
 > 15 March 2010
 - Added segment:list command
-
-
-#### [0.1.0-beta4](https://github.com/digitalist-se/extratools/compare/0.1.0-beta2...0.1.0-beta4)
+#### [0.1.0-beta5](https://github.com/digitalist-se/extratools/compare/0.1.0-beta4...0.1.0-beta5)
 
 > 27 September 2019
 

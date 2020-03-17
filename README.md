@@ -12,6 +12,7 @@ Introducing new console commands:
 * `matomo:requirements` (does not work right now)
 * `segment:list`
 * `site:add`
+* `site:delete`
 * `site:list`
 
 ## Background
@@ -95,6 +96,10 @@ List all segments, with ID, definition and date created.
 ### `site:add`
 
 Adds a new site to track.
+
+### `site:delete`
+
+Deletes a site with ID provided.
 
 ### `site:list`
 
@@ -192,13 +197,13 @@ Normally throws a notice for mod_pagespeed check.
 `database:drop` - as it says - drops the entire db, make a backup first if you 
 want to save you data, and check if it's ok.
 `database:import` - writes over your current database.
+`site:delete` - really deletes a site you have setup in Matomo.
 
 This plugin comes with **no** guarantees. But it's free and open source. 
 So, let's make it better!
 
 ## Version supported
-This is tested from version 3.8.1, and should work with the latest stable 
-(as of writing, that is 3.9.1)
+This is tested from version 3.8.1, and should work with the latest stable.
 
 ## Thank you!
 This plugin is based on work done by [Ben Evans](https://github.com/nebev) in 
