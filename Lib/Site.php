@@ -92,6 +92,15 @@ class Site
             return false;
         }
     }
+    public function addURL($id, $urls)
+    {
+        try {
+            $add_url = APISitesManager::getInstance()->addSiteAliasUrls($id, $urls);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
     public function totalSites()
     {

@@ -14,15 +14,15 @@ Introducing new console commands:
 * `site:add`
 * `site:delete`
 * `site:list`
+* `site:url`
 
 ## Background
 
-The main reason to doing this plugin was to get automatic installs to work with Matomo, including automatic updates -  and version controlled deliveries with configuration in json or yaml. 
+The main reason to doing this plugin was to get automatic installs to work with Matomo, including automatic updates -  
+and version controlled deliveries with configuration in json or yaml. 
 
 ## Plan
 
-* Get installation to work with a *.json file with all the settings that should be installed (partly done)
-* Get updates done with a *.json (not started)
 * Add support for yaml besides json for install and updates.
 * Add PHPUnit tests to cover at least 70% (goal for stable release is 100%)
 
@@ -30,6 +30,7 @@ The main reason to doing this plugin was to get automatic installs to work with 
 
 ### On host:
 * mysql-client (for database tasks)
+* PHP json extension
 
 ### In composer.json (Matomo root):
 
@@ -84,10 +85,12 @@ you already have a installation - it overwrites it.
 
 ### `matomo:install`
 Installs Matamo. Wipes the current installation - as default it uses settings in 
-your config.ini.php file - but all values could be overriden with arguments or
+your config.ini.php file - but all values could be overridden with arguments or
 environment variables.
 
-If you have a license for Matomo Premium plugins, set the environment variable `MATOMO_LICENSE` with the correct license token. The environment variable is set as a normal environment variable, in shell using export, in a docker-compose file, the environment array etc. If the variable is set, Matomo will have the license key set on install.
+If you have a license for Matomo Premium plugins, set the environment variable `MATOMO_LICENSE` with the correct 
+license token. The environment variable is set as a normal environment variable, in shell using export, in a 
+docker-compose file, the environment array etc. If the variable is set, Matomo will have the license key set on install.
 
 ### `segment:list`
 
@@ -104,6 +107,10 @@ Deletes a site with ID provided.
 ### `site:list`
 
 List sites, with the optional format argument - supported output is text(default), json and yaml.
+
+### `site:url`
+
+Adds one or more URLs to a site. 
 
 #### Requirements
 

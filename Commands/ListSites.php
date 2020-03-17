@@ -54,7 +54,12 @@ To run:
 
         foreach ($sites as $site) {
             $outsites[] = [
-                $site['idsite'] => $site['name'],
+                "id" => $site['idsite'],
+                "name" => $site['name'],
+                "created" => $site['ts_created'],
+                "main-url" => $site['main_url'],
+                "timezone" => $site['timezone'],
+                "type" => $site['type']
             ];
         }
 
@@ -88,6 +93,7 @@ To run:
                 $output->write("<info>$key: </info>");
                 $output->writeln("<info><comment>$site</comment></info>");
             }
+            $output->writeln("<info>*****</info>");
         }
     }
 }

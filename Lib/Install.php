@@ -12,23 +12,11 @@ use Piwik\Access;
 use Piwik\Updater;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
 use Piwik\Plugin\Manager;
-use Piwik\Plugin;
-use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Version;
-use Piwik\Option;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
-use Piwik\Plugins\ExtraTools\Lib\Site;
 use Piwik\Plugins\Marketplace\LicenseKey;
-use Piwik\Container\StaticContainer;
-use Piwik\Plugins\TagManager\Model\Container\StaticContainerIdGenerator;
-use Piwik\Plugins\TagManager\Context\WebContext;
 use Piwik\Plugins\TagManager\Dao\ContainersDao;
-use Piwik\Plugins\TagManager\API as TagAPI;
-use Piwik\Plugins\TagManager\TagManager;
-use Piwik\Plugins\TagManager\Model\Container;
-
-use Piwik\Plugins\ExtraTools\Lib\ConfigManipulation;
 
 class Install
 {
