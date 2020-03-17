@@ -20,6 +20,7 @@ use Piwik\Common;
 use stdClass;
 
 use Piwik\Plugins\ExtraTools\Lib\Install;
+use Piwik\Plugins\ExtraTools\Lib\Defaults;
 
 /**
  * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on
@@ -59,77 +60,77 @@ Example:
             null,
             InputOption::VALUE_OPTIONAL,
             'First user name',
-            getenv('MATOMO_FIRST_USER_NAME')
+            $this->defaults()->firstSiteUserName()
         );
         $this->addOption(
             'first-user-email',
             null,
             InputOption::VALUE_OPTIONAL,
             'First user email',
-            getenv('MATOMO_FIRST_USER_EMAIL')
+            $this->defaults()->firstSiteUserEmail()
         );
         $this->addOption(
             'first-user-pass',
             null,
             InputOption::VALUE_OPTIONAL,
             'First user password',
-            getenv('MATOMO_FIRST_USER_PASSWORD')
+            $this->defaults()->firstSiteUserPass()
         );
         $this->addOption(
             'first-site-name',
             null,
             InputOption::VALUE_OPTIONAL,
             'First site name',
-            getenv('MATOMO_FIRST_SITE_NAME')
+            $this->defaults()->firstSiteName()
         );
         $this->addOption(
             'first-site-url',
             null,
             InputOption::VALUE_OPTIONAL,
             'First site url',
-            getenv('MATOMO_FIRST_SITE_URL')
+            $this->defaults()->firstSiteUrl()
         );
         $this->addOption(
             'db-username',
             null,
             InputOption::VALUE_OPTIONAL,
             'DB user name',
-            getenv('MATOMO_DB_USERNAME')
+            $this->defaults()->dbUser()
         );
         $this->addOption(
             'db-pass',
             null,
             InputOption::VALUE_OPTIONAL,
             'DB password',
-            getenv('MATOMO_DB_PASSWORD')
+            $this->defaults()->dbPass()
         );
         $this->addOption(
             'db-host',
             null,
             InputOption::VALUE_OPTIONAL,
             'DB host',
-            getenv('MATOMO_DB_HOST')
+            $this->defaults()->dbHost()
         );
         $this->addOption(
             'db-name',
             null,
             InputOption::VALUE_OPTIONAL,
             'DB name',
-            getenv('MATOMO_DB_NAME')
+            $this->defaults()->dbName()
         );
         $this->addOption(
             'db-prefix',
             null,
             InputOption::VALUE_OPTIONAL,
             'DB tables prefix',
-            getenv('MATOMO_DB_PREFIX')
+            $this->defaults()->dbPrefix()
         );
         $this->addOption(
             'plugins',
             null,
             InputOption::VALUE_OPTIONAL,
             'Plugins to install (comma separated)',
-            getenv('MATOMO_PLUGINS')
+            $this->defaults()->plugins()
         );
         $this->addOption(
             'timestamp',
@@ -173,7 +174,7 @@ Example:
         $dontdropdb = $input->getOption('do-not-drop-db') ? true : false;
         $force = $input->getOption('force');
 
-        $env_timestamp = getenv('MATOMO_LOG_TIMESTAMP');
+        $env_timestamp = $this->defaults()->timestamp();
         if (isset($env_timestamp)) {
             if ($env_timestamp == true) {
                 $timestamp = $env_timestamp;
@@ -263,5 +264,14 @@ Example:
     {
         $output = new ConsoleOutput();
         $output->writeln("<info>$text</info>");
+    }
+
+    /**
+     * Gets defaults config.
+     * @return Defaults
+     */
+    public function defaults()
+    {
+        return new Defaults();
     }
 }

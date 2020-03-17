@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. 
 
 > 17 March 2020
+- Added support for Matomo default env. variables, https://hub.docker.com/_/matomo?tab=description
+#### [0.1.0-beta7](https://github.com/digitalist-se/extratools/compare/0.1.0-beta6...0.1.0-beta7)
+
+
+> 17 March 2020
 - Added site:delete command
 #### [0.1.0-beta6](https://github.com/digitalist-se/extratools/compare/0.1.0-beta5...0.1.0-beta6)
 

@@ -120,13 +120,31 @@ You could also use a json-file for configuration - like all the above
 mentioned - and for installing plugins. An example json-file could be found in 
 the docs folder for this plugin.
 
-#### Environment variables
-```bash
-MATOMO_DB_USERNAME
-MATOMO_DB_PASSWORD
-MATOMO_DB_HOST
-MATOMO_DB_NAME
 
+#### Environment variables
+Supported default environment variables from the official Matomo docker container:
+
+```bash
+MATOMO_DATABASE_HOST
+MATOMO_DATABASE_TABLES_PREFIX
+MATOMO_DATABASE_USERNAME
+MATOMO_DATABASE_PASSWORD
+MATOMO_DATABASE_DBNAME
+```
+
+These could be overridden with (historical reasons):
+
+```bash
+MATOMO_DB_HOST
+MATOMO_DB_PREFIX
+MATOMO_DB_USERNAME 
+MATOMO_DB_PASSWORD
+MATOMO_DB_NAME
+```
+
+Other environment variables:
+
+```bash
 MATOMO_FIRST_USER_NAME
 MATOMO_FIRST_USER_EMAIL
 MATOMO_FIRST_USER_PASSWORD
@@ -144,11 +162,9 @@ Run:
 
 ```bash
 console plugin:activate ExtraTools
-
 ```
 
-Then follow one of the Examples below:
-
+Then follow one of the Examples below.
 
 #### Example install 1 (recomended)
 ``` 
