@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. 
 
+> 19 March 2020
+- Added a `logger:delete` command, that will delete logging messages stored in the db, if any.
+#### [0.1.0-beta9](https://github.com/digitalist-se/extratools/compare/0.1.0-beta8...0.1.0-beta9)
 
 > 17 March 2020
 - Added a `site:url` command for adding more URLs to an existing site. Also updated the `site:list` command, that now

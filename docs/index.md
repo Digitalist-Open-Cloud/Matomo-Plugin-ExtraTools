@@ -8,6 +8,7 @@ Introducing new console commands:
 * `database:create`
 * `database:drop`
 * `database:import`
+* `logger:delete`
 * `matomo:install`
 * `matomo:requirements` (does not work right now)
 * `segment:list`
@@ -82,6 +83,9 @@ Adding the --force flag stops the command for asking questions.
 ### `database:import`
 Imports database dump to database defined in config.ini.php, so if
 you already have a installation - it overwrites it.
+
+### `logger:delete`
+Removes logging entries from the DB, that is the internal logging in Matomo, not visits on sites.
 
 ### `matomo:install`
 Installs Matamo. Wipes the current installation - as default it uses settings in 
