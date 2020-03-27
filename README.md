@@ -62,7 +62,6 @@ db_backup_path = "/var/www/html/tmp"
 
 ```
 
-
 ## Commands
 
 ### `config:get`
