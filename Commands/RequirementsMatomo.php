@@ -30,7 +30,7 @@ class RequirementsMatomo extends ConsoleCommand
     protected function configure()
     {
 
-        $HelpText = 'The <info>%command.name%</info> will check for Matomo depencies.
+        $HelpText = 'The <info>%command.name%</info> will check for Matomo dependencies.
 <comment>Samples:</comment>
 To run:
 <info>%command.name%</info>';

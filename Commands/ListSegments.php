@@ -25,6 +25,11 @@ class ListSegments extends ConsoleCommand
 {
     protected function configure()
     {
+        $HelpText = 'The <info>%command.name%</info> will list att your segments.
+<comment>Samples:</comment>
+To run:
+<info>%command.name%</info>';
+        $this->setHelp($HelpText);
         $this->setName('segment:list');
         $this->setDescription('List segments');
     }

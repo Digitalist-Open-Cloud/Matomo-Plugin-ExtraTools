@@ -20,6 +20,11 @@ class DeleteLoggerMessages extends ConsoleCommand
 {
     protected function configure()
     {
+        $HelpText = 'The <info>%command.name%</info> will delete internal logger messages in the database.
+<comment>Samples:</comment>
+To run:
+<info>%command.name%</info>';
+        $this->setHelp($HelpText);
         $this->setName('logger:delete');
         $this->setDescription('Delete internal logger messages in database (monolog)');
         $this->addOption(

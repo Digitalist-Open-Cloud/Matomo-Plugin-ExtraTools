@@ -32,7 +32,7 @@ class ImportDB extends ConsoleCommand
     protected function configure()
     {
 
-        $HelpText = 'The <info>%command.name%</info> command will backup your db.
+        $HelpText = 'The <info>%command.name%</info> command will import a db.
 <comment>Samples:</comment>
 To run:
 <info>%command.name%</info>';

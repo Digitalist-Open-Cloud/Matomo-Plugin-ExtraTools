@@ -22,7 +22,7 @@ class ListSites extends ConsoleCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>%command.name%</info> will list all sites you have.
+        $HelpText = 'The <info>%command.name%</info> will list all sites.
 <comment>Samples:</comment>
 To run:
 <info>%command.name%</info>';

@@ -55,7 +55,7 @@ Set up a db backup path, use the console (use the path you desire):
 ```
 ./console config:set 'ExtraTools.db_backup_path="/var/www/html/tmp"'
 ```
-Or add it manualy to config.ini.php:
+Or add it manually to config.ini.php:
 ```
 [ExtraTools]
 db_backup_path = "/var/www/html/tmp"
@@ -176,7 +176,7 @@ console plugin:activate ExtraTools
 
 Then follow one of the Examples below.
 
-#### Example install 1 (recomended)
+#### Example install 1 (recommended)
 ``` 
 console matomo:install --install-file=install.json
 ```

@@ -156,7 +156,7 @@ You could use options to override config or environment variables:
     }
 
     /**
-     * Execute the command like: ./console backup:db"
+     * Execute the command like: ./console site:add
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

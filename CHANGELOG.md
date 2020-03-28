@@ -70,7 +70,7 @@ will output more information.
 
 > 4 April 2019
 
-- update becuase of wrong version commited [`d64295c`](https://github.com/digitalist-se/extratools/commit/d64295cdfa80f5e62b6117ce383c25abac48cbbb)
+- update because of wrong version committed [`d64295c`](https://github.com/digitalist-se/extratools/commit/d64295cdfa80f5e62b6117ce383c25abac48cbbb)
 
 #### [0.1.0-alpha5](https://github.com/digitalist-se/extratools/compare/0.1.0-alpha4...0.1.0-alpha5)
 
@@ -88,7 +88,7 @@ will output more information.
 
 > 6 March 2019
 
-- better desciption on plugin page [`f12a798`](https://github.com/digitalist-se/extratools/commit/f12a798c1e417e97b30109749bc9d0dace1f6f35)
+- better description on plugin page [`f12a798`](https://github.com/digitalist-se/extratools/commit/f12a798c1e417e97b30109749bc9d0dace1f6f35)
 
 #### [0.1.0-alpha2](https://github.com/digitalist-se/extratools/compare/0.1.0-alpha1...0.1.0-alpha2)
 
@@ -108,7 +108,7 @@ will output more information.
 
 > 6 March 2019
 
-- still versioing [`76e478b`](https://github.com/digitalist-se/extratools/commit/76e478bfc55b260543f8a3dff33b59c3d0be77dc)
+- still versioning [`76e478b`](https://github.com/digitalist-se/extratools/commit/76e478bfc55b260543f8a3dff33b59c3d0be77dc)
 - versioning [`baddcb4`](https://github.com/digitalist-se/extratools/commit/baddcb4dea29f9fdc99c0842819696750f8e024e)
 
 #### 0.0.1-alpha.10
