@@ -45,7 +45,8 @@ To run:
         foreach ($segments as $out) {
             $message= "Segment ID: <comment>" . $out['idsegment'] . "</comment>\n"
             . "     Definition: <comment>" . $out['definition']. "</comment>\n"
-            . "     Created: <comment>" . $out['ts_created']. "</comment>";
+            . "     Created: <comment>" . $out['ts_created']. "</comment>"
+            . "     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
             $output->writeln("<info>$message</info>");
         }
     }

@@ -16,6 +16,7 @@ Introducing new console commands:
 * `site:delete`
 * `site:list`
 * `site:url`
+* `visits:get`
 
 ## Background
 
@@ -97,7 +98,7 @@ docker-compose file, the environment array etc. If the variable is set, Matomo w
 
 ### `segment:list`
 
-List all segments, with ID, definition and date created.
+List all segments, with ID, definition, date created and latest updated.
 
 ### `site:add`
 
@@ -114,6 +115,11 @@ List sites, with the optional format argument - supported output is text(default
 ### `site:url`
 
 Adds one or more URLs to a site. 
+
+### `visits:get`
+
+Get all archived visits, for one site or all. For a segment or all segments, for today, or another day etc.
+
 
 #### Requirements
 
