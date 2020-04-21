@@ -9,6 +9,7 @@ Introducing new console commands:
 * `database:drop`
 * `database:import`
 * `logger:delete`
+* `logger:show`
 * `matomo:install`
 * `matomo:requirements` (does not work right now)
 * `segment:list`
@@ -86,6 +87,9 @@ you already have a installation - it overwrites it.
 
 ### `logger:delete`
 Removes logging entries from the DB, that is the internal logging in Matomo, not visits on sites.
+
+### `logger:show`
+Show logging and query entries of logs from the database, output could be exported to CSV.
 
 ### `matomo:install`
 Installs Matamo. Wipes the current installation - as default it uses settings in 
