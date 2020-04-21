@@ -44,9 +44,14 @@ To run:
 
         foreach ($segments as $out) {
             $message= "Segment ID: <comment>" . $out['idsegment'] . "</comment>\n"
+                . "     Name: <comment>" . $out['name']. "</comment>\n"
             . "     Definition: <comment>" . $out['definition']. "</comment>\n"
-            . "     Created: <comment>" . $out['ts_created']. "</comment>"
-            . "     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
+                . "     URL encoded Definition: <comment>" . urlencode($out['definition']). "</comment>\n"
+            . "     Created: <comment>" . $out['ts_created']. "</comment>\n";
+            if (isset($out['ts_last_edit'])) {
+                $message .=  "     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
+            }
+
             $output->writeln("<info>$message</info>");
         }
     }

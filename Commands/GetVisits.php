@@ -69,7 +69,14 @@ To run:
                     InputOption::VALUE_OPTIONAL,
                     'Segment id, to get total visits in a segment.',
                     null
-                )
+                ),
+                new InputOption(
+                    'view',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'What to output, visits, actions, pageviews, revenue,  defaults to pageviews',
+                    'pageviews'
+                ),
             ]
         );
     }
@@ -82,6 +89,10 @@ To run:
         $single = $input->getOption('id');
         $period = $input->getOption('period');
         $date = $input->getOption('date');
+        $view = 'nb_' . $input->getOption('view');
+        if ($view == 'nb_revenue') {
+            $view = 'revenue';
+        }
 
         $siteIds = SitesManagerAPI::getInstance()->getAllSitesId();
         $id = $siteIds['0'];
@@ -100,15 +111,16 @@ To run:
         }
         if (isset($single)) {
             $api = API::getInstance()->getProcessedReport($single, $period, $date, 'MultiSites', 'getOne', $definition);
-            $total = $api['reportTotal']['nb_pageviews'];
+            $total = $api['reportTotal'][$view];
         } else {
             $api = API::getInstance()->getProcessedReport($id, $period, $date, 'MultiSites', 'getAll', $definition);
-            $total = $api['reportTotal']['nb_pageviews'];
+            $total = $api['reportTotal'][$view];
         }
         if (!(isset($total))) {
             $total = "looks like you have no archived visits";
         }
-        $output->writeln($total);
+        $output->writeln("Total $view $total");
+        return 0;
     }
 
     public function getSegmentName($segmentid)
