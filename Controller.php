@@ -20,9 +20,11 @@ class Controller extends \Piwik\Plugin\Controller
 {
     public function index()
     {
+        $api = new API();
+        $info = $api->getPhpInfo();
         // Render the Twig template templates/index.twig and assign the view variable answerToLife to the view.
         return $this->renderTemplate('index', array(
-            'answerToLife' => 42
+            'info' => $info
         ));
     }
 }

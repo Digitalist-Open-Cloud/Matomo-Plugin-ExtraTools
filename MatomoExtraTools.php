@@ -10,4 +10,18 @@ namespace Piwik\Plugins\ExtraTools;
 
 class ExtraTools extends \Piwik\Plugin
 {
+    /**
+     * @see Piwik\Plugin::registerEvents
+     */
+    public function registerEvents()
+    {
+        return array(
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+        );
+    }
+
+    public function getClientSideTranslationKeys(&$translationKeys)
+    {
+        $translationKeys[] = 'ExtraTools_PhpInfo';
+    }
 }

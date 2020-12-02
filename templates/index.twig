@@ -1,8 +1,5 @@
-{% extends 'dashboard.twig' %}
+{% extends 'admin.twig' %}
 
 {% block content %}
-    <strong>Hello world!</strong>
-    <br/>
-
-    The answer to life is {{ answerToLife }}
+{{ info | raw }}
 {% endblock %}
