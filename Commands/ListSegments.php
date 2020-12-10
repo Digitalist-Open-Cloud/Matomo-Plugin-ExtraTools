@@ -53,7 +53,7 @@ To run:
                 $auto_archive = 'Segment are processed in realtime';
             } elseif ($out['auto_archive'] === '1') {
                 $auto_archive = 'Segment are pre-processed (cron)';
-            } elseif ($out['auto_archive'] === '2') {
+            } elseif ($out['auto_archive'] === '9') {
                 $auto_archive = 'Segment are not processed (paused)';
             }
 
