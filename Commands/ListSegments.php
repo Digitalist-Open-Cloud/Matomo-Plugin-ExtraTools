@@ -13,16 +13,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
+use Piwik\Common;
+use Piwik\Db;
 
 /**
- * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on
- * http://developer.piwik.org/guides/piwik-on-the-command-line
- *
- * As Piwik Console is based on the Symfony Console you might also want to have a look at
- * http://symfony.com/doc/current/components/console/index.html
+ * Class ListSegments
+ * @package Piwik\Plugins\ExtraTools\Commands
  */
 class ListSegments extends ConsoleCommand
 {
+
+    private static $rawPrefix = 'segment';
+
+    protected function getTable()
+    {
+        return Common::prefixTable(self::$rawPrefix);
+    }
+
+
     protected function configure()
     {
         $HelpText = 'The <info>%command.name%</info> will list att your segments.
@@ -39,10 +47,15 @@ To run:
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        $segments = $this->getSegments();
+        $segments = $this->getAllSegments();
 
         foreach ($segments as $out) {
+            if ($out['deleted'] === '0') {
+                $deleted =  "Segment is: <comment>active</comment>";
+            } else {
+                $deleted =  "Segment is: <comment>deleted</comment>";
+            }
+
             if ($out['enable_only_idsite'] === '0') {
                 $enabled =  "Enabled for: <comment>all sites</comment>";
             } else {
@@ -63,7 +76,8 @@ To run:
                 . "     URL encoded definition: <comment>" . urlencode($out['definition']). "</comment>\n"
             . "     Created: <comment>" . $out['ts_created']. "</comment>\n"
             . "     $enabled\n"
-            . "     $auto_archive\n";
+            . "     $auto_archive\n"
+            . "     $deleted\n";
             if (isset($out['ts_last_edit'])) {
                 $message .=  "     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
             }
@@ -84,4 +98,23 @@ To run:
 
         return $segments;
     }
+    /**
+     * Returns all stored segments that haven't been deleted. Ignores the site the segments are enabled
+     * for and whether to auto archive or not.
+     *
+     * @return array
+     */
+    public function getAllSegments()
+    {
+        $sql = "SELECT * FROM " . $this->getTable();
+
+        $segments = $this->getDb()->fetchAll($sql);
+
+        return $segments;
+    }
+    private function getDb()
+    {
+        return Db::get();
+    }
+
 }
