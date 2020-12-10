@@ -43,11 +43,27 @@ To run:
         $segments = $this->getSegments();
 
         foreach ($segments as $out) {
+            if ($out['enable_only_idsite'] === '0') {
+                $enabled =  "Enabled for: <comment>all sites</comment>";
+            } else {
+                $enabled = "Enabled for site id: <comment>" . $out['enable_only_idsite'] . "</comment>";
+            }
+            $auto_archive = '';
+            if ($out['auto_archive'] === '0') {
+                $auto_archive = 'Segment are processed in realtime';
+            } elseif ($out['auto_archive'] === '1') {
+                $auto_archive = 'Segment are pre-processed (cron)';
+            } elseif ($out['auto_archive'] === '2') {
+                $auto_archive = 'Segment are not processed (paused)';
+            }
+
             $message= "Segment ID: <comment>" . $out['idsegment'] . "</comment>\n"
                 . "     Name: <comment>" . $out['name']. "</comment>\n"
             . "     Definition: <comment>" . $out['definition']. "</comment>\n"
-                . "     URL encoded Definition: <comment>" . urlencode($out['definition']). "</comment>\n"
-            . "     Created: <comment>" . $out['ts_created']. "</comment>\n";
+                . "     URL encoded definition: <comment>" . urlencode($out['definition']). "</comment>\n"
+            . "     Created: <comment>" . $out['ts_created']. "</comment>\n"
+            . "     $enabled\n"
+            . "     $auto_archive\n";
             if (isset($out['ts_last_edit'])) {
                 $message .=  "     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
             }
