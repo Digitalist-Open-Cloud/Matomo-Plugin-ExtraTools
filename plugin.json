@@ -1,7 +1,7 @@
 {
     "name": "ExtraTools",
     "description": "Adds automatic installation from the console, db backups, creation of new sites etc.",
-    "version": "3.1.0-beta14",
+    "version": "3.1.0-beta15",
     "theme": false,
     "require": {
         "piwik": ">=3.8.0-stable,<4.0.0-rc6"

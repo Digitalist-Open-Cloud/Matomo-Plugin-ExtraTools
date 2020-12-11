@@ -63,11 +63,11 @@ To run:
             }
             $auto_archive = '';
             if ($out['auto_archive'] === '0') {
-                $auto_archive = 'Segment are processed in realtime';
+                $auto_archive = 'Segment is processed in realtime';
             } elseif ($out['auto_archive'] === '1') {
-                $auto_archive = 'Segment are pre-processed (cron)';
+                $auto_archive = 'Segment is pre-processed (cron)';
             } elseif ($out['auto_archive'] === '9') {
-                $auto_archive = 'Segment are not processed (paused)';
+                $auto_archive = 'Segment is not processed (paused)';
             }
 
             $message= "Segment ID: <comment>" . $out['idsegment'] . "</comment>\n"
@@ -116,5 +116,4 @@ To run:
     {
         return Db::get();
     }
-
 }
