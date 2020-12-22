@@ -15,6 +15,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
 use Piwik\Common;
 use Piwik\Db;
+use Piwik\Config;
 
 /**
  * Class ListSegments
@@ -47,6 +48,8 @@ To run:
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+
         $segments = $this->getAllSegments();
 
         foreach ($segments as $out) {
@@ -61,6 +64,21 @@ To run:
             } else {
                 $enabled = "Enabled for site id: <comment>" . $out['enable_only_idsite'] . "</comment>";
             }
+            $segment_paused = '';
+            // This functionality comes from a patch to Segment Editor
+            // https://gist.github.com/mikkeschiren/7a0c6f5b5ce912c0bd7f898be78ac51b
+            if (isset(Config::getInstance()->Segments['pause'])) {
+                $paused = Config::getInstance()->Segments['pause'];
+            }
+            if (isset($paused)) {
+                trim($paused);
+                $id = $out['idsegment'];
+                $pausedSegmentIDs = explode(",", $paused);
+                if (in_array($id, $pausedSegmentIDs, true)) {
+                    $segment_paused = "Segment is paused";
+                }
+            }
+
             $auto_archive = '';
             if ($out['auto_archive'] === '0') {
                 $auto_archive = 'Segment is processed in realtime';
@@ -77,10 +95,16 @@ To run:
             . "     Created: <comment>" . $out['ts_created']. "</comment>\n"
             . "     $enabled\n"
             . "     $auto_archive\n"
-            . "     $deleted\n";
+            . "     $deleted";
             if (isset($out['ts_last_edit'])) {
-                $message .=  "     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
+                $message .=  "\n     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
             }
+            if (!is_null($segment_paused)) {
+                $message .= "\n     $segment_paused\n";
+            }
+
+            // Remove double newlines if any strings above is empty.
+            $message = preg_replace("/[\n]+/", "\n", $message);
 
             $output->writeln("<info>$message</info>");
         }
