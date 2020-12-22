@@ -1,6 +1,6 @@
 # Extra Tools (for Matomo)
 
-Some extra cli commands to help with maintaining Matomo. 
+Some extra cli commands to help with maintaining Matomo. Also providing an phpinfo page in the admin part.
 Introducing new console commands:
 
 * `config:get`
@@ -12,6 +12,7 @@ Introducing new console commands:
 * `logger:show`
 * `matomo:install`
 * `matomo:requirements` (does not work right now)
+* `segment:admin`
 * `segment:list`
 * `site:add`
 * `site:delete`
@@ -100,6 +101,11 @@ If you have a license for Matomo Premium plugins, set the environment variable `
 license token. The environment variable is set as a normal environment variable, in shell using export, in a 
 docker-compose file, the environment array etc. If the variable is set, Matomo will have the license key set on install.
 
+### `segment:admin`
+
+Administration of segments, only options right now is to delete or activate a segment, a deleted segment
+could later be activated again.
+
 ### `segment:list`
 
 List all segments, with ID, definition, date created and latest updated.
@@ -150,6 +156,7 @@ MATOMO_DATABASE_TABLES_PREFIX
 MATOMO_DATABASE_USERNAME
 MATOMO_DATABASE_PASSWORD
 MATOMO_DATABASE_DBNAME
+MATOMO_DATABASE_ADAPTER
 ```
 
 These could be overridden with (historical reasons):

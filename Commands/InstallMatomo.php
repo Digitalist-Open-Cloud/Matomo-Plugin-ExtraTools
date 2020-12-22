@@ -126,6 +126,13 @@ Example:
             $this->defaults()->dbPrefix()
         );
         $this->addOption(
+            'db-adapter',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'DB adapter',
+            $this->defaults()->dbAdapter()
+        );
+        $this->addOption(
             'plugins',
             null,
             InputOption::VALUE_OPTIONAL,
@@ -169,6 +176,7 @@ Example:
         $db_host = $input->getOption('db-host');
         $db_name = $input->getOption('db-name');
         $db_prefix = $input->getOption('db-prefix');
+        $db_adapter = $input->getOption('db-adapter');
         $plugins = $input->getOption('plugins');
         $timestamp = $input->getOption('timestamp') ? true : false;
         $dontdropdb = $input->getOption('do-not-drop-db') ? true : false;
@@ -195,6 +203,7 @@ Example:
             'db-host' => $db_host,
             'db-name' => $db_name,
             'db-prefix' => $db_prefix,
+            'db-adapter' => $db_adapter,
             'timestamp' => $timestamp,
             'plugins' => $plugins,
             'do-not-drop-db' => $dontdropdb
@@ -205,6 +214,7 @@ Example:
             'db_user' => $db_username,
             'db_pass' => $db_pass,
             'db_name' => $db_name,
+            'db_adapter' => $db_adapter
         ];
 
         if ($force === false) {

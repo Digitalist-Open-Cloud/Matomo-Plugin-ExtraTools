@@ -173,6 +173,9 @@ class Install
             if (isset($options['db-prefix'])) {
                 $config->database['tables_prefix'] = $options['db-prefix'];
             }
+            if (isset($options['db-adapter'])) {
+                $config->database['adapter'] = $options['db-adapter'];
+            }
         }
 
         if (isset($fileconfig)) {
@@ -184,6 +187,7 @@ class Install
                     'username',
                     'password',
                     'dbname',
+                    'adapter',
                 ];
                 foreach ($keys as $key) {
                     if (isset($database[$key])) {
@@ -548,8 +552,7 @@ class Install
         $this->log('Finalising...');
 
         unset(
-            $config->General['installation_in_progress'],
-            $config->database['adapter']
+            $config->General['installation_in_progress']
         );
 
         $config->forceSave();

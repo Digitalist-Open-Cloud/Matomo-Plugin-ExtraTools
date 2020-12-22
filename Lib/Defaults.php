@@ -56,6 +56,19 @@ class Defaults
     /**
      * @return string
      */
+    public function dbAdapter()
+    {
+        $adapter = 'PDO\MYSQL';
+        if (getenv('MATOMO_DATABASE_ADAPTER')) {
+            $adapter = getenv('MATOMO_DATABASE_ADAPTER');
+        }
+        return $adapter;
+    }
+
+
+    /**
+     * @return string
+     */
     public function dbPass()
     {
         $pass = '';
