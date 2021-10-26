@@ -220,7 +220,7 @@ class Install
         $retries = [10, 20, 30];
         foreach ($retries as $retry_timeout_index => $retry_timeout) {
             try {
-                DbHelper::isDatabaseConnectionUTF8();
+                DbHelper::getDefaultCharset();
                 break;
             } catch (\Exception $e) {
                 $this->log(
@@ -230,9 +230,7 @@ class Install
                 sleep($retry_timeout);
             }
         }
-        if (!DbHelper::isDatabaseConnectionUTF8()) {  // Exception will be thrown if cannot connect
-            $config->database['charset'] = 'utf8';
-        }
+
         // Save the config.
         $config->forceSave();
         Db::createDatabaseObject($config->database);
