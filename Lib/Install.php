@@ -96,7 +96,8 @@ class Install
 
 
         $this->output->writeln("<info>Starting <comment>install</comment></info>");
-
+        # Always disable sending emails at install
+        $this->config->General['emails_enabled'] = 0;
         $this->deleteCache();
         $this->initDBConnection();
 
