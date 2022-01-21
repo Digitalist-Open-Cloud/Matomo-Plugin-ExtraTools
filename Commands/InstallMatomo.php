@@ -250,9 +250,12 @@ Example:
         );
 
         if (Common::hasJsonErrorOccurred()) {
-            throw new \Exception(
-                $this->log("<error>" . Common::getLastJsonError() . "</error>")
+            $errorMsg = sprintf(
+                "<error>%s</error>",
+                Common::getLastJsonError()
             );
+            $this->log($errorMsg);
+            throw new \Exception($errorMsg);
         }
         return $json;
     }
