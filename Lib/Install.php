@@ -58,7 +58,7 @@ class Install
             }
         }
 
-        $file_config = false;
+        $fileconfig = false;
 
         if (isset($this->fileconfig)) {
             $config_from_file = $this->fileconfig;
