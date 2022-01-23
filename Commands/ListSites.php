@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtraTools
  *
@@ -63,19 +64,19 @@ To run:
             ];
         }
 
-        if ($format=='json') {
+        if ($format == 'json') {
             $this->json($outsites);
         }
-        if ($format=='yaml') {
+        if ($format == 'yaml') {
             $this->yaml($outsites);
         }
-        if ($format=='text') {
+        if ($format == 'text') {
             $this->text($outsites, $output);
         }
     }
     private function json($sites)
     {
-        $json = json_encode($sites, JSON_PRETTY_PRINT |JSON_UNESCAPED_SLASHES);
+        $json = json_encode($sites, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         print_r($json);
         echo "\n";
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtraTools
  *
@@ -69,20 +70,20 @@ You could use options to override config or environment variables:
         if ($get_section == null) {
             $output->writeln("<info>Looks like section <comment>$section</comment> does not exist</info>");
         } else {
-            if ($format=='json') {
+            if ($format == 'json') {
                 $this->json($get_section);
             }
-            if ($format=='yaml') {
+            if ($format == 'yaml') {
                 $this->yaml($get_section);
             }
-            if ($format=='text') {
+            if ($format == 'text') {
                 $this->text($get_section, $output);
             }
         }
     }
     private function json($config)
     {
-        $json = json_encode($config, JSON_PRETTY_PRINT |JSON_UNESCAPED_SLASHES);
+        $json = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         print_r($json);
         echo "\n";
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -88,16 +89,16 @@ To run:
                 $auto_archive = 'Segment is not processed (paused)';
             }
 
-            $message= "Segment ID: <comment>" . $out['idsegment'] . "</comment>\n"
-                . "     Name: <comment>" . $out['name']. "</comment>\n"
-            . "     Definition: <comment>" . $out['definition']. "</comment>\n"
-                . "     URL encoded definition: <comment>" . urlencode($out['definition']). "</comment>\n"
-            . "     Created: <comment>" . $out['ts_created']. "</comment>\n"
+            $message = "Segment ID: <comment>" . $out['idsegment'] . "</comment>\n"
+                . "     Name: <comment>" . $out['name'] . "</comment>\n"
+            . "     Definition: <comment>" . $out['definition'] . "</comment>\n"
+                . "     URL encoded definition: <comment>" . urlencode($out['definition']) . "</comment>\n"
+            . "     Created: <comment>" . $out['ts_created'] . "</comment>\n"
             . "     $enabled\n"
             . "     $auto_archive\n"
             . "     $deleted";
             if (isset($out['ts_last_edit'])) {
-                $message .=  "\n     Latest update: <comment>" . $out['ts_last_edit']. "</comment>";
+                $message .=  "\n     Latest update: <comment>" . $out['ts_last_edit'] . "</comment>";
             }
             if (!is_null($segment_paused)) {
                 $message .= "\n     $segment_paused\n";

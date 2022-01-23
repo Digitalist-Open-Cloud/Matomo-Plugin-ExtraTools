@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtraTools
  *
@@ -14,7 +15,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\CronArchive\SharedSiteIds  as ListArchives;
 use Piwik\Config;
-
 use Piwik\Plugins\ExtraTools\Lib\Backup;
 
 /**

@@ -245,7 +245,7 @@ class Install
     {
         $datestamp = '';
         if ($this->timestamp == true) {
-            $datestamp = '[' .date("Y-m-d H:i:s") . '] ';
+            $datestamp = '[' . date("Y-m-d H:i:s") . '] ';
         }
         $this->output->writeln("<info>$datestamp$text</info>");
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtraTools
  *
@@ -13,7 +14,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Config;
-
 use Piwik\Plugins\ExtraTools\Lib\Backup;
 
 /**

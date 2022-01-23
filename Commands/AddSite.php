@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtraTools
  *
@@ -12,7 +13,6 @@ use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Piwik\Plugins\ExtraTools\Lib\Site;
 
 class AddSite extends ConsoleCommand

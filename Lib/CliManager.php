@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtraTools
  *
@@ -573,7 +574,8 @@ class CliManager
         $pluginNames = $this->getLoadedPluginsName();
         foreach ($pluginNames as $pluginName) {
             if ($this->isPluginActivated($pluginName)
-                && !$this->isPluginAlwaysActivated($pluginName)) {
+                && !$this->isPluginAlwaysActivated($pluginName)
+            ) {
                 $counter++;
             }
         }
@@ -902,7 +904,8 @@ class CliManager
             && SettingsPiwik::isInternetEnabled()
             && !Development::isEnabled()
             && $this->isPluginActivated('Marketplace')
-            && $this->isPluginActivated($pluginName)) {
+            && $this->isPluginActivated($pluginName)
+        ) {
             $cacheKey = 'MarketplacePluginMissingLicense' . $pluginName;
             $cache = self::getLicenseCache();
 
@@ -1018,7 +1021,7 @@ class CliManager
         if (!class_exists($namespacedClass, false)) {
             throw new \Exception("The class $pluginClassName couldn't be found in the file '$path'");
         }
-        $newPlugin = new $namespacedClass;
+        $newPlugin = new $namespacedClass();
 
         if (!($newPlugin instanceof Plugin)) {
             throw new \Exception("The plugin $pluginClassName in the file $path must inherit from Plugin.");
@@ -1136,7 +1139,8 @@ class CliManager
         foreach ($plugins as $pluginName) {
             // if a plugin is listed in the config, but is not loaded, it does not exist in the folder
             if (!$this->isPluginLoaded($pluginName) && !$this->isPluginBogus($pluginName) &&
-                !($this->doesPluginRequireInternetConnection($pluginName) && !SettingsPiwik::isInternetEnabled())) {
+                !($this->doesPluginRequireInternetConnection($pluginName) && !SettingsPiwik::isInternetEnabled())
+            ) {
                 $missingPlugins[] = $pluginName;
             }
         }
@@ -1274,7 +1278,8 @@ class CliManager
         // Only one theme enabled at a time
         $themeEnabled = $this->getThemeEnabled();
         if ($themeEnabled
-            && $themeEnabled->getPluginName() != self::DEFAULT_THEME) {
+            && $themeEnabled->getPluginName() != self::DEFAULT_THEME
+        ) {
             $themeAlreadyEnabled = $themeEnabled->getPluginName();
 
             $plugin = $this->loadPlugin($pluginName);
@@ -1375,7 +1380,8 @@ class CliManager
         foreach ($allDimensions as $dim) {
             if ($dim->getColumnName() === $columnName &&
                 $dim->hasColumnType() &&
-                $dim->getModule() !== $module) {
+                $dim->getModule() !== $module
+            ) {
                 return true;
             }
         }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExtraTools
  *
@@ -18,7 +19,6 @@ use Piwik\Plugins\ExtraTools\Lib\Drop;
 use Piwik\Plugins\ExtraTools\Lib\Create;
 use Piwik\Common;
 use stdClass;
-
 use Piwik\Plugins\ExtraTools\Lib\Install;
 use Piwik\Plugins\ExtraTools\Lib\Defaults;
 
@@ -169,7 +169,7 @@ Example:
         $first_user = $input->getOption('first-user');
         $first_user_email = $input->getOption('first-user-email');
         $first_user_password = $input->getOption('first-user-pass');
-        $first_site_name= $input->getOption('first-site-name');
+        $first_site_name = $input->getOption('first-site-name');
         $first_site_url = $input->getOption('first-site-url');
         $db_username = $input->getOption('db-username');
         $db_pass = $input->getOption('db-pass');
