@@ -1,8 +1,8 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * ExtraTools
  *
- * @link http://piwik.org
+ * @link https://github.com/digitalist-se/extratools
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
@@ -44,7 +44,7 @@ Example:
 <info> %command.name% --install-file=install.json</info>
 <info>
  See more examples in README.md
-</info>  
+</info>
   ';
         $this->setHelp($HelpText);
         $this->setName('matomo:install');

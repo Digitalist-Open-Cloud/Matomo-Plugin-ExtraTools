@@ -1,9 +1,9 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * ExtraTools
  *
- * @link http://piwik.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link https://github.com/digitalist-se/extratools
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or laster
  */
 
 namespace Piwik\Plugins\ExtraTools\Commands;
