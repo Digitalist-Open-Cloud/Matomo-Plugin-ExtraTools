@@ -3,8 +3,6 @@
 namespace Piwik\Plugins\ExtraTools\Lib;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Piwik\Plugins\CoreAdminHome\Commands\SetConfig\ConfigSettingManipulation;
 use Piwik\Config as Config;
 

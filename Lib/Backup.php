@@ -3,7 +3,7 @@
 namespace Piwik\Plugins\ExtraTools\Lib;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Backup
@@ -33,7 +33,7 @@ class Backup
         $prefix  = $this->config['db_backup_prefix'];
 
         $timestamp = date("Ymd-His");
-        $backup = new Process\Process(
+        $backup = new Process(
             "mysqldump -u $db_user -h $db_host -p$db_pass $db_name --add-drop-table >" .
             "$backup_folder/$prefix-$timestamp.sql" . " 2> >(grep -v \"Using a password\")"
         );

@@ -3,7 +3,7 @@
 namespace Piwik\Plugins\ExtraTools\Lib;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Import
@@ -31,7 +31,7 @@ class Import
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
 
-        $import = new Process\Process(
+        $import = new Process(
             "mysql -u $db_user -h $db_host -p$db_pass $db_name < $backup_path"
         );
         $import->enableOutput();

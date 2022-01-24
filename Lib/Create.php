@@ -3,7 +3,7 @@
 namespace Piwik\Plugins\ExtraTools\Lib;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Create
@@ -29,7 +29,7 @@ class Create
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
 
-        $drop = new Process\Process(
+        $drop = new Process(
             "mysqladmin -u $db_user -h $db_host -p$db_pass create $db_name --force"
         );
         $drop->enableOutput();
