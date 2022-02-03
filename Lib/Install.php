@@ -105,10 +105,10 @@ class Install
         $this->saveLanguage('en');
         # Environment check can not be used right now. It has a dependency on being installed.
         //  $this->checkEnvironment();
-        if ($dontdrobdb === false) {
-            // Do not create a new default site if not dropping db.
-            $this->addWebsite();
-        }
+ //       if ($dontdrobdb === false) {
+ //           // Do not create a new default site if not dropping db.
+ //           $this->addWebsite();
+ //       }
         $this->createSuperUser();
         $this->installPlugins();
         $this->unInstallPlugins();
