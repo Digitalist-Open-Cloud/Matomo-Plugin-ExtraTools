@@ -10,7 +10,7 @@ base:
   variables:
     EXTRA_TOOLS_COMMIT: $CI_COMMIT_SHA
     EXTRA_TOOLS_BRANCH: $CI_COMMIT_BRANCH
-  stage: cloud
+  stage: base
   trigger:
     project: se-ops/docker/matomo-docker-base
     branch: develop
