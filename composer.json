@@ -6,7 +6,7 @@
         "install"
     ],
     "homepage": "https://github.com/digitalist-se/extratools",
-    "version": "4.0.0-beta6",
+    "version": "4.0.0-beta7",
     "license": "GPL-3.0-or-later",
     "authors": [
         {
@@ -21,6 +21,6 @@
         }
     ],
     "require": {
-        "php": ">=7.2"
+        "php": ">=7.4"
     }
 }
