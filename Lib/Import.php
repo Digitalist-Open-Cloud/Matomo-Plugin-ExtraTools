@@ -27,12 +27,13 @@ class Import
         // Fetch config.
         $backup_path = $this->config['db_backup_path'];
         $db_host = $this->config['db_host'];
+        $db_port = $this->config['db_port'];
         $db_user = $this->config['db_user'];
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
 
         $import = new Process\Process(
-            "mysql -u $db_user -h $db_host -p$db_pass $db_name < $backup_path"
+            "mysql -u $db_user -h $db_host -P $db_port -p$db_pass $db_name < $backup_path"
         );
         $import->enableOutput();
 

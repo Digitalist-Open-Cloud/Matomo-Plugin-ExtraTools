@@ -25,12 +25,13 @@ class Drop
     public function execute()
     {
         $db_host = $this->config['db_host'];
+        $db_port = $this->config['db_port'];
         $db_user = $this->config['db_user'];
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
 
         $drop = new Process\Process(
-            "mysqladmin -u $db_user -h $db_host -p$db_pass drop $db_name --force"
+            "mysqladmin -u $db_user -h $db_host -P $db_port -p$db_pass drop $db_name --force"
         );
         $drop->enableOutput();
         $drop->run();

@@ -26,6 +26,21 @@ class Defaults
     /**
      * @return string
      */
+    public function dbPort()
+    {
+        $port = '';
+        if (getenv('MATOMO_DATABASE_PORT')) {
+            $port = getenv('MATOMO_DATABASE_PORT');
+        }
+        if (getenv('MATOMO_DB_PORT')) {
+            $port = getenv('MATOMO_DB_PORT');
+        }
+        return $port;
+    }
+
+    /**
+     * @return string
+     */
     public function dbName()
     {
         $name = '';

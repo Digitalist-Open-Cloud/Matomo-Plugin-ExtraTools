@@ -76,6 +76,7 @@ To run:
 
         $config = [
             'db_host' =>  $db_configs['host'],
+            'db_port' =>  $db_configs['port'],
             'db_user' => $db_configs['username'],
             'db_pass' => $db_configs['password'],
             'db_name' =>  $db_configs['dbname'],

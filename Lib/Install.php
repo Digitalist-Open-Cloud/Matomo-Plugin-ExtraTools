@@ -168,6 +168,9 @@ class Install
             if (isset($options['db-host'])) {
                 $config->database['host'] = $options['db-host'];
             }
+            if (isset($options['db-port'])) {
+                $config->database['port'] = $options['db-port'];
+            }
             if (isset($options['db-name'])) {
                 $config->database['dbname'] = $options['db-name'];
             }
@@ -185,6 +188,7 @@ class Install
                 $keys = [
                     'tables_prefix',
                     'host',
+                    'port',
                     'username',
                     'password',
                     'dbname',
