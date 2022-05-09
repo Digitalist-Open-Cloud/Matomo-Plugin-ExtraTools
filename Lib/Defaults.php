@@ -28,7 +28,7 @@ class Defaults
      */
     public function dbPort()
     {
-        $port = '';
+        $port = '3306';
         if (getenv('MATOMO_DATABASE_PORT')) {
             $port = getenv('MATOMO_DATABASE_PORT');
         }
