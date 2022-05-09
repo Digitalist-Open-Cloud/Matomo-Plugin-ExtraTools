@@ -152,6 +152,7 @@ Supported default environment variables from the official Matomo docker containe
 
 ```bash
 MATOMO_DATABASE_HOST
+MATOMO_DATABASE_PORT
 MATOMO_DATABASE_TABLES_PREFIX
 MATOMO_DATABASE_USERNAME
 MATOMO_DATABASE_PASSWORD
@@ -201,7 +202,7 @@ console matomo:install --install-file=install.json
 #### Example install 2
 ```
 console matomo:install --db-username=myuser --db-pass=password \
-  --db-host=localhost --db-name=matomo --first-site-name=Foo \
+  --db-host=localhost --db-port=3306 --db-name=matomo --first-site-name=Foo \
   --first-site-url=https//foo.bar --first-user='Mr Foo Bar' \
   --first-user-email=foo@bar.com --first-user-pass=secret
 ```
@@ -212,6 +213,7 @@ environment:
       - MATOMO_DB_USERNAME=myuser
       - MATOMO_DB_PASSWORD=secret
       - MATOMO_DB_HOST=mysql
+      - MATOMO_DB_PORT=3306
       - MATOMO_DB_NAME=matomo
       - MATOMO_FIRST_USER_NAME=Mr Foo Bar
       - MATOMO_FIRST_USER_EMAIL=foo@bar.com

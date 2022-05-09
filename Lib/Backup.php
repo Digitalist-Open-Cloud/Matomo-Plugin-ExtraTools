@@ -27,6 +27,7 @@ class Backup
         // Fetch config.
         $backup_folder = $this->config['db_backup_folder'];
         $db_host = $this->config['db_host'];
+        $db_port = $this->config['db_port'];
         $db_user = $this->config['db_user'];
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
@@ -34,7 +35,7 @@ class Backup
 
         $timestamp = date("Ymd-His");
         $backup = new Process\Process(
-            "mysqldump -u $db_user -h $db_host -p$db_pass $db_name --add-drop-table >" .
+            "mysqldump -u $db_user -h $db_host -P $db_port -p$db_pass $db_name --add-drop-table >" .
             "$backup_folder/$prefix-$timestamp.sql" . " 2> >(grep -v \"Using a password\")"
         );
         $backup->enableOutput();

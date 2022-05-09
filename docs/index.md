@@ -201,7 +201,7 @@ console matomo:install --install-file=install.json
 #### Example install 2
 ```
 console matomo:install --db-username=myuser --db-pass=password \
-  --db-host=localhost --db-name=matomo --first-site-name=Foo \
+  --db-host=localhost --db-port=1234 --db-name=matomo --first-site-name=Foo \
   --first-site-url=https//foo.bar --first-user='Mr Foo Bar' \
   --first-user-email=foo@bar.com --first-user-pass=secret
 ```

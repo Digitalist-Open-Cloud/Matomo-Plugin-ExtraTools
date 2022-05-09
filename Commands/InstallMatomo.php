@@ -112,6 +112,13 @@ Example:
             $this->defaults()->dbHost()
         );
         $this->addOption(
+            'db-port',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'DB port',
+            $this->defaults()->dbPort()
+        );
+        $this->addOption(
             'db-name',
             null,
             InputOption::VALUE_OPTIONAL,
@@ -174,6 +181,7 @@ Example:
         $db_username = $input->getOption('db-username');
         $db_pass = $input->getOption('db-pass');
         $db_host = $input->getOption('db-host');
+        $db_port = $input->getOption('db-port');
         $db_name = $input->getOption('db-name');
         $db_prefix = $input->getOption('db-prefix');
         $db_adapter = $input->getOption('db-adapter');
@@ -201,6 +209,7 @@ Example:
             'db-username' => $db_username,
             'db-pass' =>  $db_pass,
             'db-host' => $db_host,
+            'db-port' => $db_port,
             'db-name' => $db_name,
             'db-prefix' => $db_prefix,
             'db-adapter' => $db_adapter,
@@ -211,6 +220,7 @@ Example:
 
         $config = [
             'db_host' => $db_host,
+            'db_port' => $db_port,
             'db_user' => $db_username,
             'db_pass' => $db_pass,
             'db_name' => $db_name,
