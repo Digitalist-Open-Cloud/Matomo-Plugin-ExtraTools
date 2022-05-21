@@ -3,6 +3,7 @@
 Some extra cli commands to help with maintaining Matomo. Also providing an phpinfo page in the admin part.
 Introducing new console commands:
 
+* `archive:list`
 * `config:get`
 * `database:backup`
 * `database:create`
@@ -25,10 +26,6 @@ Introducing new console commands:
 The main reason to doing this plugin was to get automatic installs to work with Matomo, including automatic updates -  
 and version controlled deliveries with configuration in json or yaml. 
 
-## Plan
-
-* Add support for yaml besides json for install and updates.
-* Add PHPUnit tests to cover at least 70% (goal for stable release is 100%)
 
 ## Dependencies
 
@@ -62,10 +59,12 @@ Or add it manually to config.ini.php:
 ```
 [ExtraTools]
 db_backup_path = "/var/www/html/tmp"
-
 ```
 
 ## Commands
+
+### `archive:list`
+Gets al list of ongoing or scheduled core archivers, if such exist.
 
 ### `config:get`
 Gets a section config.
@@ -103,8 +102,7 @@ docker-compose file, the environment array etc. If the variable is set, Matomo w
 
 ### `segment:admin`
 
-Administration of segments, only options right now is to delete or activate a segment, a deleted segment
-could later be activated again.
+Administration of segments, only options right now is to delete or activate a segment, a deleted segment could later be activated again.
 
 ### `segment:list`
 

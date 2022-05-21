@@ -11,64 +11,100 @@ namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Piwik\CronArchive\SharedSiteIds  as ListArchives;
-use Piwik\Config;
-use Piwik\Plugins\ExtraTools\Lib\Backup;
+use Piwik\Plugins\ExtraTools\Lib\Archivers;
+use Piwik\Common;
+use Piwik\Db;
 
-/**
- * This class lets you define a new command. To read more about commands have a look at our Piwik Console guide on
- * http://developer.piwik.org/guides/piwik-on-the-command-line
- *
- * As Piwik Console is based on the Symfony Console you might also want to have a look at
- * http://symfony.com/doc/current/components/console/index.html
- */
 class ArchiveList extends ConsoleCommand
 {
-    /**
-     * This methods allows you to configure your command. Here you can define the name and description of your command
-     * as well as all options and arguments you expect when executing it.
-     */
-    protected function configure()
-    {
+    private static $rawPrefix = 'segment';
 
-        $HelpText = 'The <info>%command.name%</info> command will backup your db.
-<comment>Samples:</comment>
-To run:
-<info>%command.name%</info>
-You could use options to override config or environment variables:
-<info>%command.name% --db-backup-path=/tmp/foo</info>';
-        $this->setHelp($HelpText);
-        $this->setName('archive:list');
-        $this->setDescription('List running archivers (does not work yet)');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'backup-path',
-                    'b',
-                    InputOption::VALUE_OPTIONAL,
-                    'backup path',
-                    null
-                ),
-                new InputOption(
-                    'backup-prefix',
-                    'p',
-                    InputOption::VALUE_OPTIONAL,
-                    'prefix for backup name',
-                    'backup'
-                )
-            ]
-        );
+    protected function getTable()
+    {
+        return Common::prefixTable(self::$rawPrefix);
     }
 
-    /**
-     * Execute the command like: ./console backup:db"
-     */
+    protected function configure()
+    {
+        $HelpText = 'The <info>%command.name%</info> wil list archives that are going
+        or beeing archived.';
+        $this->setHelp($HelpText);
+        $this->setName('archive:list');
+        $this->setDescription('List archivers listed for archivation');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $ids = [];
-        $list = new ListArchives($ids);
-        echo $list->getNumProcessedWebsites();
+        $get = $this->getArchivers();
+        if (!empty($get)) {
+            foreach ($get as $out) {
+                $name = $out['name'];
+                if ($name == 'done') {
+                    $out_name = '';
+                } else {
+                    $hash = preg_replace('/^done/', '', $name);
+                    $name = $this->getSegmentName($hash);
+                    $out_name =  "     segment: <comment>" . $name['name'] . "</comment>\n";
+                }
+                $out_period = '';
+                if (isset($out['period'])) {
+                    $period = $out['period'];
+                    switch ($period) {
+                        case 1:
+                            $period = 'day';
+                            break;
+                        case 2:
+                            $period = 'week';
+                            break;
+                        case 3:
+                            $period = 'month';
+                            break;
+                        case 4:
+                            $period = 'year';
+                            break;
+                    }
+                    $out_period =  "     period: <comment>" . $period . "</comment>\n";
+                }
+                if (isset($out['started'])) {
+                    $started = "     started: <comment>" . $out['started'] . "</comment>\n";
+                } else {
+                    $started = "     started: <comment>no</comment>\n";
+                }
+                $message = "idsite: <comment>" . $out['idsite'] . "</comment>\n"
+                . $out_name
+                . "     from: <comment>" . $out['date1'] . "</comment>\n"
+                . "     to: <comment>" . $out['date2'] . "</comment>\n"
+                . $out_period
+                . "     invalidated: <comment>" . $out['ts_invalidated'] . "</comment>\n"
+                . $started;
+                $output->writeln("<info>$message</info>");
+            }
+        } else {
+            $output->writeln("<info>no archivers ongoing or scheduled</info>");
+        }
+    }
+
+    public function getArchivers()
+    {
+        $list = new Archivers();
+        $out = $list->getAllInvalidations();
+        return $out;
+    }
+
+
+    public function getSegmentName($hash)
+    {
+        try {
+            $sql = "SELECT `name` FROM " . $this->getTable() . " WHERE `hash` = '" . $hash . "';";
+            $name = $this->getDb()->fetchRow($sql);
+            return $name;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    private function getDb()
+    {
+        return Db::get();
     }
 }
