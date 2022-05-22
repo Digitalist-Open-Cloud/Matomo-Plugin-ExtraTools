@@ -421,18 +421,18 @@ class Install
             'urls' => $urls,
             'ecommerce' => false,
             'siteSearch' => true,
-            'searchKeywordParameters' => NULL,
-            'searchCategoryParameters' => NULL,
-            'excludedIps' => NULL,
+            'searchKeywordParameters' => null,
+            'searchCategoryParameters' => null,
+            'excludedIps' => null,
             'excludedQueryParameters' => false,
-            'timezone' => NULL,
-            'currency' => NULL,
-            'group' => NULL,
-            'startDate' => NULL,
+            'timezone' => null,
+            'currency' => null,
+            'group' => null,
+            'startDate' => null,
             'excludedUserAgents' => false,
             'keepURLFragments' => false,
-            'type' => NULL,
-            'settingValues' => NULL,
+            'type' => null,
+            'settingValues' => null,
             'excludeUnknownUrls' => false,
         ];
 
@@ -455,10 +455,10 @@ class Install
             }
         }
 
-       $general = Config::getInstance()->General;
-       $general['trusted_hosts'] = $trustedHosts;
-       Config::getInstance()->General = $general;
-       Config::getInstance()->forceSave();
+        $general = Config::getInstance()->General;
+        $general['trusted_hosts'] = $trustedHosts;
+        Config::getInstance()->General = $general;
+        Config::getInstance()->forceSave();
     }
 
 
