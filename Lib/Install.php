@@ -17,6 +17,7 @@ use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\Marketplace\LicenseKey;
 use Piwik\Plugins\TagManager\Dao\ContainersDao;
+use Piwik\Plugins\ExtraTools\Lib\Site;
 
 class Install
 {
@@ -58,7 +59,7 @@ class Install
             }
         }
 
-        $file_config = false;
+        $fileconfig = false;
 
         if (isset($this->fileconfig)) {
             $config_from_file = $this->fileconfig;
@@ -109,6 +110,7 @@ class Install
  //           // Do not create a new default site if not dropping db.
  //           $this->addWebsite();
  //       }
+
         $this->createSuperUser();
         $this->installPlugins();
         $this->unInstallPlugins();
@@ -117,6 +119,7 @@ class Install
         $this->finish();
         $this->saveLicenseKey();
         $this->login();
+  //      $this->addWebsite();
     }
 
 
@@ -379,12 +382,11 @@ class Install
         $options = $this->options;
         $fileconfig = false;
 
-        if (isset($options ["first-site-name"])) {
-            $site['siteName'] = $options ["first-site-name"];
+        if (isset($options["first-site-name"])) {
+            $siteName = $options["first-site-name"];
         }
-        if (isset($options ["first-site-url"])) {
-            unset($site['urls']);
-            $site['urls'][] = $options ["first-site-url"];
+        if (isset($options["first-site-url"])) {
+            $urls = $options["first-site-url"];
         }
 
         if (isset($this->fileconfig)) {
@@ -397,21 +399,42 @@ class Install
         if (isset($fileconfig['Site'])) {
             $site_from_file = $fileconfig['Site'];
             if (isset($site_from_file['name'])) {
-                $site['siteName'] = $site_from_file['name'];
+                $siteName = $site_from_file['name'];
             }
             if (isset($site_from_file['url'])) {
-                unset($site['urls']);
-                $site['urls'][] = $site_from_file['url'];
+                $urls = $site_from_file['url'];
             }
         }
-        if (!isset($site['urls'])) {
-            $site['urls'] = ["https://example.com"];
+        if (!isset($urls)) {
+            $urls = "https://example.com";
         }
-        if (!isset($site['siteName'])) {
-            $site['siteName'] =  "Example";
+        if (!isset($siteName)) {
+            $siteName =  "Example";
         }
+        $trimmed_urls = trim($urls);
+        $urls = explode(',', $trimmed_urls);
 
         $this->log('Adding Primary Website');
+
+        $site = [
+            'siteName' => $siteName,
+            'urls' => $urls,
+            'ecommerce' => false,
+            'siteSearch' => true,
+            'searchKeywordParameters' => NULL,
+            'searchCategoryParameters' => NULL,
+            'excludedIps' => NULL,
+            'excludedQueryParameters' => false,
+            'timezone' => NULL,
+            'currency' => NULL,
+            'group' => NULL,
+            'startDate' => NULL,
+            'excludedUserAgents' => false,
+            'keepURLFragments' => false,
+            'type' => NULL,
+            'settingValues' => NULL,
+            'excludeUnknownUrls' => false,
+        ];
 
         $create_site = new Site($site);
         $add_site = $create_site->add();
@@ -432,10 +455,10 @@ class Install
             }
         }
 
-        $general = Config::getInstance()->General;
-        $general['trusted_hosts'] = $trustedHosts;
-        Config::getInstance()->General = $general;
-        Config::getInstance()->forceSave();
+       $general = Config::getInstance()->General;
+       $general['trusted_hosts'] = $trustedHosts;
+       Config::getInstance()->General = $general;
+       Config::getInstance()->forceSave();
     }
 
 

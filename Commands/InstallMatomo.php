@@ -198,7 +198,7 @@ Example:
         }
 
 
-        $file_config = $this->fileConfig($file);
+        $fileconfig = $this->fileConfig($file);
 
         $options = [
             'first-user' => $first_user,
@@ -245,7 +245,7 @@ Example:
                 $create->execute();
             }
 
-            $install = new Install($options, $output, $file_config);
+            $install = new Install($options, $output, $fileconfig);
 
             $output->writeln("<info><comment>Installing Matomo</comment></info>");
             $install->execute();
