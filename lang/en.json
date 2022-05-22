@@ -1,5 +1,6 @@
 {
   "ExtraTools": {
-    "PhpInfo": "Phpinfo"
+    "PhpInfo": "Phpinfo",
+    "Invalidations" : "Invalidations"
   }
 }

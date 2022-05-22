@@ -1,0 +1,32 @@
+{% extends 'admin.twig' %}
+
+{% block content %}
+
+   <table id="results" onchange="unCheckAll()" piwik-content-table>
+        <thead>
+            <tr>
+                <th class="center">Site</th>
+                <th class="center">Period</th>
+                <th class="center">From</th>
+                <th class="center">To</th>
+                <th class="center">Invalidated</th>
+                <th class="center">Started</th>
+                <th class="center">Info/Segment</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        {% for archive in archivers %}
+            <tr>
+                <td>{{ archive.idsite }}</td>
+                <td>{{ archive.period }}</td>
+                <td>{{ archive.date1 }}</td>
+                <td>{{ archive.date2 }} </td>
+                <td>{{ archive.ts_invalidated }}</td>
+                <td>{{ archive.ts_started }}</td>
+                <td>{{ archive.name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+   </table>
+{% endblock %}
