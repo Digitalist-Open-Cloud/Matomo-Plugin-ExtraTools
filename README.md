@@ -12,7 +12,6 @@ Introducing new console commands:
 * `logger:delete`
 * `logger:show`
 * `matomo:install`
-* `matomo:requirements` (does not work right now)
 * `segment:admin`
 * `segment:list`
 * `site:add`
@@ -23,8 +22,8 @@ Introducing new console commands:
 
 ## Background
 
-The main reason to doing this plugin was to get automatic installs to work with Matomo, including automatic updates -  
-and version controlled deliveries with configuration in json or yaml. 
+The main reason to doing this plugin was to get automatic installs to work with Matomo, including automatic updates -
+and version controlled deliveries with configuration in json or yaml.
 
 
 ## Dependencies
@@ -47,7 +46,7 @@ git clone https://github.com/nodeone/extratools.git ExtraTools
 
 ## Config
 Activate ExtraTools - in UI, or better - in the console:
-``` 
+```
 console plugin:activate ExtraTools
 ```
 
@@ -71,7 +70,7 @@ Gets a section config.
 @todo - make this more like config:set - so you have more options.
 
 ### `database:backup`
-Backups the db. 
+Backups the db.
 
 ### `database:create`
 Creates the db defined i config.ini.php.
@@ -92,12 +91,12 @@ Removes logging entries from the DB, that is the internal logging in Matomo, not
 Show logging and query entries of logs from the database, output could be exported to CSV.
 
 ### `matomo:install`
-Installs Matamo. Wipes the current installation - as default it uses settings in 
+Installs Matamo. Wipes the current installation - as default it uses settings in
 your config.ini.php file - but all values could be overridden with arguments or
 environment variables.
 
-If you have a license for Matomo Premium plugins, set the environment variable `MATOMO_LICENSE` with the correct 
-license token. The environment variable is set as a normal environment variable, in shell using export, in a 
+If you have a license for Matomo Premium plugins, set the environment variable `MATOMO_LICENSE` with the correct
+license token. The environment variable is set as a normal environment variable, in shell using export, in a
 docker-compose file, the environment array etc. If the variable is set, Matomo will have the license key set on install.
 
 ### `segment:admin`
@@ -122,7 +121,7 @@ List sites, with the optional format argument - supported output is text(default
 
 ### `site:url`
 
-Adds one or more URLs to a site. 
+Adds one or more URLs to a site.
 
 ### `visits:get`
 
@@ -131,17 +130,17 @@ Get all archived visits, for one site or all. For a segment or all segments, for
 
 #### Requirements
 
-Matomo needs a MySQL/MariaDB host, with a user setup that is allowed to drop 
+Matomo needs a MySQL/MariaDB host, with a user setup that is allowed to drop
 that db.
-The first user is created as a super user and it is need to have one to 
-set up Matomo. If you do not add values in environment variables or options to 
-matomo:install command, it will use the defaults for the user - so important 
+The first user is created as a super user and it is need to have one to
+set up Matomo. If you do not add values in environment variables or options to
+matomo:install command, it will use the defaults for the user - so important
 that you change that users password after install.
 Matomo also creates a first site to track, this also has default values that
 you could override with environment variables or options.
 
-You could also use a json-file for configuration - like all the above 
-mentioned - and for installing plugins. An example json-file could be found in 
+You could also use a json-file for configuration - like all the above
+mentioned - and for installing plugins. An example json-file could be found in
 the docs folder for this plugin.
 
 
@@ -163,7 +162,7 @@ These could be overridden with (historical reasons):
 ```bash
 MATOMO_DB_HOST
 MATOMO_DB_PREFIX
-MATOMO_DB_USERNAME 
+MATOMO_DB_USERNAME
 MATOMO_DB_PASSWORD
 MATOMO_DB_NAME
 ```
@@ -193,7 +192,7 @@ console plugin:activate ExtraTools
 Then follow one of the Examples below.
 
 #### Example install 1 (recommended)
-``` 
+```
 console matomo:install --install-file=install.json
 ```
 
@@ -221,7 +220,7 @@ environment:
 ```
 
 #### Order of values
-Highest number = takes over. If you have you mysql server settings in environment 
+Highest number = takes over. If you have you mysql server settings in environment
 variables and provide the option --db-username=myuser, the latter is used for the
 db username.
 
@@ -230,25 +229,20 @@ db username.
 3) Option (matomo:install --db-username=myuser)
 4) File overrides (matom-install --install-file=install.json)
 
-### matomo:requirements
-Check that all requirements, mandatory and optional, are in place.
-Normally throws a notice for mod_pagespeed check.
-@todo: Look into what needs to be done in core for the mod_pagespeed check.
-
 ## CAUTION!
 * `matamo:install` wipes your current installation.
-* `database:drop` - as it says - drops the entire db, make a backup first if you 
+* `database:drop` - as it says - drops the entire db, make a backup first if you
 want to save you data, and check if it's ok.
 * `database:import` - writes over your current database.
 * `site:delete` - really deletes a site you have setup in Matomo.
 
-This plugin comes with **no** guarantees. But it's free and open source. 
+This plugin comes with **no** guarantees. But it's free and open source.
 So, let's make it better!
 
 ## Version supported
 This is tested from version 3.8.1, and should work with the latest stable.
 
 ## Thank you!
-This plugin is based on work done by [Ben Evans](https://github.com/nebev) in 
+This plugin is based on work done by [Ben Evans](https://github.com/nebev) in
 https://github.com/nebev/piwik-cli-setup, and also reusing code in Matomo
 core.

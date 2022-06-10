@@ -38,8 +38,14 @@ class Install
     private $output;
 
 
-    public function __construct($options, OutputInterface $output, $fileconfig = null, $user = null, $licensekey = null)
-    {
+    public function __construct(
+        $options,
+        OutputInterface $output,
+        $fileconfig = null,
+        $user = null,
+        $licensekey = null,
+        $silent = null
+    ) {
         $this->config = Config::getInstance();
         $this->options = $options;
         $this->output = $output;
@@ -47,6 +53,7 @@ class Install
         $this->timestamp = false;
         $this->user = $user;
         $this->licensekey = getenv('MATOMO_LICENSE');
+        $this->silent = $silent;
     }
 
     public function execute()
@@ -93,9 +100,13 @@ class Install
             $first_site_url = $fileconfig['first-site-url'];
         }
         $dontdrobdb = $options['do-not-drop-db'];
+        $this->silent = $options['silent'];
+
+        if ($this->silent !== true) {
+            $this->output->writeln("<info>Starting <comment>install</comment></info>");
+        }
 
 
-        $this->output->writeln("<info>Starting <comment>install</comment></info>");
         # Always disable sending emails at install
         $this->config->General['emails_enabled'] = 0;
         $this->deleteCache();
@@ -203,7 +214,10 @@ class Install
         }
 
 
-        $this->log('Initialising Database Connections');
+        if ($this->silent !== true) {
+            $this->log('Initialising Database Connections');
+        }
+
 
         if (isset($fileconfig['General'])) {
             $general = $fileconfig['General'];
@@ -247,11 +261,15 @@ class Install
        */
     protected function log($text)
     {
-        $datestamp = '';
-        if ($this->timestamp == true) {
-            $datestamp = '[' . date("Y-m-d H:i:s") . '] ';
+        if ($this->silent === true) {
+            return 0;
+        } else {
+            $datestamp = '';
+            if ($this->timestamp == true) {
+                $datestamp = '[' . date("Y-m-d H:i:s") . '] ';
+            }
+            $this->output->writeln("<info>$datestamp$text</info>");
         }
-        $this->output->writeln("<info>$datestamp$text</info>");
     }
 
 
@@ -324,7 +342,8 @@ class Install
                 // split up the array - now we get $username, $pass and $email.
                 extract($user);
                 $api = APIUsersManager::getInstance();
-                if (!$api->userExists($username)
+                if (
+                    !$api->userExists($username)
                     and !$api->userEmailExists($email)
                 ) {
                     $api->addUser(
@@ -366,7 +385,10 @@ class Install
      */
     private function deleteCache()
     {
-        $this->output->writeln("<info>Deleting <comment>cache</comment></info>");
+        if ($this->silent !== true) {
+            $this->output->writeln("<info>Deleting <comment>cache</comment></info>");
+        }
+
         Filesystem::deleteAllCacheOnUpdate();
     }
 

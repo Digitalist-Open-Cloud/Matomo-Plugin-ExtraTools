@@ -45,7 +45,9 @@ class Backup
         if (!$backup->isSuccessful()) {
             throw new ProcessFailedException($backup);
         } else {
-            $this->output->writeln("<info>Backup done, dump at <comment>$backup_folder/$prefix-$timestamp.sql</comment></info>");
+            $this->output->writeln(
+                "<info>Backup done, dump at <comment>$backup_folder/$prefix-$timestamp.sql</comment></info>"
+            );
         }
     }
 }

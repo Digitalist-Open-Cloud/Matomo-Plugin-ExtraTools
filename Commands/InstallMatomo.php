@@ -165,6 +165,13 @@ Example:
             'force installing without asking',
             null
         );
+        $this->addOption(
+            'silent',
+            null,
+            InputOption::VALUE_NONE,
+            'do not ouput anything',
+            null
+        );
     }
 
     /**
@@ -189,6 +196,8 @@ Example:
         $timestamp = $input->getOption('timestamp') ? true : false;
         $dontdropdb = $input->getOption('do-not-drop-db') ? true : false;
         $force = $input->getOption('force');
+        $silent = $input->getOption('silent');
+        $this->silent = $silent;
 
         $env_timestamp = $this->defaults()->timestamp();
         if (isset($env_timestamp)) {
@@ -215,7 +224,8 @@ Example:
             'db-adapter' => $db_adapter,
             'timestamp' => $timestamp,
             'plugins' => $plugins,
-            'do-not-drop-db' => $dontdropdb
+            'do-not-drop-db' => $dontdropdb,
+            'silent' => $silent
         ];
 
         $config = [
@@ -229,7 +239,11 @@ Example:
 
         if ($force === false) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Are you really sure you would like to install Matomo - if you have an installation already, it will be wiped? ', false);
+            $question = new ConfirmationQuestion(
+                'Are you really sure you would like to install Matomo - '
+                . 'if you have an installation already, it will be wiped? ',
+                false
+            );
             if (!$helper->ask($input, $output, $question)) {
                 return;
             } else {
@@ -239,15 +253,17 @@ Example:
 
         if ($force === true) {
             if ($dontdropdb === false) {
-                $drop = new Drop($config, $output);
+                $drop = new Drop($config, $output, $this->silent);
                 $drop->execute();
-                $create = new Create($config, $output);
+                $create = new Create($config, $output, $this->silent);
                 $create->execute();
             }
 
             $install = new Install($options, $output, $file_config);
+            if ($this->silent !== true) {
+                $output->writeln("<info><comment>Installing Matomo</comment></info>");
+            }
 
-            $output->writeln("<info><comment>Installing Matomo</comment></info>");
             $install->execute();
         }
     }

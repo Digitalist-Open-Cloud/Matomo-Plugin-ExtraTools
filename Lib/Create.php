@@ -16,10 +16,11 @@ class Create
      */
     private $output;
 
-    public function __construct($config, OutputInterface $output)
+    public function __construct($config, OutputInterface $output, $silent = null)
     {
         $this->config = $config;
         $this->output = $output;
+        $this->silent = $silent;
     }
 
     public function execute()
@@ -39,9 +40,13 @@ class Create
         if (!$drop->isSuccessful()) {
             throw new ProcessFailedException($drop);
         } else {
-            $text = 'Database "%s" created';
-            $message = sprintf($text, $db_name);
-            $this->output->writeln("<info>$message</info>");
+            if ($this->silent === true) {
+                return 0;
+            } else {
+                $text = 'Database "%s" created';
+                $message = sprintf($text, $db_name);
+                $this->output->writeln("<info>$message</info>");
+            }
         }
     }
 }

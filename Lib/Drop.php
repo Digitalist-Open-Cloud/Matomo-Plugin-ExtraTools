@@ -16,10 +16,11 @@ class Drop
      */
     private $output;
 
-    public function __construct($config, OutputInterface $output)
+    public function __construct($config, OutputInterface $output, $silent = null)
     {
         $this->config = $config;
         $this->output = $output;
+        $this->silent = $silent;
     }
 
     public function execute()
@@ -41,7 +42,12 @@ class Drop
             $this->output->writeln("<error>$message</error>");
             throw new ProcessFailedException($drop);
         } else {
-            $this->output->writeln("<info>$message</info>");
+            if ($this->silent === true) {
+                return 0;
+            } else {
+                $this->output->writeln("<info>$message</info>");
+                return 0;
+            }
         }
     }
 }

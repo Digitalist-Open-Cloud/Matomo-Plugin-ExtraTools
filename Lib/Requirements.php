@@ -77,7 +77,10 @@ class Requirements
             $output->writeln("<error>Errors were found in!</error>");
         }
 
-        $this->output->writeln("<info>Number of type errors: <comment>$errors</comment>. Number of type warnings: <comment>$warnings</comment></info>");
+        $this->output->writeln(
+            "<info>Number of type errors: <comment>$errors</comment>. Number of type warnings: "
+            . "<comment>$warnings</comment></info>"
+        );
     }
 
     /**
