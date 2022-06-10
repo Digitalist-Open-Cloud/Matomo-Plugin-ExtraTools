@@ -14,7 +14,11 @@ class Menu extends \Piwik\Plugin\Menu
         }
 
         if (Piwik::hasUserSuperUserAccess()) {
-            $menu->addDiagnosticItem('ExtraTools_Invalidations', $this->urlForAction('invalidatedarchives'), $order = 50);
+            $menu->addDiagnosticItem(
+                'ExtraTools_Invalidations',
+                $this->urlForAction('invalidatedarchives'),
+                $order = 50
+            );
         }
     }
 }

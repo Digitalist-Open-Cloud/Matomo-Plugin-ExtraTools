@@ -207,7 +207,7 @@ Example:
         }
 
 
-        $fileconfig = $this->fileConfig($file);
+        $file_config = $this->fileConfig($file);
 
         $options = [
             'first-user' => $first_user,

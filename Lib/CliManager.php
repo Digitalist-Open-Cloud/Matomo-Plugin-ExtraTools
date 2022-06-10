@@ -40,16 +40,13 @@ use Piwik\Plugin\MetadataLoader;
 class CliManager
 {
 
-    public function __construct()
-    {
-        require_once PIWIK_INCLUDE_PATH . '/core/EventDispatcher.php';
-    }
     /**
      * @return self
      */
     public static function getInstance()
     {
         return StaticContainer::get('Piwik\Plugins\ExtraTools\Lib\CliManager');
+        require_once PIWIK_INCLUDE_PATH . '/core/EventDispatcher.php';
     }
 
     protected $pluginsToLoad = array();
