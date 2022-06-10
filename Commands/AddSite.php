@@ -92,7 +92,7 @@ You could use options to override config or environment variables:
                     'timezone',
                     null,
                     InputOption::VALUE_OPTIONAL,
-                    'TImezone',
+                    'Timezone',
                     null
                 ),
                 new InputOption(
@@ -200,10 +200,10 @@ You could use options to override config or environment variables:
             'excludeUnknownUrls' => $excludeUnknownUrls,
         ];
 
-        $output->writeln("Adding a new site");
+        $output->writeln("<info>Adding a new site</info>");
 
         $new = new Site($site);
         $add_site = $new->add();
-        $output->writeln("Site added");
+        $output->writeln("<comment>Site added</comment>");
     }
 }

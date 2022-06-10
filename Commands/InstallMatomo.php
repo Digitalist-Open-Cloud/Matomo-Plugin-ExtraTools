@@ -207,7 +207,7 @@ Example:
         }
 
 
-        $file_config = $this->fileConfig($file);
+        $fileconfig = $this->fileConfig($file);
 
         $options = [
             'first-user' => $first_user,
@@ -258,12 +258,10 @@ Example:
                 $create = new Create($config, $output, $this->silent);
                 $create->execute();
             }
-
             $install = new Install($options, $output, $file_config);
             if ($this->silent !== true) {
                 $output->writeln("<info><comment>Installing Matomo</comment></info>");
             }
-
             $install->execute();
         }
     }
@@ -277,7 +275,7 @@ Example:
 
         if (Common::hasJsonErrorOccurred()) {
             throw new \Exception(
-                $this->log("<error>" . Common::getLastJsonError() . "</error>")
+                $this->log("<error> Common::getLastJsonError()</error>")
             );
         }
         return $json;

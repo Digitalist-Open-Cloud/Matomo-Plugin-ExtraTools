@@ -25,7 +25,7 @@ class Archivers
      */
     public function getAllInvalidations()
     {
-        $sql = "SELECT * FROM " . $this->getTable();
+        $sql = "SELECT * FROM " . $this->getTable() . " ORDER BY `ts_invalidated`";
 
         $invalidations = $this->getDb()->fetchAll($sql);
         if (isset($invalidations)) {

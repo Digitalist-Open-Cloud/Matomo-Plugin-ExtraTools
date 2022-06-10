@@ -25,6 +25,11 @@ Introducing new console commands:
 The main reason to doing this plugin was to get automatic installs to work with Matomo, including automatic updates -
 and version controlled deliveries with configuration in json or yaml.
 
+## Known bugs
+Adding a site as part of `matomo:install` is currently broken, but you could just after the command run the `site:add` command:
+```
+./console site:add --name=Foo --urls=https://foo.bar
+```
 
 ## Dependencies
 
@@ -41,7 +46,7 @@ and version controlled deliveries with configuration in json or yaml.
 
 Git clone the plugin into your plugins folder:
 ```
-git clone https://github.com/nodeone/extratools.git ExtraTools
+git clone https://github.com/digitalist-se/extratools.git ExtraTools
 ```
 
 ## Config
