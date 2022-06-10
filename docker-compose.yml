@@ -1,0 +1,44 @@
+version: '3'
+services:
+  matomo:
+    container_name: matomo
+    image: "${IMAGE:-registry.wklive.net:5000/matomo/test:matomo-4-10-1-php-8-0}"
+    volumes:
+      - matomo-volume:/var/www/html:rw
+      - $PWD:/var/www/html/plugins/ExtraTools
+      - ./tests/ci/config/install.json:/var/www/html/config/install.json
+    environment:
+      - MATOMO_DB_USERNAME=root
+      - MATOMO_DB_PASSWORD=root
+      - MATOMO_DB_HOST=db
+      - MATOMO_DB_NAME=matomo
+      - MATOMO_DB_PREFIX=matomo_
+      - MATOMO_URL=http://web
+      - XDEBUG_MODE=coverage
+    depends_on:
+      - db
+  web:
+    container_name: web
+    image: nginx:alpine
+    volumes:
+      - ./tests/ci/config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - matomo-volume:/var/www/html
+     # - $PWD:/var/www/html/plugins/ExtraTools
+      #- ./tests/ci/config/install.json:/var/www/html/config/install.json:rw
+    command: [nginx-debug, '-g', 'daemon off;']
+    depends_on:
+      - matomo
+    ports:
+      - 80:80
+    links:
+       - matomo
+  db:
+    image: mariadb:10.1
+    container_name: db
+    command: --init-file /data/application/init.sql --max_allowed_packet=67108864
+    volumes:
+      - ./tests/ci/config/mysql/init.sql:/data/application/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+volumes:
+  matomo-volume:

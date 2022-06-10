@@ -27,6 +27,7 @@ class Install
     protected $timestamp;
     protected $user;
     protected $licensekey;
+    public bool $silent;
 
     /**
      * @var API
@@ -45,7 +46,7 @@ class Install
         $fileconfig = null,
         $user = null,
         $licensekey = null,
-        $silent = null
+        $silent = 0
     ) {
         $this->config = Config::getInstance();
         $this->options = $options;

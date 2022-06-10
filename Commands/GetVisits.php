@@ -31,6 +31,7 @@ use Piwik\Plugins\SitesManager\API as SitesManagerAPI;
  */
 class GetVisits extends ConsoleCommand
 {
+
     protected function configure()
     {
         $HelpText = 'The <info>%command.name%</info> will list total visits.
@@ -87,6 +88,7 @@ To run:
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $single = $input->getOption('id');
         $period = $input->getOption('period');
         $date = $input->getOption('date');

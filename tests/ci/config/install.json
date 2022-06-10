@@ -1,0 +1,109 @@
+{
+  "PluginsInstalled": [
+    "Diagnostics",
+    "DBStats",
+    "Login",
+    "CoreAdminHome",
+    "UsersManager",
+    "SitesManager",
+    "Installation",
+    "Monolog",
+    "Intl",
+    "CorePluginsAdmin",
+    "CoreHome",
+    "WebsiteMeasurable",
+    "CoreVisualizations",
+    "Proxy",
+    "API",
+    "Transitions",
+    "Actions",
+    "Referrers",
+    "UserLanguage",
+    "DevicesDetection",
+    "Goals",
+    "SEO",
+    "Events",
+    "UserCountry",
+    "GeoIp2",
+    "VisitsSummary",
+    "VisitFrequency",
+    "VisitTime",
+    "VisitorInterest",
+    "CoreUpdater",
+    "CoreConsole",
+    "UserCountryMap",
+    "Live",
+    "ImageGraph",
+    "Annotations",
+    "Insights",
+    "Morpheus",
+    "Contents",
+    "DevicePlugins",
+    "UserId",
+    "ExtraTools",
+    "LanguagesManager",
+    "SegmentEditor",
+    "Dashboard",
+    "ScheduledReports",
+    "PrivacyManager",
+    "CustomVariables",
+    "IntranetMeasurable",
+    "Widgetize",
+    "MultiSites",
+    "Ecommerce",
+    "RssWidget",
+    "Feedback",
+    "TwoFactorAuth",
+    "MobileMessaging",
+    "Overlay",
+    "TestRunner",
+    "BulkTracking",
+    "Resolution",
+    "Heartbeat",
+    "Marketplace",
+    "ProfessionalServices",
+    "LogViewer",
+    "UserConsole",
+    "SingleDigitalGateway"
+  ],
+  "User": {
+    "username": "Foo",
+    "pass": "bar23456789",
+    "email": "foo@example.com"
+  },
+  "Site": {
+    "name": "Foo bar",
+    "url": "https://digitalist-tech.se"
+  },
+  "database": {
+      "username": "root",
+      "password": "root",
+      "host": "db",
+      "dname": "matomo",
+      "tables_prefix": "matomo_",
+      "adapter": "MYSQLI"
+  },
+  "Config": {
+    "General": {
+      "session_save_handler": "dbtable",
+      "enable_trusted_host_check": 0,
+      "proxy_client_headers[]": "HTTP_X_FORWARDED_FOR",
+      "cors_domains[]": "*",
+      "assume_secure_protocol": 1,
+      "force_ssl": 0,
+      "minimum_memory_limit": -1,
+      "minimum_memory_limit_when_archiving": -1
+    },
+    "log": {
+      "log_writers[]": "database",
+      "log_level": "WARNING"
+    },
+    "VisitorGenerator": {
+       "use_http": 1
+    }
+  },
+  "PluginsUnInstalled": [
+    "Provider",
+    "Feedback"
+  ]
+}

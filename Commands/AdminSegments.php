@@ -178,4 +178,10 @@ To run:
             return false;
         }
     }
+
+
+    private function getDb()
+    {
+        return Db::get();
+    }
 }

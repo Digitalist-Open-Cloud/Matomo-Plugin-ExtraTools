@@ -317,7 +317,7 @@ class CliManager
      */
     public function readPluginsDirectory()
     {
-        $pluginsName = _glob(self::getPluginsDirectory() . '*', GLOB_ONLYDIR);
+        $pluginsName = \_glob(self::getPluginsDirectory() . '*', GLOB_ONLYDIR);
         $result = array();
         if ($pluginsName != false) {
             foreach ($pluginsName as $path) {
@@ -459,13 +459,10 @@ class CliManager
 
     /**
      * Install loaded plugins
-     *
-     * @throws
-     * @return array Error messages of plugin install fails
      */
     public function installLoadedPlugins()
     {
-        Log::debug("Loaded plugins: " . implode(", ", array_keys($this->getLoadedPlugins())));
+       // Log::debug("Loaded plugins: " . implode(", ", array_keys($this->getLoadedPlugins())));
 
         foreach ($this->getLoadedPlugins() as $plugin) {
             $this->installPluginIfNecessary($plugin);
@@ -1134,6 +1131,7 @@ class CliManager
         if (isset($pluginNames)) {
             return $pluginNames;
         }
+        else return [];
     }
 
     /**

@@ -10,13 +10,14 @@ class Drop
 {
 
     protected $config;
+    public bool $silent;
 
     /**
      * @var OutputInterface
      */
     private $output;
 
-    public function __construct($config, OutputInterface $output, $silent = null)
+    public function __construct($config, OutputInterface $output, $silent = 0)
     {
         $this->config = $config;
         $this->output = $output;
