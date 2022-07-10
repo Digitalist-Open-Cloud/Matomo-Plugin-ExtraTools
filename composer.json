@@ -6,7 +6,7 @@
         "install"
     ],
     "homepage": "https://github.com/digitalist-se/extratools",
-    "version": "4.0.1-beta2",
+    "version": "4.0.1-beta3",
     "license": "GPL-3.0-or-later",
     "authors": [
         {
@@ -25,6 +25,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^1.7",
-        "phpstan/phpstan-deprecation-rules": "^1.0"
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpunit/phpunit": "^9.5"
     }
 }

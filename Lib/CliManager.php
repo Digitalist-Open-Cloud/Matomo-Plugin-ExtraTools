@@ -355,7 +355,7 @@ class CliManager
          *
          * @param string $pluginName The plugin that has been deactivated.
          */
-        Piwik::postEvent('PluginManager.pluginDeactivated', array($pluginName));
+      //  Piwik::postEvent('PluginManager.pluginDeactivated', array($pluginName));
     }
 
     /**
@@ -438,7 +438,7 @@ class CliManager
          *
          * @param string $pluginName The plugin that has been uninstalled.
          */
-        Piwik::postEvent('PluginManager.pluginUninstalled', array($pluginName));
+        //Piwik::postEvent('PluginManager.pluginUninstalled', array($pluginName));
 
         return true;
     }
