@@ -32,7 +32,7 @@ use Piwik\Plugins\ExtraTools\Lib\Defaults;
 class InstallMatomo extends ConsoleCommand
 {
 
-    public bool $silent;
+    public $silent;
 
     /**
      * This methods allows you to configure your command. Here you can define the name and description of your command
