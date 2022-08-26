@@ -8,9 +8,9 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Backup
 {
-
+    
     protected $config;
-
+    
     /**
      * @var OutputInterface
      */
@@ -23,8 +23,8 @@ class Backup
     }
 
     public function execute()
-    {
-        // Fetch config.
+    {	    
+	// Fetch config.
         $backup_folder = $this->config['db_backup_folder'];
         $db_host = $this->config['db_host'];
         $db_port = $this->config['db_port'];
@@ -32,15 +32,29 @@ class Backup
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
         $prefix  = $this->config['db_backup_prefix'];
+	
+	// build temp db config file
+	$temp = tmpfile();
+	fwrite($temp,
+		"[client]" . "\n" .
+		"user=" . $db_user . "\n" .
+		"password=" . $db_pass
+	);
+	$config_path = stream_get_meta_data($temp)['uri'];
 
         $timestamp = date("Ymd-His");
-        $backup = new Process\Process(
-            "mysqldump -u $db_user -h $db_host -P $db_port -p$db_pass $db_name --add-drop-table >" .
-            "$backup_folder/$prefix-$timestamp.sql" . " 2> >(grep -v \"Using a password\")"
-        );
-        $backup->enableOutput();
 
-        $backup->run();
+	$backup = new Process\Process(
+		"mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port --no-data $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql 2> /dev/tty"
+		#"mysqldump -u 2$db_user -h$host -P $db_port -p$db_pass --no-data $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql 2> /dev/tty"
+	);
+
+        $backup->enableOutput();
+	$backup->run();
+
+	// remove temp file
+	fclose($temp);
+
         echo $backup->getOutput();
         if (!$backup->isSuccessful()) {
             throw new ProcessFailedException($backup);
