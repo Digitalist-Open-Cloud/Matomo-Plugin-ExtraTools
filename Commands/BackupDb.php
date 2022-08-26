@@ -56,7 +56,14 @@ You could use options to override config or environment variables:
                 InputOption::VALUE_OPTIONAL,
                 'prefix for backup name',
                 'backup'
-            )
+	    ),
+	    new InputOption(
+		'timeout',
+		't',
+		InputOption::VALUE_OPTIONAL,
+		'timeout for the process',
+		'60'
+	    )
             ]
         );
     }
@@ -67,7 +74,8 @@ You could use options to override config or environment variables:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $backup_folder = $input->getOption('backup-path');
-        $backup_prefix = $input->getOption('backup-prefix');
+	$backup_prefix = $input->getOption('backup-prefix');
+	$timeout = $input->getOption('timeout');
         // check if we have db backup path in config
         $configs = Config::getInstance();
         $matomo_tools_config = $configs->getFromLocalConfig('ExtraTools');
@@ -92,7 +100,8 @@ You could use options to override config or environment variables:
             'db_pass' => $db_configs['password'],
             'db_name' =>  $db_configs['dbname'],
             'db_backup_folder' => $backup_folder,
-            'db_backup_prefix' => $backup_prefix,
+	    'db_backup_prefix' => $backup_prefix,
+	    'timeout' => $timeout,
         ];
 
         $backup = new Backup($config, $output);

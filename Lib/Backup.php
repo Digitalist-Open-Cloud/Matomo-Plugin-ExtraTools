@@ -25,13 +25,14 @@ class Backup
     public function execute()
     {	    
 	// Fetch config.
-        $backup_folder = $this->config['db_backup_folder'];
+	$backup_folder = $this->config['db_backup_folder'];
         $db_host = $this->config['db_host'];
         $db_port = $this->config['db_port'];
         $db_user = $this->config['db_user'];
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
-        $prefix  = $this->config['db_backup_prefix'];
+	$prefix  = $this->config['db_backup_prefix'];
+	$timeout = $this->config['timeout'];
 	
 	// build temp db config file
 	$temp = tmpfile();
@@ -47,7 +48,7 @@ class Backup
 	$backup = new Process\Process(
 		"mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql 2> /dev/tty"
 	);
-
+	$backup->setTimeout($timeout);
         $backup->enableOutput();
 	$backup->run();
 
