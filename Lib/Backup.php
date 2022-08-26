@@ -46,7 +46,6 @@ class Backup
 
 	$backup = new Process\Process(
 		"mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port --no-data $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql 2> /dev/tty"
-		#"mysqldump -u 2$db_user -h$host -P $db_port -p$db_pass --no-data $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql 2> /dev/tty"
 	);
 
         $backup->enableOutput();
