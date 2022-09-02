@@ -38,7 +38,7 @@ class Backup
 	$temp = tmpfile();
 	fwrite($temp,
 		"[client]" . "\n" .
-		"user=1" . $db_user . "\n" .
+		"user=" . $db_user . "\n" .
 		"password=" . $db_pass
 	);
 	$config_path = stream_get_meta_data($temp)['uri'];
