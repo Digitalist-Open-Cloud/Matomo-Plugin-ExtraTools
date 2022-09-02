@@ -38,7 +38,7 @@ class Backup
 	$temp = tmpfile();
 	fwrite($temp,
 		"[client]" . "\n" .
-		"user=" . $db_user . "\n" .
+		"user=1" . $db_user . "\n" .
 		"password=" . $db_pass
 	);
 	$config_path = stream_get_meta_data($temp)['uri'];
@@ -46,7 +46,7 @@ class Backup
         $timestamp = date("Ymd-His");
 
 	$backup = new Process\Process(
-		"mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql 2> /dev/tty"
+		"mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql"
 	);
 	$backup->setTimeout($timeout);
         $backup->enableOutput();
