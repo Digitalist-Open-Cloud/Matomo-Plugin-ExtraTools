@@ -536,8 +536,7 @@ class CliManager
         $theme = false;
         foreach ($plugins as $plugin) {
             /* @var $plugin Plugin */
-            if (
-                $plugin->isTheme()
+            if ($plugin->isTheme()
                 && $this->isPluginActivated($plugin->getPluginName())
             ) {
                 if ($plugin->getPluginName() != self::DEFAULT_THEME) {
@@ -572,8 +571,7 @@ class CliManager
 
         $pluginNames = $this->getLoadedPluginsName();
         foreach ($pluginNames as $pluginName) {
-            if (
-                $this->isPluginActivated($pluginName)
+            if ($this->isPluginActivated($pluginName)
                 && !$this->isPluginAlwaysActivated($pluginName)
             ) {
                 $counter++;
@@ -909,8 +907,7 @@ class CliManager
             return $pluginsToPostPendingEventsTo;
         }
 
-        if (
-            $newPlugin->isPremiumFeature()
+        if ($newPlugin->isPremiumFeature()
             && SettingsPiwik::isInternetEnabled()
             && !Development::isEnabled()
             && $this->isPluginActivated('Marketplace')
@@ -1130,8 +1127,9 @@ class CliManager
         $pluginNames = Config::getInstance()->PluginsInstalled;
         if (isset($pluginNames)) {
             return $pluginNames;
+        } else {
+            return [];
         }
-        else return [];
     }
 
     /**
@@ -1149,8 +1147,7 @@ class CliManager
 
         foreach ($plugins as $pluginName) {
             // if a plugin is listed in the config, but is not loaded, it does not exist in the folder
-            if (
-                !$this->isPluginLoaded($pluginName) && !$this->isPluginBogus($pluginName) &&
+            if (!$this->isPluginLoaded($pluginName) && !$this->isPluginBogus($pluginName) &&
                 !($this->doesPluginRequireInternetConnection($pluginName) && !SettingsPiwik::isInternetEnabled())
             ) {
                 $missingPlugins[] = $pluginName;
@@ -1289,8 +1286,7 @@ class CliManager
     {
         // Only one theme enabled at a time
         $themeEnabled = $this->getThemeEnabled();
-        if (
-            $themeEnabled
+        if ($themeEnabled
             && $themeEnabled->getPluginName() != self::DEFAULT_THEME
         ) {
             $themeAlreadyEnabled = $themeEnabled->getPluginName();
@@ -1391,8 +1387,7 @@ class CliManager
         $columnName = $dimension->getColumnName();
 
         foreach ($allDimensions as $dim) {
-            if (
-                $dim->getColumnName() === $columnName &&
+            if ($dim->getColumnName() === $columnName &&
                 $dim->hasColumnType() &&
                 $dim->getModule() !== $module
             ) {

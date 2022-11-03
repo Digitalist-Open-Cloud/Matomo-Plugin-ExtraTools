@@ -19,6 +19,7 @@ Introducing new console commands:
 * `site:list`
 * `site:url`
 * `visits:get`
+* `customdimensions:configure-new-dimension`
 
 ## Background
 
@@ -34,7 +35,7 @@ Adding a site as part of `matomo:install` is currently broken, but you could jus
 ## Dependencies
 
 ### On host:
-* mysql-client (for database tasks)
+* mysql-client or mariadb-client (for database tasks)
 * PHP json extension
 
 ### In composer.json (Matomo root):
@@ -132,6 +133,9 @@ Adds one or more URLs to a site.
 
 Get all archived visits, for one site or all. For a segment or all segments, for today, or another day etc.
 
+### `customdimensions:configure-new-dimension`
+
+Configure a new custom dimension. BETA.
 
 #### Requirements
 
