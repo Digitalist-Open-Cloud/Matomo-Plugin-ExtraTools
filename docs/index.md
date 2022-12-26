@@ -103,6 +103,15 @@ Removes logging entries from the DB, that is the internal logging in Matomo, not
 Show logging and query entries of logs from the database, output could be exported to CSV.
 
 ### `matomo:install`
+To use matomo:install, you need ExtraTools to always be enabled, add `always_load_commands_from_plugin=ExtraTools` to `common.config.ini.php`.
+
+Here is how we do it in ad docker image build:
+
+```bash
+    echo "[General]" > /var/www/html/config/common.config.ini.php; \
+    echo "always_load_commands_from_plugin=ExtraTools" >> /var/www/html/config/common.config.ini.php; \
+```
+
 Installs Matamo. Wipes the current installation - as default it uses settings in
 your config.ini.php file - but all values could be overridden with arguments or
 environment variables.
