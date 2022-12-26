@@ -33,7 +33,18 @@ class Create
         $db_name = $this->config['db_name'];
 
         $drop = new Process\Process(
-            "mysqladmin -u $db_user -h $db_host -P $db_port -p$db_pass create $db_name --force"
+            [
+                "mysqladmin",
+                 "-u$db_user",
+                "-h",
+                "$db_host",
+                "-P",
+                "$db_port",
+                "-p$db_pass",
+                "create",
+                "$db_name",
+                "--force"
+            ]
         );
         $drop->enableOutput();
         $drop->run();
