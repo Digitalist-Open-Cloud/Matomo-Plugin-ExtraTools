@@ -12,5 +12,5 @@ base:
     EXTRA_TOOLS_BRANCH: $CI_COMMIT_BRANCH
   stage: base
   trigger:
-    project: se-ops/docker/matomo-docker-base
+    project: matomo-cloud/docker-images/matomo-docker-base
     branch: develop

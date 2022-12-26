@@ -33,6 +33,7 @@ Adding a site as part of `matomo:install` is currently broken, but you could jus
 ```
 
 ## Dependencies
+Sine version 4.1.0-beta1 we are dependent on PHP 8.1
 
 ### On host:
 * mysql-client or mariadb-client (for database tasks)
@@ -40,6 +41,11 @@ Adding a site as part of `matomo:install` is currently broken, but you could jus
 
 ### In composer.json (Matomo root):
 
+From version 4.1.0-beta1:
+* `composer require symfony/yaml:~2.6.0` (moves it from dev)
+* `composer require symfony/process:^5.4`
+
+Earlier versions:
 * `composer require symfony/yaml:~2.6.0` (moves it from dev)
 * `composer require symfony/process:^3.4`
 

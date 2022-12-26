@@ -1,7 +1,7 @@
 {
     "name": "ExtraTools",
     "description": "Adds automatic installation from the console, db backups etc.",
-    "version": "4.1.0-beta1",
+    "version": "4.1.0-beta2",
     "theme": false,
     "require": {
         "matomo": ">=4.0.0-b1,<5.0.0-b1"
