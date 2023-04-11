@@ -131,7 +131,9 @@ class Install
         $this->finish();
         $this->saveLicenseKey();
         $this->login();
-  //      $this->addWebsite();
+
+      //  $this->updateComponents();
+      //  $this->addWebsite();
     }
 
 
@@ -346,7 +348,8 @@ class Install
                 // split up the array - now we get $username, $pass and $email.
                 extract($user);
                 $api = APIUsersManager::getInstance();
-                if (!$api->userExists($username)
+                if (
+                    !$api->userExists($username)
                     and !$api->userEmailExists($email)
                 ) {
                     $api->addUser(
@@ -379,6 +382,7 @@ class Install
                 return false;
             }
             $result = $updater->updateComponents($componentsWithUpdateFile);
+
             return $result;
         });
     }

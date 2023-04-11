@@ -8,7 +8,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Import
 {
-
     protected $config;
 
     /**

@@ -84,5 +84,6 @@ To run:
             $output->writeln('<info>Dropping db:</info>');
             $create->execute();
         }
+        return 0;
     }
 }

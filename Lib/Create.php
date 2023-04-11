@@ -8,7 +8,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Create
 {
-
     protected $config;
     public bool $silent;
 

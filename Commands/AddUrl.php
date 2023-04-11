@@ -69,5 +69,6 @@ To run:
         $urls = explode(",", trim($url));
         $site = new Site($id);
         $site->addURL($id, $urls);
+        return 0;
     }
 }

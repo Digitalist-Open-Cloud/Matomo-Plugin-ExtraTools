@@ -98,5 +98,6 @@ You could use options to override config or environment variables:
         $backup = new Backup($config, $output);
         $output->writeln('<info>Starting backup job:</info>');
         $backup->execute();
+        return 0;
     }
 }

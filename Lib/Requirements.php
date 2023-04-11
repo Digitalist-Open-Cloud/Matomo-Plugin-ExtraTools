@@ -10,7 +10,6 @@ use Symfony\Component\Console\Helper\Table;
 
 class Requirements
 {
-
     /**
      * @var OutputInterface
      */

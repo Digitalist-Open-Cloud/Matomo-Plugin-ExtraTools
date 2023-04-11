@@ -78,6 +78,7 @@ To run:
 
         $configure = $this->configureCustomDimension($idsite, $name, $scope, $active);
         $output->writeln('<info>Adding</info>');
+        return 0;
     }
     public function configureCustomDimension($idsite, $name, $scope, $active)
     {
