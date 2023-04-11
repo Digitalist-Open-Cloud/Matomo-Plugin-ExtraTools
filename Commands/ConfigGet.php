@@ -80,6 +80,7 @@ You could use options to override config or environment variables:
                 $this->text($get_section, $output);
             }
         }
+        return 0;
     }
     private function json($config)
     {

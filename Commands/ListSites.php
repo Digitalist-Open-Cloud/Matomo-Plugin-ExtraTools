@@ -73,6 +73,7 @@ To run:
         if ($format == 'text') {
             $this->text($outsites, $output);
         }
+        return 0;
     }
     private function json($sites)
     {

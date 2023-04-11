@@ -24,7 +24,6 @@ use Piwik\Config;
  */
 class ListSegments extends ConsoleCommand
 {
-
     private static $rawPrefix = 'segment';
 
     protected function getTable()
@@ -109,6 +108,7 @@ To run:
 
             $output->writeln("<info>$message</info>");
         }
+        return 0;
     }
 
     /**

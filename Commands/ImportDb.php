@@ -86,5 +86,6 @@ To run:
         $backup = new Import($config, $output);
         $output->writeln('<info>Starting import db job:</info>');
         $backup->execute();
+        return 0;
     }
 }

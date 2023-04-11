@@ -95,5 +95,6 @@ To run:
             $out = json_encode($logs);
             $output->writeln("<info>$out</info>");
         }
+        return 0;
     }
 }

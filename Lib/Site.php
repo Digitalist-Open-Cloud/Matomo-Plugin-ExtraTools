@@ -7,7 +7,6 @@ use Piwik\Plugins\SitesManager\API as APISitesManager;
 
 class Site
 {
-
     protected $site;
 
     public function __construct($site)

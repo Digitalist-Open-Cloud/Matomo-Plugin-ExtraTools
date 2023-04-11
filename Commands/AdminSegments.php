@@ -25,7 +25,6 @@ use Piwik\Date;
  */
 class AdminSegments extends ConsoleCommand
 {
-
     private static $rawPrefix = 'segment';
 
     protected function getTable()
@@ -107,6 +106,7 @@ To run:
 
 
         $output->writeln("<info>$info</info>");
+        return 0;
     }
 
 

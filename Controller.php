@@ -18,7 +18,6 @@ use Piwik\Db;
  */
 class Controller extends \Piwik\Plugin\Controller
 {
-
     private static $rawPrefix = 'segment';
 
     protected function getTable()

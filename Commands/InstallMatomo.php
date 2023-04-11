@@ -31,7 +31,6 @@ use Piwik\Plugins\ExtraTools\Lib\Defaults;
  */
 class InstallMatomo extends ConsoleCommand
 {
-
     public bool $silent;
 
     /**
@@ -267,6 +266,7 @@ Example:
             }
             $install->execute();
         }
+        return 0;
     }
 
     private function readconf($file)

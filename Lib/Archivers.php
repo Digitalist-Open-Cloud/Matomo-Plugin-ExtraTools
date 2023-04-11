@@ -7,7 +7,6 @@ use Piwik\Db;
 
 class Archivers
 {
-
     private static $rawPrefix = 'archive_invalidations';
 
 

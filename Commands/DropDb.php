@@ -86,5 +86,6 @@ To run:
             $output->writeln('<info>Dropping db:</info>');
             $backup->execute();
         }
+        return 0;
     }
 }

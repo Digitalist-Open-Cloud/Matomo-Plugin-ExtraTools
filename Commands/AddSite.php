@@ -17,7 +17,6 @@ use Piwik\Plugins\ExtraTools\Lib\Site;
 
 class AddSite extends ConsoleCommand
 {
-
     protected function configure()
     {
 
@@ -204,6 +203,7 @@ You could use options to override config or environment variables:
 
         $new = new Site($site);
         $add_site = $new->add();
-        $output->writeln("<comment>Site added</comment>");
+        $output->writeln("<comment>Site $siteName added</comment>");
+        return 0;
     }
 }

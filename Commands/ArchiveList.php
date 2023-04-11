@@ -83,6 +83,7 @@ class ArchiveList extends ConsoleCommand
         } else {
             $output->writeln("<info>no archivers ongoing or scheduled</info>");
         }
+        return 0;
     }
 
     public function getArchivers()

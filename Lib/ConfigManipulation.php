@@ -10,7 +10,6 @@ use Piwik\Config as Config;
 
 class ConfigManipulation
 {
-
     protected $config;
 
     /**
