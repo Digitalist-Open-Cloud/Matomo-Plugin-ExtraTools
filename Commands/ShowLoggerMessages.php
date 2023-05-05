@@ -65,8 +65,10 @@ To run:
     /**
      * List users.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $query = $input->getOption('query');
         $results = $input->getOption('results');
         $format = $input->getOption('format');
@@ -95,6 +97,6 @@ To run:
             $out = json_encode($logs);
             $output->writeln("<info>$out</info>");
         }
-        return 0;
+        return self::SUCCESS;
     }
 }

@@ -85,9 +85,10 @@ To run:
     /**
      * List visits
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
-
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $single = $input->getOption('id');
         $period = $input->getOption('period');
         $date = $input->getOption('date');
@@ -122,7 +123,7 @@ To run:
             $total = "looks like you have no archived visits";
         }
         $output->writeln("Total $view $total");
-        return 0;
+        return self::SUCCESS;
     }
 
     public function getSegmentName($segmentid)

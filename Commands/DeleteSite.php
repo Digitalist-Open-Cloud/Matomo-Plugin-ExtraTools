@@ -46,8 +46,10 @@ To run:
     /**
      * Execute the command like: ./console site:list"
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $id = $input->getOption('id');
         $site = new Site($id);
         $record = $site->record();
@@ -65,7 +67,7 @@ To run:
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion("Are you really sure you would like to delete site $record? ", false);
             if (!$helper->ask($input, $output, $question)) {
-                return;
+                return self::SUCCESS;
             } else {
                 $delete = $site->delete();
                 if (!$delete) {
@@ -75,6 +77,6 @@ To run:
                 }
             }
         }
-        return 0;
+        return self::SUCCESS;
     }
 }

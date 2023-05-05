@@ -46,10 +46,10 @@ To run:
     /**
      * List users.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
-
-
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $segments = $this->getAllSegments();
 
         foreach ($segments as $out) {
@@ -108,7 +108,7 @@ To run:
 
             $output->writeln("<info>$message</info>");
         }
-        return 0;
+        return self::SUCCESS;
     }
 
     /**

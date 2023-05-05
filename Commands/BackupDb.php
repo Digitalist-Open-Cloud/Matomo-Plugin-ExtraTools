@@ -10,9 +10,7 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Config;
 use Piwik\Plugins\ExtraTools\Lib\Backup;
 
@@ -64,8 +62,10 @@ You could use options to override config or environment variables:
     /**
      * Execute the command like: ./console backup:db"
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $backup_folder = $input->getOption('backup-path');
         $backup_prefix = $input->getOption('backup-prefix');
         // check if we have db backup path in config
@@ -98,6 +98,6 @@ You could use options to override config or environment variables:
         $backup = new Backup($config, $output);
         $output->writeln('<info>Starting backup job:</info>');
         $backup->execute();
-        return 0;
+        return self::SUCCESS;
     }
 }

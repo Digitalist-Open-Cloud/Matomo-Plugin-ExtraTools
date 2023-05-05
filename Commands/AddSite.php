@@ -157,8 +157,10 @@ You could use options to override config or environment variables:
     /**
      * Execute the command like: ./console site:add
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $siteName = $input->getOption('name');
         $url = $input->getOption('urls');
         $trimmed_urls = trim($url);
@@ -200,10 +202,10 @@ You could use options to override config or environment variables:
         ];
 
         $output->writeln("<info>Adding a new site</info>");
-
         $new = new Site($site);
         $add_site = $new->add();
-        $output->writeln("<comment>Site $siteName added</comment>");
-        return 0;
+        $output->writeln('<comment>Site $siteName added</comment>');
+
+        return self::SUCCESS;
     }
 }

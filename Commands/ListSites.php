@@ -46,8 +46,10 @@ To run:
     /**
      * Execute the command like: ./console site:list"
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $format = $input->getOption('format');
 
         $list = new Site(null);
@@ -73,7 +75,7 @@ To run:
         if ($format == 'text') {
             $this->text($outsites, $output);
         }
-        return 0;
+        return self::SUCCESS;
     }
     private function json($sites)
     {

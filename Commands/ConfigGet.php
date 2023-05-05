@@ -60,8 +60,10 @@ You could use options to override config or environment variables:
     /**
      * Execute the command like: ./console backup:db"
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $section = $input->getOption('section');
         $format = $input->getOption('format');
 
@@ -80,7 +82,7 @@ You could use options to override config or environment variables:
                 $this->text($get_section, $output);
             }
         }
-        return 0;
+        return self::SUCCESS;
     }
     private function json($config)
     {

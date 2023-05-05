@@ -10,8 +10,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\ExtraTools\Lib\Archivers;
 use Piwik\Common;
 use Piwik\Db;
@@ -34,8 +32,10 @@ class ArchiveList extends ConsoleCommand
         $this->setDescription('List archivers listed for archivation');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $get = $this->getArchivers();
         if (!empty($get)) {
             foreach ($get as $out) {
@@ -83,7 +83,7 @@ class ArchiveList extends ConsoleCommand
         } else {
             $output->writeln("<info>no archivers ongoing or scheduled</info>");
         }
-        return 0;
+        return self::SUCCESS;
     }
 
     public function getArchivers()

@@ -55,9 +55,10 @@ To run:
     /**
      * Execute the command like: ./console backup:db"
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
-
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $force = $input->getOption('force');
 
         $configs = Config::getInstance();
@@ -75,7 +76,7 @@ To run:
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion('Are you really sure you would like to drop the database? ', false);
             if (!$helper->ask($input, $output, $question)) {
-                return;
+                return self::SUCCESS;
             } else {
                 $force = true;
             }
@@ -86,6 +87,6 @@ To run:
             $output->writeln('<info>Dropping db:</info>');
             $backup->execute();
         }
-        return 0;
+        return self::SUCCESS;
     }
 }

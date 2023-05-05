@@ -69,8 +69,10 @@ To run:
     /**
      * Execute the command like.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $idsite = $input->getOption('id');
         $name = $input->getOption('name');
         $scope = $input->getOption('scope');
@@ -78,14 +80,14 @@ To run:
 
         $configure = $this->configureCustomDimension($idsite, $name, $scope, $active);
         $output->writeln('<info>Adding</info>');
-        return 0;
+        return self::SUCCESS;
     }
     public function configureCustomDimension($idsite, $name, $scope, $active)
     {
         $configureNew = new CustomDimensionsAPI();
         try {
             $add = $configureNew->configureNewCustomDimension($idsite, $name, $scope, $active);
-            return 0;
+            return self::SUCCESS;
         } catch (\Exception $e) {
             echo $e->getMessage();
             return 1;

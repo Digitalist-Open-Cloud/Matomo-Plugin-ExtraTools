@@ -52,23 +52,25 @@ To run:
     /**
      * Execute the command like: ./console site:list"
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $id = $input->getOption('id');
         $url = $input->getOption('url');
 
         if (!$id) {
             $output->writeln("<info>You must provide an id for the site to add URL for</info>");
-            exit;
+            return self::SUCCESS;
         }
         if (!$url) {
-            $output->writeln("<info>You must provide an URL for the site</info>");
-            exit;
+            $output->writeln("'<info>You must provide an URL for the site</info>'");
+            return self::SUCCESS;
         }
 
         $urls = explode(",", trim($url));
         $site = new Site($id);
         $site->addURL($id, $urls);
-        return 0;
+        return self::SUCCESS;
     }
 }

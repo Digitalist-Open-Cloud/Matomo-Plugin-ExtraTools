@@ -51,126 +51,108 @@ Example:
         $this->setHelp($HelpText);
         $this->setName('matomo:install');
         $this->setDescription('Install Matomo');
-        $this->addOption(
+        $this->addRequiredValueOption(
             'install-file',
             null,
-            InputOption::VALUE_REQUIRED,
             'Install from this file'
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'first-user',
             null,
-            InputOption::VALUE_OPTIONAL,
             'First user name',
             $this->defaults()->firstSiteUserName()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'first-user-email',
             null,
-            InputOption::VALUE_OPTIONAL,
             'First user email',
             $this->defaults()->firstSiteUserEmail()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'first-user-pass',
             null,
-            InputOption::VALUE_OPTIONAL,
             'First user password',
             $this->defaults()->firstSiteUserPass()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'first-site-name',
             null,
-            InputOption::VALUE_OPTIONAL,
             'First site name',
             $this->defaults()->firstSiteName()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'first-site-url',
             null,
-            InputOption::VALUE_OPTIONAL,
             'First site url',
             $this->defaults()->firstSiteUrl()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'db-username',
             null,
-            InputOption::VALUE_OPTIONAL,
             'DB user name',
             $this->defaults()->dbUser()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'db-pass',
             null,
-            InputOption::VALUE_OPTIONAL,
             'DB password',
             $this->defaults()->dbPass()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'db-host',
             null,
-            InputOption::VALUE_OPTIONAL,
             'DB host',
             $this->defaults()->dbHost()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'db-port',
             null,
-            InputOption::VALUE_OPTIONAL,
             'DB port',
             $this->defaults()->dbPort()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'db-name',
             null,
-            InputOption::VALUE_OPTIONAL,
             'DB name',
             $this->defaults()->dbName()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'db-prefix',
             null,
-            InputOption::VALUE_OPTIONAL,
             'DB tables prefix',
             $this->defaults()->dbPrefix()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'db-adapter',
             null,
-            InputOption::VALUE_OPTIONAL,
             'DB adapter',
             $this->defaults()->dbAdapter()
         );
-        $this->addOption(
+        $this->addOptionalValueOption(
             'plugins',
             null,
-            InputOption::VALUE_OPTIONAL,
             'Plugins to install (comma separated)',
             $this->defaults()->plugins()
         );
-        $this->addOption(
+        $this->addNoValueOption(
             'timestamp',
             null,
-            InputOption::VALUE_NONE,
             'Adds timestamp to the log'
         );
-        $this->addOption(
+        $this->addNoValueOption(
             'do-not-drop-db',
             null,
-            InputOption::VALUE_NONE,
             'Do not drop database'
         );
-        $this->addOption(
+        $this->addNoValueOption(
             'force',
             null,
-            InputOption::VALUE_NONE,
             'force installing without asking',
             null
         );
-        $this->addOption(
+        $this->addNoValueOption(
             'silent',
             null,
-            InputOption::VALUE_NONE,
             'do not ouput anything',
             null
         );
@@ -179,8 +161,10 @@ Example:
     /**
      * Execute the command like: ./console install:install-matomo
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $file = $input->getOption('install-file');
         $first_user = $input->getOption('first-user');
         $first_user_email = $input->getOption('first-user-email');
@@ -207,7 +191,6 @@ Example:
                 $timestamp = $env_timestamp;
             }
         }
-
 
         $file_config = $this->fileConfig($file);
 
@@ -247,7 +230,7 @@ Example:
                 false
             );
             if (!$helper->ask($input, $output, $question)) {
-                return;
+                return self::SUCCESS;
             } else {
                 $force = true;
             }
@@ -266,7 +249,7 @@ Example:
             }
             $install->execute();
         }
-        return 0;
+        return self::SUCCESS;
     }
 
     private function readconf($file)

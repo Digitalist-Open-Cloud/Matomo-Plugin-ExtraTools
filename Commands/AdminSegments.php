@@ -65,8 +65,10 @@ To run:
     /**
      * List users.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
 
         $deleteSegment = $input->getOption('delete-segment');
         $activateSegment = $input->getOption('activate-segment');
@@ -106,7 +108,7 @@ To run:
 
 
         $output->writeln("<info>$info</info>");
-        return 0;
+        return self::SUCCESS;
     }
 
 

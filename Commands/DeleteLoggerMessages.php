@@ -28,10 +28,9 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('logger:delete');
         $this->setDescription('Delete internal logger messages in database (monolog)');
-        $this->addOption(
+        $this->addOptionalValueOption(
             'force',
             null,
-            InputOption::VALUE_NONE,
             'force removing logs, without confirmation.',
             null
         );
@@ -40,8 +39,10 @@ To run:
     /**
      * List users.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $force = $input->getOption('force');
         if ($force === false) {
             $helper = $this->getHelper('question');
@@ -61,6 +62,6 @@ To run:
                 return false;
             }
         }
-        return 0;
+        return self::SUCCESS;
     }
 }

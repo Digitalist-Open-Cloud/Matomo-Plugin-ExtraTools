@@ -55,10 +55,11 @@ To run:
     /**
      * Execute the command like: ./console backup:db"
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
         $backup_path = $input->getOption('backup-path');
-
 
         if ($backup_path == null) {
             $output->writeln("<error>Value for backup-path is required</error>");
@@ -86,6 +87,6 @@ To run:
         $backup = new Import($config, $output);
         $output->writeln('<info>Starting import db job:</info>');
         $backup->execute();
-        return 0;
+        return self::SUCCESS;
     }
 }

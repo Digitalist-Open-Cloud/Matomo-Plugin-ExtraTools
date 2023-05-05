@@ -54,10 +54,10 @@ class Drop
             throw new ProcessFailedException($drop);
         } else {
             if ($this->silent === true) {
-                return 0;
+                return self::SUCCESS;
             } else {
                 $this->output->writeln("<info>$message</info>");
-                return 0;
+                return self::SUCCESS;
             }
         }
     }

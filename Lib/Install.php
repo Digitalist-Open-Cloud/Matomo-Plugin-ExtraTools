@@ -268,7 +268,7 @@ class Install
     protected function log($text)
     {
         if ($this->silent === true) {
-            return 0;
+            return self::SUCCESS;
         } else {
             $datestamp = '';
             if ($this->timestamp == true) {
@@ -348,8 +348,7 @@ class Install
                 // split up the array - now we get $username, $pass and $email.
                 extract($user);
                 $api = APIUsersManager::getInstance();
-                if (
-                    !$api->userExists($username)
+                if (!$api->userExists($username)
                     and !$api->userEmailExists($email)
                 ) {
                     $api->addUser(
