@@ -79,7 +79,7 @@ You could use options to override config or environment variables:
                 $this->yaml($get_section);
             }
             if ($format == 'text') {
-                $this->text($get_section, $output);
+                $this->text($get_section);
             }
         }
         return self::SUCCESS;
@@ -97,8 +97,9 @@ You could use options to override config or environment variables:
     }
 
 
-    private function text($config, OutputInterface $output)
+    private function text($config)
     {
+        $output = $this->getOutput();
 
         foreach ($config as $key => $section) {
             if (is_array($section)) {

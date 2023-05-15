@@ -10,8 +10,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
 use Piwik\Common;

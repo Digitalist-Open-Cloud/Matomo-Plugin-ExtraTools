@@ -10,9 +10,7 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\ExtraTools\Lib\Site;
 
 class AddSite extends ConsoleCommand
@@ -204,7 +202,7 @@ You could use options to override config or environment variables:
         $output->writeln("<info>Adding a new site</info>");
         $new = new Site($site);
         $add_site = $new->add();
-        $output->writeln('<comment>Site $siteName added</comment>');
+        $output->writeln("<comment>Site $siteName added</comment>");
 
         return self::SUCCESS;
     }
