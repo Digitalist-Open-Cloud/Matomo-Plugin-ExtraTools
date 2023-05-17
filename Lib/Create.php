@@ -52,7 +52,7 @@ class Create
             throw new ProcessFailedException($drop);
         } else {
             if ($this->silent === true) {
-                return self::SUCCESS;
+                return 0;
             } else {
                 $text = 'Database "%s" created';
                 $message = sprintf($text, $db_name);

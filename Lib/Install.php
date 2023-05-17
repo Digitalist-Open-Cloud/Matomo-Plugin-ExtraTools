@@ -268,7 +268,7 @@ class Install
     protected function log($text)
     {
         if ($this->silent === true) {
-            return self::SUCCESS;
+            return 0;
         } else {
             $datestamp = '';
             if ($this->timestamp == true) {
