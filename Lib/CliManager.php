@@ -316,15 +316,20 @@ class CliManager
      */
     public function readPluginsDirectory()
     {
-        $pluginsName = \_glob(self::getPluginsDirectory() . '*', GLOB_ONLYDIR);
         $result = array();
-        if ($pluginsName != false) {
-            foreach ($pluginsName as $path) {
-                if (self::pluginStructureLooksValid($path)) {
-                    $result[] = basename($path);
+        foreach (self::getPluginsDirectories() as $pluginsDir) {
+            $pluginsName = _glob($pluginsDir . '*', GLOB_ONLYDIR);
+            if ($pluginsName != false) {
+                foreach ($pluginsName as $path) {
+                    if (self::pluginStructureLooksValid($path)) {
+                        $result[] = basename($path);
+                    }
                 }
             }
         }
+
+        sort($result);
+
         return $result;
     }
 
@@ -1482,4 +1487,25 @@ class CliManager
             $translator->addDirectory(self::getPluginsDirectory() . $pluginName . '/lang');
         }
     }
+    /**
+     * Returns the path to all plugins directories. Each plugins directory may contain several plugins.
+     * All paths have a trailing slash '/'.
+     * @return string[]
+     * @api
+     */
+    public static function getPluginsDirectories()
+    {
+        $dirs = array(self::getPluginsDirectory());
+
+        if (!empty($GLOBALS['MATOMO_PLUGIN_DIRS'])) {
+            $extraDirs = array_map(function ($dir) {
+                return rtrim($dir['pluginsPathAbsolute'], '/') . '/';
+            }, $GLOBALS['MATOMO_PLUGIN_DIRS']);
+            $dirs = array_merge($dirs, $extraDirs);
+        }
+
+        return $dirs;
+    }
 }
+
+
