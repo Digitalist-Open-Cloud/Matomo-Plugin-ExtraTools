@@ -318,7 +318,7 @@ class CliManager
     {
         $result = array();
         foreach (self::getPluginsDirectories() as $pluginsDir) {
-            $pluginsName = _glob($pluginsDir . '*', GLOB_ONLYDIR);
+            $pluginsName = glob($pluginsDir . '*', GLOB_ONLYDIR);
             if ($pluginsName != false) {
                 foreach ($pluginsName as $path) {
                     if (self::pluginStructureLooksValid($path)) {

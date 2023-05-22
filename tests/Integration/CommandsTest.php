@@ -21,7 +21,7 @@ use Piwik\Common;
 class CommandsTest extends ConsoleCommandTestCase
 {
 
-    public function testSiteAdd()
+    public function testSiteAddWithoutWebsiteName()
     {
         $code = $this->applicationTester->run(array(
             'command' => 'site:add',
