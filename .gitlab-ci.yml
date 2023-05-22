@@ -23,7 +23,6 @@ phpunit:
     - apk update && apk add git coreutils iputils docker-compose php8-pear php8-xdebug
     - mkdir -p /root/.docker
     - cat $DOCKER_AUTH_CONFIG > /root/.docker/config.json
-    - docker-php-ext-enable xdebug
   script:
     - docker-compose up -d --quiet-pull
     - sleep 10
