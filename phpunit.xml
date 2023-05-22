@@ -20,6 +20,10 @@
             <directory>Commands</directory>
             <directory>Lib</directory>
             <directory>templates</directory>
+			<file>API.php</file>
+			<file>Controller.php</file>
+			<file>ExtraTools.php</file>
+			<file>Menu.php</file>
         </include>
     </source>
 </phpunit>
