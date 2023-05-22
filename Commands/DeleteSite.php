@@ -53,26 +53,22 @@ To run:
         $record = $site->record();
         if (!$id) {
             $output->writeln("<info>You must provide an id for the site to delete</info>");
-            exit;
+            return self::FAILURE;
         }
         if (!$record) {
             $output->writeln("<info>Site with id <comment>$id</comment> could not be found</info>");
         } else {
             if ($site->totalSites() === 1) {
                 $output->writeln("<info>You can't delete the site, you must have at least on site in Matomo.</info>");
-                exit;
+                return self::FAILURE;
             }
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion("Are you really sure you would like to delete site $record? ", false);
-            if (!$helper->ask($input, $output, $question)) {
+
+            $question = $this->askForConfirmation("Are you really sure you would like to delete site $record? ", false);
+            if (!$question) {
                 return self::SUCCESS;
             } else {
                 $delete = $site->delete();
-                if (!$delete) {
-                    $output->writeln("<info>Site <comment>$record</comment> could not be deleted</info>");
-                } else {
-                    $output->writeln("<info>Site <comment>$record</comment> deleted</info>");
-                }
+                $output->writeln("<info>Site <comment>$record</comment> deleted</info>");
             }
         }
         return self::SUCCESS;
