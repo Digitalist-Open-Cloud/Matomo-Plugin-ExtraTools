@@ -4,7 +4,86 @@ include:
 
 stages:
   - test
+  - lint
   - base
+
+phpunit:
+  rules:
+    - if: $CI_COMMIT_BRANCH
+  stage: test
+  image: docker:20.10.16
+  allow_failure: true
+  variables:
+    MYSQL_DATABASE: matomo
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_USER: matomo
+    MYSQL_PASSWORD: matomo
+    IMAGE: registry.wklive.net:5000/matomo/base:develop-75978977
+  before_script:
+    - apk update && apk add git coreutils iputils docker-compose $PHPIZE_DEPS
+    - mkdir -p /root/.docker
+    - cat $DOCKER_AUTH_CONFIG > /root/.docker/config.json
+    - pecl install xdebug
+    - docker-php-ext-enable xdebug
+  script:
+    - docker-compose up -d --quiet-pull
+    - sleep 10
+    - docker-compose exec matomo  bash -c "php --version"
+    - docker-compose exec --user=root matomo bash -c  "cd plugins/ExtraTools && composer install --no-interaction --no-progress"
+    - docker-compose exec matomo ./console matomo:install --install-file=/var/www/html/config/install.json --force
+    - docker-compose exec matomo ./console site:add --name=Foo --urls=https://foo.bar
+    - docker-compose exec matomo touch /var/www/html/.gitmodules
+    - docker-compose exec matomo ./console development:enable
+    - docker-compose exec matomo ./console config:set --section=tests --key=http_host --value=web
+    - docker-compose exec matomo ./console config:set --section=tests --key=request_uri --value=/
+    - docker-compose exec matomo ./console config:set --section=database_tests --key=host --value=db
+    - docker-compose exec matomo ./console config:set --section=database_tests --key=username --value=root
+    - docker-compose exec matomo ./console config:set --section=database_tests --key=password --value=root
+    - docker-compose exec matomo ./console config:set --section=database_tests --key=dbname --value=matomo_test
+    - docker-compose exec matomo ./console config:set --section=database_tests --key=tables_prefix --value=""
+    - docker-compose exec matomo ./console tests:setup-fixture OneVisitorTwoVisits
+    - docker-compose exec matomo ./console plugin:activate ExtraTools
+    - docker-compose exec matomo /var/www/html/plugins/ExtraTools/vendor/bin/phpunit -c plugins/ExtraTools/tests/phpunit.xml --coverage-text --testdox --log-junit report.xml  || true
+    - mkdir -p test
+    - mkdir -p coverage
+    - docker cp matomo:/var/www/html/report.xml test/report.xml
+    - docker-compose down
+  artifacts:
+    when: always
+    reports:
+      junit: test/report.xml
+
+phpstan:
+  rules:
+    - if: $CI_COMMIT_BRANCH
+  allow_failure: true
+  stage: lint
+  image: docker:20.10.16
+  variables:
+    MYSQL_DATABASE: matomo
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_USER: matomo
+    MYSQL_PASSWORD: matomo
+    IMAGE: registry.wklive.net:5000/matomo/base:develop-75978977
+  before_script:
+    - apk update && apk add git coreutils iputils docker-compose
+    - mkdir -p /root/.docker
+    - cat $DOCKER_AUTH_CONFIG > /root/.docker/config.json
+  script:
+    - docker-compose up -d --quiet-pull
+    - sleep 2
+    - docker-compose exec matomo bash -c  "cd plugins/ExtraTools && composer install --no-interaction --no-progress"
+    - docker-compose exec matomo bash -c "/var/www/html/plugins/ExtraTools/vendor/bin/phpstan analyze --error-format=junit -c /var/www/html/plugins/ExtraTools/tests/phpstan.neon --no-progress --level=0 plugins/ExtraTools/ > phpstan80.xml" || true
+    - docker-compose exec matomo bash -c "/var/www/html/plugins/ExtraTools/vendor/bin/phpstan analyze -c /var/www/html/plugins/ExtraTools/tests/phpstan.neon --level=0 plugins/ExtraTools/" || true
+    - docker cp matomo:/var/www/html/phpstan80.xml phpstan80.xml
+    - docker-compose down
+  artifacts:
+    when: always
+    paths:
+      - phpstan80.xml
+    reports:
+      junit:
+      - phpstan80.xml
 
 base:
   variables:

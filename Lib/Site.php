@@ -65,6 +65,7 @@ class Site
 
     public function list()
     {
+        $site_name = [];
         $list = APISitesManager::getInstance()->getAllSitesId();
         foreach ($list as $id) {
             $site_name[] = APISitesManager::getInstance()->getSiteFromId($id);

@@ -183,10 +183,8 @@ Example:
         $this->silent = $silent;
 
         $env_timestamp = $this->defaults()->timestamp();
-        if (isset($env_timestamp)) {
-            if ($env_timestamp == true) {
-                $timestamp = $env_timestamp;
-            }
+        if ($env_timestamp == true) {
+          $timestamp = $env_timestamp;
         }
 
         $file_config = $this->fileConfig($file);

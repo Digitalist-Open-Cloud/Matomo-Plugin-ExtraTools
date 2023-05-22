@@ -270,3 +270,32 @@ This is tested from version 3.8.1, and should work with the latest stable.
 This plugin is based on work done by [Ben Evans](https://github.com/nebev) in
 https://github.com/nebev/piwik-cli-setup, and also reusing code in Matomo
 core.
+
+
+## Tests
+How to run tests.
+
+### PHPstan
+
+```bash
+docker-compose exec matomo bash -c "/var/www/html/plugins/ExtraTools/vendor/bin/phpstan analyze -c /var/www/html/plugins/ExtraTools/tests/phpstan.neon  --level=0 plugins/ExtraTools/"
+```
+
+### Phpunit
+
+```bash
+docker-compose up -d
+docker-compose exec --user=root matomo bash -c  "cd plugins/ExtraTools && composer install --no-interaction --no-progress"
+docker-compose exec matomo ./console matomo:install --install-file=/var/www/html/config/install.json --force
+docker-compose exec matomo ./console site:add --name=Foo --urls=https://foo.bar
+docker-compose exec matomo touch /var/www/html/.gitmodules
+docker-compose exec matomo ./console development:enable
+docker-compose exec matomo ./console config:set --section=tests --key=http_host --value=web
+docker-compose exec matomo ./console config:set --section=tests --key=request_uri --value=/
+docker-compose exec matomo ./console config:set --section=database_tests --key=host --value=db
+docker-compose exec matomo ./console config:set --section=database_tests --key=username --value=root
+docker-compose exec matomo ./console config:set --section=database_tests --key=password --value=root
+docker-compose exec matomo ./console config:set --section=database_tests --key=dbname --value=matomo_test
+docker-compose exec matomo ./console config:set --section=database_tests --key=tables_prefix --value=""
+docker-compose exec matomo ./console tests:setup-fixture OneVisitorTwoVisits
+```

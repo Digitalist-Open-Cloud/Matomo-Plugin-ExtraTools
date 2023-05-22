@@ -45,9 +45,9 @@ To run:
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion('Are you really sure you would like to delete all logs? ', false);
             if (!$helper->ask($input, $output, $question)) {
-                return false;
+                return 0;
             } else {
-                $force = true;
+                $force = 1;
             }
         }
         if ($force === true) {

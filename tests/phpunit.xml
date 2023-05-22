@@ -10,6 +10,6 @@
   </coverage>
   <logging/>
   <testsuite name="integration">
-    <directory>/var/www/html/plugins/SingleDigitalGateway/tests/Integration</directory>
+    <directory>/var/www/html/plugins/ExtraTools/tests/Integration</directory>
   </testsuite>
 </phpunit>

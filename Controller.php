@@ -12,6 +12,7 @@ namespace Piwik\Plugins\ExtraTools;
 use Piwik\Plugins\ExtraTools\Lib\Archivers;
 use Piwik\Common;
 use Piwik\Db;
+use Piwik\Piwik;
 
 /**
  *
@@ -27,6 +28,7 @@ class Controller extends \Piwik\Plugin\Controller
 
     public function index()
     {
+        Piwik::checkUserHasSomeAdminAccess();
         $api = new API();
         // Get phpinfo
         $info = $api->getPhpInfo();
@@ -36,7 +38,8 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function invalidatedarchives()
     {
-    //    $result[] = '';
+        Piwik::checkUserHasSomeAdminAccess();
+        $result = [];
         $archivers = $this->getArchivers();
         foreach ($archivers as $out) {
             if ($out['name'] == 'done') {

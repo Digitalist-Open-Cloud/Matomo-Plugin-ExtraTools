@@ -62,9 +62,7 @@
     "Heartbeat",
     "Marketplace",
     "ProfessionalServices",
-    "LogViewer",
-    "UserConsole",
-    "SingleDigitalGateway"
+    "LogViewer"
   ],
   "User": {
     "username": "Foo",

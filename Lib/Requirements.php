@@ -47,6 +47,7 @@ class Requirements
         $errors =  $diagnosticReport->getErrorCount();
         $warnings =  $diagnosticReport->getWarningCount();
 
+        $rows = [];
         $table = new Table($this->output);
         $table->setHeaders(['Test', 'Result', 'Output']);
         foreach ($results as $result) {

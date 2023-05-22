@@ -160,9 +160,11 @@ You could use options to override config or environment variables:
         $input = $this->getInput();
         $output = $this->getOutput();
         $siteName = $input->getOption('name');
-        $url = $input->getOption('urls');
-        $trimmed_urls = trim($url);
-        $urls = explode(',', $trimmed_urls);
+        $urls = $input->getOption('urls');
+        if (isset($urls)) {
+            $urls = trim($urls);
+            $urls = explode(',', $urls);
+        }
         $ecommerce = $input->getOption('ecommerce') ? true : false;
         $siteSearch = $input->getOption('no-site-search') ? false : true;
         $searchKeywordParameters = $input->getOption('search-keyword-parameters');

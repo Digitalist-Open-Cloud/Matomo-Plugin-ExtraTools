@@ -30,7 +30,7 @@ class Install
     public bool $silent;
 
     /**
-     * @var API
+     * @var APIUsersManager
      */
     private $api;
 
@@ -45,7 +45,6 @@ class Install
         OutputInterface $output,
         $fileconfig = null,
         $user = null,
-        $licensekey = null,
         $silent = 0
     ) {
         $this->config = Config::getInstance();
