@@ -10,10 +10,7 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
-use Piwik\Config;
 use Piwik\Plugins\CustomDimensions\API as CustomDimensionsAPI;
-use Exception;
 
 class ConfigureNewCustomDimension extends ConsoleCommand
 {
@@ -30,38 +27,27 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('customdimensions:configure-new-dimension');
         $this->setDescription('Configure new Custom Dimension');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'id',
-                    '',
-                    InputOption::VALUE_REQUIRED,
-                    'Site id',
-                    null
-                ),
-                new InputOption(
-                    'name',
-                    '',
-                    InputOption::VALUE_REQUIRED,
-                    'Name of the custom dimension',
-                    null
-                ),
-                new InputOption(
-                    'scope',
-                    '',
-                    InputOption::VALUE_REQUIRED,
-                    'Scope - visit or action',
-                    null
-                ),
-                new InputOption(
-                    'active',
-                    '',
-                    InputOption::VALUE_NONE,
-                    'If provided, the custom dimension is marked as active',
-                    null
-                )
-            ]
+        $this->addRequiredValueOption(
+            'id',
+            null,
+            'Site id'
         );
+        $this->addRequiredValueOption(
+            'name',
+            null,
+            'Name of the custom dimension'
+        );
+        $this->addRequiredValueOption(
+            'scope',
+            null,
+            'Scope - visit or action'
+        );
+        $this->addNoValueOption(
+            'active',
+            null,
+            'If provided, the custom dimension is marked as active'
+        );
+
     }
 
     /**
@@ -75,9 +61,21 @@ To run:
         $name = $input->getOption('name');
         $scope = $input->getOption('scope');
         $active = $input->getOption('active') ? true : false;
+        if (!isset($name)) {
+            $output->writeln('<error>A name is required</error>');
+            return self::FAILURE;
+        }
+        if (!isset($idsite)) {
+            $output->writeln('<error>A site id (id) is required</error>');
+            return self::FAILURE;
+        }
+        if (!isset($scope)) {
+            $output->writeln('<error>A scope (visit/action) is required</error>');
+            return self::FAILURE;
+        }
 
         $configure = $this->configureCustomDimension($idsite, $name, $scope, $active);
-        $output->writeln('<info>Adding</info>');
+        $output->writeln('<info>Adding a new custom dimension.</info>');
         return self::SUCCESS;
     }
     public function configureCustomDimension($idsite, $name, $scope, $active)
@@ -88,7 +86,7 @@ To run:
             return self::SUCCESS;
         } catch (\Exception $e) {
             echo $e->getMessage();
-            return 1;
+            return self::FAILURE;
         }
     }
 }

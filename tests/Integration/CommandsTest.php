@@ -273,7 +273,68 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertEquals(0, $code);
         $this->assertStringContainsStringIgnoringCase('{"host":"db"', $this->applicationTester->getDisplay());
     }
-}
 
+    /**
+     * @group CustomDimensions
+     */
+    public function testCustomDimensionsWithoutNameShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'customdimensions:configure-new-dimension',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("A name is required", $this->applicationTester->getDisplay());
+
+    }
+
+    /**
+     * @group CustomDimensions
+     */
+    public function testCustomDimensionsWithoutIdShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'customdimensions:configure-new-dimension',
+            '--name' => 'foo',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("A site id (id) is required", $this->applicationTester->getDisplay());
+
+    }
+
+    /**
+     * @group CustomDimensions
+     */
+    public function testCustomDimensionsWithoutScopeShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'customdimensions:configure-new-dimension',
+            '--name' => 'foo',
+            '--id' => '1',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("A scope (visit/action) is required", $this->applicationTester->getDisplay());
+
+    }
+        /**
+     * @group CustomDimensions
+     */
+    public function testCustomDimensionsShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'customdimensions:configure-new-dimension',
+            '--name' => 'foo',
+            '--id' => '1',
+            '--scope' => 'action',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("Adding a new custom dimension", $this->applicationTester->getDisplay());
+
+    }
+
+}
 
 CommandsTest::$fixture = new OneVisitorTwoVisits();
