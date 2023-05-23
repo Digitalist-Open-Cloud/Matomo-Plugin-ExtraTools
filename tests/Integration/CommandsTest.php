@@ -193,6 +193,19 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("Backup done", $this->applicationTester->getDisplay());
     }
 
+    public function testDatabaseBackupWitBackupPathAndBackupPrefixSetShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'database:backup',
+            '--backup-path' => '/tmp',
+            '--backup-prefix' => 'bar',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("/tmp/bar-", $this->applicationTester->getDisplay());
+    }
+
+
 }
 
 
