@@ -27,128 +27,108 @@ You could use options to override config or environment variables:
         $this->setHelp($HelpText);
         $this->setName('site:add');
         $this->setDescription('Add a new site');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'name',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Name for the site',
-                    null
-                ),
-                new InputOption(
-                    'urls',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'URL for the site',
-                    null
-                ),
-                new InputOption(
-                    'ecommerce',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'If the site is a ecommerce site',
-                    null
-                ),
-                new InputOption(
-                    'no-site-search',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'If site search should be tracked',
-                    null
-                ),
-                new InputOption(
-                    'search-keyword-parameters',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Search keyword parameters',
-                    null
-                ),
-                new InputOption(
-                    'search-category-parameters',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Search category parameters',
-                    null
-                ),
-                new InputOption(
-                    'exclude-ips',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Exclude IPs',
-                    null
-                ),
-                new InputOption(
-                    'exclude-query-parameters',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Exclude query parameters',
-                    null
-                ),
-                new InputOption(
-                    'timezone',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Timezone',
-                    null
-                ),
-                new InputOption(
-                    'currency',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Currency',
-                    null
-                ),
-                new InputOption(
-                    'group',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Group',
-                    null
-                ),
-                new InputOption(
-                    'start-date',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Start date',
-                    null
-                ),
-                new InputOption(
-                    'exclude-user-agents',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'Exclude user agents',
-                    null
-                ),
-                new InputOption(
-                    'keep-url-fragments',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'Keep url fragments',
-                    null
-                ),
-                new InputOption(
-                    'type',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Type',
-                    null
-                ),
-                new InputOption(
-                    'settings-value',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Settings value',
-                    null
-                ),
-                new InputOption(
-                    'exclude-unknown-urls',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'Exclude unknown urls',
-                    null
-                ),
-            ]
+
+        $this->addOptionalValueOption(
+            'name',
+            null,
+            'Name for the site',
+            null
+        );
+        $this->addOptionalValueOption(
+            'urls',
+            null,
+            'URL for the site',
+            null
+        );
+        $this->addOptionalValueOption(
+            'ecommerce',
+            null,
+            'If the site is a ecommerce site',
+            null
+        );
+        $this->addOptionalValueOption(
+            'no-site-search',
+            null,
+            'If site search should be tracked',
+            null
+        );
+        $this->addOptionalValueOption(
+            'search-keyword-parameters',
+            null,
+            'Search keyword parameters',
+            null
+        );
+        $this->addOptionalValueOption(
+            'search-category-parameters',
+            null,
+            'Search category parameters',
+            null
+        );
+        $this->addOptionalValueOption(
+            'exclude-ips',
+            null,
+            'Exclude IPs',
+            null
+        );
+        $this->addOptionalValueOption(
+            'exclude-query-parameters',
+            null,
+            'Exclude query parameters',
+            null
+        );
+        $this->addOptionalValueOption(
+            'timezone',
+            null,
+            'Timezone',
+            null
+        );
+        $this->addOptionalValueOption(
+            'currency',
+            null,
+            'Currency',
+            null
+        );
+        $this->addOptionalValueOption(
+            'group',
+            null,
+            'Group',
+            null
+        );
+        $this->addOptionalValueOption(
+            'start-date',
+            null,
+            'Start date',
+            null
+        );
+        $this->addNoValueOption(
+            'exclude-user-agents',
+            null,
+            'Exclude user agents',
+            null
+        );
+        $this->addNoValueOption(
+            'keep-url-fragments',
+            null,
+            'Keep url fragments',
+            null
+        );
+        $this->addNoValueOption(
+            'exclude-unknown-urls',
+            null,
+            'Exclude unknown urls',
+            null
+        );
+        $this->addOptionalValueOption(
+            'type',
+            null,
+            'Type',
+            null
+        );
+        $this->addOptionalValueOption(
+            'settings-value',
+            null,
+            'Settings value',
+            null
         );
     }
 

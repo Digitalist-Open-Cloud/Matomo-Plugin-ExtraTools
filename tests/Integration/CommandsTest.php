@@ -6,12 +6,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-use Piwik\Tests\Framework\Fixture;
 use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
-use Piwik\Container\StaticContainer;
-use Piwik\Db;
-use Piwik\Common;
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @group ExtraTools
@@ -65,7 +60,6 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteDeleteShouldFailWithoutId()
     {
-       // $this->applicationTester->setInputs(['yes']);
         $code = $this->applicationTester->run(array(
             'command' => 'site:delete',
             '-vvv' => true,
