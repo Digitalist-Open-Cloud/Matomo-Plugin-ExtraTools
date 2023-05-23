@@ -10,7 +10,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Piwik\Config;
 use Piwik\Plugins\ExtraTools\Lib\Backup;
 
@@ -49,7 +48,7 @@ You could use options to override config or environment variables:
             'backup-prefix',
             'p',
             'prefix for backup name',
-            null
+            'backup'
         );
         $this->addOptionalValueOption(
             'timeout',

@@ -7,7 +7,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
-use Piwik\Tests\Framework\Fixture;
 use Piwik\Tests\Fixtures\OneVisitorTwoVisits;
 
 /**
@@ -205,7 +204,75 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("/tmp/bar-", $this->applicationTester->getDisplay());
     }
 
+    /**
+     * @group DatabaseBackup
+     */
+    public function testDatabaseBackupWitBackupPathAndNoPrefixSetShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'database:backup',
+            '--backup-path' => '/tmp',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("/tmp/backup-", $this->applicationTester->getDisplay());
+    }
 
+    /**
+     * @group ConfigGet
+     */
+    public function testConfigGetDatabaseShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'config:get',
+            '--section' => 'database',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("dbname", $this->applicationTester->getDisplay());
+    }
+
+    /**
+     * @group ConfigGet
+     */
+    public function testConfigGetFooBarShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'config:get',
+            '--section' => 'foobar',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("Nothing found", $this->applicationTester->getDisplay());
+    }
+
+    /**
+     * @group ConfigGet
+     */
+    public function testConfigGetNothingShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'config:get',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("You must set either an argument or set options", $this->applicationTester->getDisplay());
+    }
+
+    /**
+     * @group ConfigGet
+     */
+    public function testConfigGetFormatJsonShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'config:get',
+            '--section' => 'database',
+            '--format' => 'json',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase('{"host":"db"', $this->applicationTester->getDisplay());
+    }
 }
 
 

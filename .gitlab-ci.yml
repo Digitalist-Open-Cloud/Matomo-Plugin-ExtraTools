@@ -28,9 +28,9 @@ phpunit:
     MYSQL_ROOT_PASSWORD: root
     MYSQL_USER: matomo
     MYSQL_PASSWORD: matomo
-    IMAGE: registry.wklive.net:5000/matomo/base:develop-75978977
+    IMAGE: digitalist/matomo:5.x-pcov
   before_script:
-    - apk update && apk add git coreutils iputils docker-compose php8-pear php8-xdebug
+    - apk update && apk add git coreutils iputils docker-compose
     - mkdir -p /root/.docker
     - cat $DOCKER_AUTH_CONFIG > /root/.docker/config.json
   script:
@@ -71,7 +71,7 @@ phpstan:
     MYSQL_ROOT_PASSWORD: root
     MYSQL_USER: matomo
     MYSQL_PASSWORD: matomo
-    IMAGE: registry.wklive.net:5000/matomo/base:develop-75978977
+    IMAGE: digitalist/matomo:5.x-pcov
   before_script:
     - apk update && apk add git coreutils iputils docker-compose
     - mkdir -p /root/.docker

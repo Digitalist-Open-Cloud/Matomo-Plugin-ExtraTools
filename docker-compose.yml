@@ -9,7 +9,7 @@ services:
     shm_size: 2g
   matomo:
     container_name: matomo
-    image: "${IMAGE:-registry.wklive.net:5000/matomo/base:develop-75978977}"
+    image: "${IMAGE:-digitalist/matomo:5.x-pcov}"
     volumes:
       - matomo-volume:/var/www/html:rw
       - $PWD:/var/www/html/plugins/ExtraTools
@@ -21,7 +21,6 @@ services:
       - MATOMO_DB_NAME=matomo
       - MATOMO_DB_PREFIX=matomo_
       - MATOMO_URL=http://web
-      - XDEBUG_MODE=coverage
     depends_on:
       - db
   web:

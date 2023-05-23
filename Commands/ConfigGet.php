@@ -10,9 +10,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Config;
 use Symfony\Component\Yaml\Yaml;
 
@@ -37,23 +34,17 @@ You could use options to override config or environment variables:
         $this->setHelp($HelpText);
         $this->setName('config:get');
         $this->setDescription('Get config in the file config/config.ini.php');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'section',
-                    's',
-                    InputOption::VALUE_REQUIRED,
-                    'Section in ini file, like database',
-                    null
-                ),
-                new InputOption(
-                    'format',
-                    'f',
-                    InputOption::VALUE_OPTIONAL,
-                    'Output format (json, yaml, text)',
-                    'text'
-                )
-            ]
+        $this->addOptionalValueOption(
+            'section',
+            's',
+            'Section in ini file, like database',
+            null
+        );
+        $this->addOptionalValueOption(
+            'format',
+            'f',
+            'Output format (json, yaml, text)',
+            'text'
         );
     }
 
@@ -71,6 +62,7 @@ You could use options to override config or environment variables:
         $get_section = $configs->getFromLocalConfig("$section");
         if ($get_section == null) {
             $output->writeln("<info>Looks like section <comment>$section</comment> does not exist</info>");
+            return self::FAILURE;
         } else {
             if ($format == 'json') {
                 $this->json($get_section);
