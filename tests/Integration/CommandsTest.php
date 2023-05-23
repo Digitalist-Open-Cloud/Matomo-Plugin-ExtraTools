@@ -163,7 +163,19 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("You need to provide an existing segment id", $this->applicationTester->getDisplay());
     }
 
+    public function testArchiveListShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'archive:list',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("No archivers ongoing or scheduled", $this->applicationTester->getDisplay());
+    }
+
+
 
 }
+
 
 CommandsTest::$fixture = new OneVisitorTwoVisits();

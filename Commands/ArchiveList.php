@@ -81,7 +81,7 @@ class ArchiveList extends ConsoleCommand
                 $output->writeln("<info>$message</info>");
             }
         } else {
-            $output->writeln("<info>no archivers ongoing or scheduled</info>");
+            $output->writeln("<info>No archivers ongoing or scheduled</info>");
         }
         return self::SUCCESS;
     }

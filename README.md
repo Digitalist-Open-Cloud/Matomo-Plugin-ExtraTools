@@ -297,6 +297,5 @@ docker-compose exec matomo ./console config:set --section=database_tests --key=u
 docker-compose exec matomo ./console config:set --section=database_tests --key=password --value=root
 docker-compose exec matomo ./console config:set --section=database_tests --key=dbname --value=matomo_test
 docker-compose exec matomo ./console config:set --section=database_tests --key=tables_prefix --value=""
-docker-compose exec matomo ./console tests:setup-fixture OneVisitorTwoVisits
 docker-compose exec matomo /var/www/html/plugins/ExtraTools/vendor/bin/phpunit -c plugins/ExtraTools/tests/phpunit.xml --coverage-text --testdox --log-junit report.xml
 ```
