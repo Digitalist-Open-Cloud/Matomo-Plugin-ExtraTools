@@ -30,28 +30,25 @@ class Backup
         $db_user = $this->config['db_user'];
         $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
-        $prefix  = $this->config['db_backup_prefix'];
+        $prefix = $this->config['db_backup_prefix'];
+        $timeout = $this->config['timeout'];
 
-        $timestamp = date("Ymd-His");
-        $backup = new Process\Process(
-            [
-                "mysqldump",
-                "-u$db_user",
-                "-h",
-                "$db_host",
-                "-P",
-                "$db_port",
-                "-p$db_pass",
-                "$db_name",
-                "--add-drop-table",
-                ">",
-                "$backup_folder/$prefix-$timestamp.sql",
-                "2> >(grep -v \"Using a password\")"
-            ]
+        // Build a temp db config file.
+        $temp = tmpfile();
+        fwrite($temp,
+            "[client]" . "\n" .
+            "user=" . $db_user . "\n" .
+            "password=" . $db_pass
         );
+        $config_path = stream_get_meta_data($temp)['uri'];
+        $timestamp = date("Ymd-His");
+        $backup = Process\Process::fromShellCommandline("mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql");
+        $backup->setTimeout($timeout);
         $backup->enableOutput();
-
         $backup->run();
+        // remove temp file
+        fclose($temp);
+
         echo $backup->getOutput();
         if (!$backup->isSuccessful()) {
             throw new ProcessFailedException($backup);

@@ -39,23 +39,23 @@ You could use options to override config or environment variables:
         $this->setHelp($HelpText);
         $this->setName('database:backup');
         $this->setDescription('Backup database');
-        $this->setDefinition(
-            [
-            new InputOption(
-                'backup-path',
-                'b',
-                InputOption::VALUE_OPTIONAL,
-                'backup path',
-                null
-            ),
-            new InputOption(
-                'backup-prefix',
-                'p',
-                InputOption::VALUE_OPTIONAL,
-                'prefix for backup name',
-                'backup'
-            )
-            ]
+        $this->addOptionalValueOption(
+            'backup-path',
+            'b',
+            'backup path',
+            null
+        );
+        $this->addOptionalValueOption(
+            'backup-prefix',
+            'p',
+            'prefix for backup name',
+            null
+        );
+        $this->addOptionalValueOption(
+            'timeout',
+            't',
+            'timeout for the process',
+            '60'
         );
     }
 
@@ -68,6 +68,7 @@ You could use options to override config or environment variables:
         $output = $this->getOutput();
         $backup_folder = $input->getOption('backup-path');
         $backup_prefix = $input->getOption('backup-prefix');
+        $timeout = $input->getOption('timeout');
         // check if we have db backup path in config
         $configs = Config::getInstance();
         $matomo_tools_config = $configs->getFromLocalConfig('ExtraTools');
@@ -78,13 +79,16 @@ You could use options to override config or environment variables:
         }
 
         if ($backup_folder == null) {
-            $output->writeln("<error>Value for backup-folder is required</error>");
-            exit;
+            $output->writeln("<error>Value for backup-path is required</error>");
+            return self::FAILURE;
         }
         $configs = Config::getInstance();
         // Only supporting local config.
         $db_configs = $configs->getFromLocalConfig('database');
-
+        // port is not always set.
+        if (!isset($db_configs['port'])) {
+            $db_configs['port'] = '3306';
+        }
         $config = [
             'db_host' =>  $db_configs['host'],
             'db_port' =>  $db_configs['port'],
@@ -93,7 +97,9 @@ You could use options to override config or environment variables:
             'db_name' =>  $db_configs['dbname'],
             'db_backup_folder' => $backup_folder,
             'db_backup_prefix' => $backup_prefix,
+            'timeout' => $timeout,
         ];
+
 
         $backup = new Backup($config, $output);
         $output->writeln('<info>Starting backup job:</info>');

@@ -173,7 +173,25 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("No archivers ongoing or scheduled", $this->applicationTester->getDisplay());
     }
 
-
+    public function testDatabaseBackupWithoutBackupPathSetShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'database:backup',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("Value for backup-path is required", $this->applicationTester->getDisplay());
+    }
+    public function testDatabaseBackupWitBackupPathSetShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'database:backup',
+            '--backup-path' => '/tmp',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("Backup done", $this->applicationTester->getDisplay());
+    }
 
 }
 
