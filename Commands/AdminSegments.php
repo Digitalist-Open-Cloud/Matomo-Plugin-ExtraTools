@@ -40,29 +40,21 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('segment:admin');
         $this->setDescription('Administrate segments');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'delete-segment',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Name for the site',
-                    null
-                ),
-                new InputOption(
-                    'activate-segment',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Name for the site',
-                    null
-                ),
-            ]
+        $this->addOptionalValueOption(
+            'delete-segment',
+            null,
+            'Segment id to delete',
+            null
         );
+        $this->addOptionalValueOption(
+            'activate-segment',
+            null,
+            'Segment id to activate (undo delete)',
+            null
+        );
+
     }
 
-    /**
-     * List users.
-     */
     protected function doExecute(): int
     {
         $input = $this->getInput();
@@ -80,18 +72,19 @@ To run:
         }
         if (!isset($segmentId)) {
             $output->writeln("<error>You need to provide a segment id</error>");
-            return exit(1);
+            return self::FAILURE;
         }
         $validate = $this->isInt($segmentId);
         if (!$validate) {
             $output->writeln("<error>You need to provide a single int id for segment (ex. 1)</error>");
+            return self::FAILURE;
         }
 
         $segment = $this->getSegment($segmentId);
 
         if (!$segment) {
             $output->writeln("<error>You need to provide an existing segment id</error>");
-            return exit(1);
+            return self::FAILURE;
         }
 
         if (isset($deleteSegment)) {

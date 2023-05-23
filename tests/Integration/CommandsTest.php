@@ -7,6 +7,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
+use Piwik\Tests\Framework\Fixture;
+use Piwik\Tests\Fixtures\OneVisitorTwoVisits;
 
 /**
  * @group ExtraTools
@@ -15,6 +17,11 @@ use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
  */
 class CommandsTest extends ConsoleCommandTestCase
 {
+
+    /**
+     * @var ManySitesImportedLogs
+     */
+    public static $fixture;
 
     public function testSiteAddWithoutWebsiteNameShouldFail()
     {
@@ -125,6 +132,38 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("URL https://foo.bar added for site 1", $this->applicationTester->getDisplay());
     }
 
+    public function testSegmentAdminWithoutIdShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'segment:admin',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("You need to provide a segment id", $this->applicationTester->getDisplay());
+    }
+
+    public function testSegmentAdminWithDeleteSegmentShouldFailBecauseItDoesNotExist()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'segment:admin',
+            '--delete-segment' => '1',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("You need to provide an existing segment id", $this->applicationTester->getDisplay());
+    }
+    public function testSegmentAdminWithActivateSegmentShouldFailBecauseItDoesNotExist()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'segment:admin',
+            '--activate-segment' => '1',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("You need to provide an existing segment id", $this->applicationTester->getDisplay());
+    }
+
 
 }
 
+CommandsTest::$fixture = new OneVisitorTwoVisits();
