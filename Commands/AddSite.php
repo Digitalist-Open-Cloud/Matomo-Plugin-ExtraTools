@@ -10,7 +10,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Piwik\Plugins\ExtraTools\Lib\Site;
 
 class AddSite extends ConsoleCommand

@@ -11,7 +11,6 @@ namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\ExtraTools\Lib\Site;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * List sites.
@@ -27,23 +26,17 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('site:url');
         $this->setDescription('Add an URL to a site.');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'id',
-                    'i',
-                    InputOption::VALUE_OPTIONAL,
-                    'Site id to add URL to',
-                    null
-                ),
-                new InputOption(
-                    'url',
-                    'u',
-                    InputOption::VALUE_OPTIONAL,
-                    'URL(s) to add, comma separated, no space',
-                    null
-                )
-            ]
+        $this->addOptionalValueOption(
+            'id',
+            null,
+            'Site id to add URL to',
+            null
+        );
+        $this->addOptionalValueOption(
+            'url',
+            null,
+            'URL(s) to add, comma separated, no space',
+            null
         );
     }
 
@@ -56,19 +49,19 @@ To run:
         $output = $this->getOutput();
         $id = $input->getOption('id');
         $url = $input->getOption('url');
-
         if (!$id) {
             $output->writeln("<info>You must provide an id for the site to add URL for</info>");
-            return self::SUCCESS;
+            return self::FAILURE;
         }
         if (!$url) {
             $output->writeln("'<info>You must provide an URL for the site</info>'");
-            return self::SUCCESS;
+            return self::FAILURE;
         }
 
         $urls = explode(",", trim($url));
         $site = new Site($id);
         $site->addURL($id, $urls);
+        $output->writeln("<info>URL $url added for site $id</info>");
         return self::SUCCESS;
     }
 }

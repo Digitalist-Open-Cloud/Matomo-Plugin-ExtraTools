@@ -81,5 +81,50 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("Are you really sure you would like to delete site", $this->applicationTester->getDisplay());
     }
 
+    public function testSiteAddUrlWithoutIdShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:url',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("You must provide an id for the site to add URL", $this->applicationTester->getDisplay());
+    }
+
+    public function testSiteAddUrlWithoutIdAndWithUrlShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:url',
+            '--url' => 'https://foo.bar',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("You must provide an id for the site to add URL", $this->applicationTester->getDisplay());
+    }
+
+    public function testSiteAddUrlWithoutUrlAndWithIdShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:url',
+            '--id' => '1',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("You must provide an URL for the site", $this->applicationTester->getDisplay());
+    }
+
+    public function testSiteAddUrlWithNeededParametersShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:url',
+            '--id' => '1',
+            '--url' => 'https://foo.bar',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("URL https://foo.bar added for site 1", $this->applicationTester->getDisplay());
+    }
+
+
 }
 
