@@ -10,14 +10,10 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Piwik\Plugins\SitesManager\SitesManager;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
 use Symfony\Component\Console\Input\InputOption;
-use Piwik\API\Request;
-use Piwik\Report;
 use Piwik\Plugins\API\API;
-use Piwik\Plugins\Live\Model;
 use Piwik\Plugins\SitesManager\API as SitesManagerAPI;
 
 /**

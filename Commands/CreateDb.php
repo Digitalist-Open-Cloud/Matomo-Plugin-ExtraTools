@@ -10,8 +10,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Piwik\Config;
 use Piwik\Plugins\ExtraTools\Lib\Create;
 
@@ -37,21 +35,15 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('database:create');
         $this->setDescription('Create database defined in config.ini.php');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'force',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'force dropping without asking',
-                    null
-                ),
-            ]
+        $this->addNoValueOption(
+            'force',
+            null,
+            'force dropping without asking'
         );
     }
 
     /**
-     * Execute the command like: ./console backup:db"
+     * Execute the command
      */
     protected function doExecute(): int
     {
@@ -63,15 +55,18 @@ To run:
         $db_configs = $configs->getFromLocalConfig('database');
 
         if ($force === false) {
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Are you really sure you would like to create the database? ', false);
-            if (!$helper->ask($input, $output, $question)) {
-                return self::SUCCESS;
+            $question = $this->askForConfirmation('Are you really sure you would like to create the database? ', false);
+            if (!$question) {
+                echo "foo";
+                //return self::FAILURE;
             } else {
                 $force = true;
             }
         }
         if ($force === true) {
+            if (!isset($db_configs['port'])) {
+                $db_configs['port'] = '3306';
+            }
             $config = [
                 'db_host' => $db_configs['host'],
                 'db_port' => $db_configs['port'],
@@ -83,6 +78,7 @@ To run:
             $create = new Create($config, $output);
             $output->writeln('<info>Dropping db:</info>');
             $create->execute();
+            $output->writeln('<info>Database created</info>');
         }
         return self::SUCCESS;
     }

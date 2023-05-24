@@ -11,8 +11,6 @@ namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\ExtraTools\Lib\Site;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * List sites.
@@ -28,16 +26,11 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('site:delete');
         $this->setDescription('Delete site.');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'id',
-                    'i',
-                    InputOption::VALUE_OPTIONAL,
-                    'Site id to delete',
-                    null
-                )
-            ]
+        $this->addOptionalValueOption(
+            'id',
+            'i',
+            'Site id to delete',
+            null
         );
     }
 
@@ -65,7 +58,8 @@ To run:
 
             $question = $this->askForConfirmation("Are you really sure you would like to delete site $record? ", false);
             if (!$question) {
-                return self::SUCCESS;
+                $output->writeln("<info>Site was <comment>not</comment> deleted</info>");
+                return self::FAILURE;
             } else {
                 $delete = $site->delete();
                 $output->writeln("<info>Site <comment>$record</comment> deleted</info>");

@@ -12,7 +12,6 @@ namespace Piwik\Plugins\ExtraTools\Commands;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Db;
 use Piwik\Common;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class DeleteLoggerMessages extends ConsoleCommand
 {
@@ -25,7 +24,7 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('logger:delete');
         $this->setDescription('Delete internal logger messages in database (monolog)');
-        $this->addOptionalValueOption(
+        $this->addNoValueOption(
             'force',
             null,
             'force removing logs, without confirmation.',
@@ -42,21 +41,21 @@ To run:
         $output = $this->getOutput();
         $force = $input->getOption('force');
         if ($force === false) {
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Are you really sure you would like to delete all logs? ', false);
-            if (!$helper->ask($input, $output, $question)) {
-                return 0;
+            $question = $this->askForConfirmation('Are you really sure you would like to delete all logs? ', false);
+            if (!$question) {
+                $output->writeln("<info>Logs not deleted.</info>");
+                return self::FAILURE;
             } else {
-                $force = 1;
+                $force = true;
             }
         }
         if ($force === true) {
             try {
                 Db::query('TRUNCATE ' . Common::prefixTable('logger_message'));
                 $output->writeln("<info>Logs deleted.</info>");
-                return true;
+                return self::SUCCESS;
             } catch (\Exception $e) {
-                return false;
+                return self::FAILURE;
             }
         }
         return self::SUCCESS;

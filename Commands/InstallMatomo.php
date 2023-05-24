@@ -255,9 +255,12 @@ Example:
         );
 
         if (Common::hasJsonErrorOccurred()) {
-            throw new \Exception(
-                $this->log("<error> Common::getLastJsonError()</error>")
-            );
+            $this->log("<error> " .  Common::getLastJsonError() . "</error>");
+            throw new \Exception(sprintf(
+                'Not able to read file %s: %s',
+                $file,
+                Common::getLastJsonError()
+            ));
         }
         return $json;
     }

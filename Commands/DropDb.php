@@ -37,16 +37,11 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('database:drop');
         $this->setDescription('Drops database - backup first if needed.');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'force',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'force dropping without asking',
-                    null
-                ),
-            ]
+        $this->addNoValueOption(
+            'force',
+            null,
+            'force dropping without asking',
+            null
         );
     }
 
@@ -60,9 +55,10 @@ To run:
         $force = $input->getOption('force');
 
         $configs = Config::getInstance();
-        // Only supporting local config.
         $db_configs = $configs->getFromLocalConfig('database');
-
+        if (!isset( $db_configs['port'])) {
+          $db_configs['port'] = '3306';
+        }
         $config = [
             'db_host' =>  $db_configs['host'],
             'db_port' =>  $db_configs['port'],
@@ -71,10 +67,10 @@ To run:
             'db_name' =>  $db_configs['dbname'],
         ];
         if ($force === false) {
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Are you really sure you would like to drop the database? ', false);
-            if (!$helper->ask($input, $output, $question)) {
-                return self::SUCCESS;
+            $question = $this->askForConfirmation("'Are you really sure you would like to drop the database? ", false);
+            if (!$question) {
+                $output->writeln('<info>Not dropping db</info>');
+                return self::FAILURE;
             } else {
                 $force = true;
             }

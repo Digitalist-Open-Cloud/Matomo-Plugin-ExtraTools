@@ -80,7 +80,7 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->applicationTester->setInputs(['yes']);
         $code = $this->applicationTester->run(array(
             'command' => 'site:delete',
-            '--id' => '1',
+            '--id' => self::$fixture->idSite,
             '-vvv' => true,
         ));
         $this->assertEquals(0, $code);
@@ -112,7 +112,7 @@ class CommandsTest extends ConsoleCommandTestCase
     {
         $code = $this->applicationTester->run(array(
             'command' => 'site:url',
-            '--id' => '1',
+            '--id' => self::$fixture->idSite,
             '-vvv' => true,
         ));
         $this->assertEquals(1, $code);
@@ -123,7 +123,7 @@ class CommandsTest extends ConsoleCommandTestCase
     {
         $code = $this->applicationTester->run(array(
             'command' => 'site:url',
-            '--id' => '1',
+            '--id' => self::$fixture->idSite,
             '--url' => 'https://foo.bar',
             '-vvv' => true,
         ));
@@ -172,6 +172,10 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("No archivers ongoing or scheduled", $this->applicationTester->getDisplay());
     }
 
+    /**
+     * @group DatabaseBackup
+     * @group Database
+     */
     public function testDatabaseBackupWithoutBackupPathSetShouldFail()
     {
         $code = $this->applicationTester->run(array(
@@ -181,6 +185,11 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertEquals(1, $code);
         $this->assertStringContainsStringIgnoringCase("Value for backup-path is required", $this->applicationTester->getDisplay());
     }
+
+    /**
+     * @group DatabaseBackup
+     * @group Database
+     */
     public function testDatabaseBackupWitBackupPathSetShouldSucceed()
     {
         $code = $this->applicationTester->run(array(
@@ -192,6 +201,10 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("Backup done", $this->applicationTester->getDisplay());
     }
 
+    /**
+     * @group DatabaseBackup
+     * @group Database
+     */
     public function testDatabaseBackupWitBackupPathAndBackupPrefixSetShouldSucceed()
     {
         $code = $this->applicationTester->run(array(
@@ -206,6 +219,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     /**
      * @group DatabaseBackup
+     * @group Database
      */
     public function testDatabaseBackupWitBackupPathAndNoPrefixSetShouldSucceed()
     {
@@ -285,7 +299,6 @@ class CommandsTest extends ConsoleCommandTestCase
         ));
         $this->assertEquals(1, $code);
         $this->assertStringContainsStringIgnoringCase("A name is required", $this->applicationTester->getDisplay());
-
     }
 
     /**
@@ -300,7 +313,6 @@ class CommandsTest extends ConsoleCommandTestCase
         ));
         $this->assertEquals(1, $code);
         $this->assertStringContainsStringIgnoringCase("A site id (id) is required", $this->applicationTester->getDisplay());
-
     }
 
     /**
@@ -311,14 +323,13 @@ class CommandsTest extends ConsoleCommandTestCase
         $code = $this->applicationTester->run(array(
             'command' => 'customdimensions:configure-new-dimension',
             '--name' => 'foo',
-            '--id' => '1',
+            '--id' => self::$fixture->idSite,
             '-vvv' => true,
         ));
         $this->assertEquals(1, $code);
         $this->assertStringContainsStringIgnoringCase("A scope (visit/action) is required", $this->applicationTester->getDisplay());
-
     }
-        /**
+    /**
      * @group CustomDimensions
      */
     public function testCustomDimensionsShouldSucceed()
@@ -326,15 +337,82 @@ class CommandsTest extends ConsoleCommandTestCase
         $code = $this->applicationTester->run(array(
             'command' => 'customdimensions:configure-new-dimension',
             '--name' => 'foo',
-            '--id' => '1',
+            '--id' => self::$fixture->idSite,
             '--scope' => 'action',
             '-vvv' => true,
         ));
         $this->assertEquals(0, $code);
         $this->assertStringContainsStringIgnoringCase("Adding a new custom dimension", $this->applicationTester->getDisplay());
-
     }
 
+    /**
+     * @group DatabaseCreate
+     * @group Database
+     */
+    public function testDatbaseCreateShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'database:create',
+            '--force' => '',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+    }
+
+    /**
+     * @group Logger
+     */
+    public function testLoggerDeleteForceShouldSucceed()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'logger:delete',
+            '--force' => '',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+    }
+
+    /**
+     * @group Logger
+     */
+    public function testLoggerDeleteConfirmYesShouldSucceed()
+    {
+        $this->applicationTester->setInputs(['yes']);
+        $code = $this->applicationTester->run(array(
+            'command' => 'logger:delete',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+    }
+
+    /**
+     * @group Logger
+     */
+    public function testLoggerDeleteConfirmNoShouldFail()
+    {
+        $this->applicationTester->setInputs(['no']);
+        $code = $this->applicationTester->run(array(
+            'command' => 'logger:delete',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("Are you really sure you would like to delete all logs? Logs not deleted.", $this->applicationTester->getDisplay());
+    }
+
+    /**
+     * @group Database
+     * @group DropDatabase
+     */
+    public function testDropDatabaseShouldFail()
+    {
+        $this->applicationTester->setInputs(['no']);
+        $code = $this->applicationTester->run(array(
+            'command' => 'database:drop',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase("Are you really sure you would like to drop the database? Not dropping db", $this->applicationTester->getDisplay());
+    }
 }
 
 CommandsTest::$fixture = new OneVisitorTwoVisits();

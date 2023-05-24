@@ -2,7 +2,7 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="/var/www/html/tests/PHPUnit/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
   <coverage processUncoveredFiles="false" includeUncoveredFiles="true">
     <include>
-      <directory suffix=".php">./</directory>
+      <directory suffix=".php">../Commands/</directory>
     </include>
     <report>
       <text outputFile="php://stdout" showUncoveredFiles="true"/>
