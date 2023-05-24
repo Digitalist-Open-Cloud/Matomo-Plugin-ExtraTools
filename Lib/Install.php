@@ -112,14 +112,12 @@ class Install
         $this->config->General['emails_enabled'] = 0;
         $this->deleteCache();
         $this->initDBConnection();
-
         $this->tableCreation();
         $this->saveLanguage('en');
         $this->createSuperUser();
         $this->installPlugins();
         $this->unInstallPlugins();
         $this->writeConfig();
-//        $this->setGeo();
         $this->finish();
         $this->saveLicenseKey();
         $this->login();
@@ -606,55 +604,6 @@ class Install
     public static function recordInstallVersion()
     {
         Schema::getInstance()->recordInstallVersion();
-    }
-
-    /**
-     * Sets the Geolocation
-     * [geo_provider] is mandatory. Only correct value implemented is
-     * [geoip_pecl]
-     * TODO: Need to make a better solution than this so we can be independent
-     */
-    protected function setGeo()
-    {
-
-        $config = $this->config;
-        $fileconfig = false;
-        $geo_provider = 'geoip_pecl';
-        if (isset($this->fileconfig)) {
-            $config_from_file = $this->fileconfig;
-            if (isset($config_from_file->Config)) {
-                $fileconfig = $config_from_file->Config;
-                if (isset($fileconfig['geo_provider'])) {
-                    $geo_provider = $fileconfig['geo_provider'];
-                }
-            }
-        }
-
-
-        $this->log('Setting Geoprovider');
-
-        //$config->['geo_provider'] = $geo_provider;
-        $config['geo_provider'] = $geo_provider;
-        $config->forceSave();
-
-    //    $config_write = new ConfigManipulation($this->config, $this->output);
-     //   $config_write->saveConfig("General", "geo_provider", "$geo_provider");
-
-/*
-        Option::set(
-            'usercountry.location_provider',
-            $geo_provider
-        );
-        if ($geo_provider === 'geoip_pecl') {
-            Option::set('geoip.isp_db_url', '');
-            Option::set(
-                'geoip.loc_db_url',
-                'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz'
-            );
-            Option::set('geoip.org_db_url', '');
-            Option::set('geoip.updater_period', 'month');
-        }
-*/
     }
 
 
