@@ -29,7 +29,6 @@ class ListSegments extends ConsoleCommand
         return Common::prefixTable(self::$rawPrefix);
     }
 
-
     protected function configure()
     {
         $HelpText = 'The <info>%command.name%</info> will list att your segments.
@@ -46,9 +45,13 @@ To run:
      */
     protected function doExecute(): int
     {
-        $input = $this->getInput();
         $output = $this->getOutput();
         $segments = $this->getAllSegments();
+
+        if (!$segments) {
+            $output->writeln("<info>There is no segments</info>");
+            return self::SUCCESS;
+        }
 
         foreach ($segments as $out) {
             if ($out['deleted'] === '0') {

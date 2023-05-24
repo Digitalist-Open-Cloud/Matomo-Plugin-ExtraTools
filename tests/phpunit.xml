@@ -3,6 +3,7 @@
   <coverage processUncoveredFiles="false" includeUncoveredFiles="true">
     <include>
       <directory suffix=".php">../Commands/</directory>
+      <directory suffix=".php">../Lib/</directory>
     </include>
     <report>
       <text outputFile="php://stdout" showUncoveredFiles="true"/>

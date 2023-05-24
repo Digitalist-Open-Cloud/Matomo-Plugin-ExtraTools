@@ -7,8 +7,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
-use Piwik\Tests\Fixtures\OneVisitorTwoVisits;
+//use Piwik\Tests\Fixtures\OneVisitorTwoVisits;
+use Piwik\Tests\Fixtures\SomePageGoalVisitsWithConversions;
 
+use Piwik\Plugins\SegmentEditor\API;
 /**
  * @group ExtraTools
  * @group Plugins
@@ -16,14 +18,28 @@ use Piwik\Tests\Fixtures\OneVisitorTwoVisits;
  */
 class CommandsTest extends ConsoleCommandTestCase
 {
-
     /**
      * @var ManySitesImportedLogs
      */
     public static $fixture;
 
+    /**
+     * @var API
+     */
+    private $api;
+
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+
+    }
+
+
     public function testSiteAddWithoutWebsiteNameShouldFail()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:add',
             '-vvv' => true,
@@ -33,6 +49,7 @@ class CommandsTest extends ConsoleCommandTestCase
     }
     public function testSiteAddWithWebsiteNameShouldSuceed()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:add',
             '--name' => 'Foo',
@@ -44,6 +61,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteAddWithWebsiteNameAndUrlShouldSuceed()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:add',
             '--name' => 'Foo',
@@ -56,6 +74,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteListShouldSuceedAndShowUrl()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:list',
             '-vvv' => true,
@@ -66,6 +85,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteDeleteShouldFailWithoutId()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:delete',
             '-vvv' => true,
@@ -77,6 +97,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteDeleteWithIdShouldSucceed()
     {
+
         $this->applicationTester->setInputs(['yes']);
         $code = $this->applicationTester->run(array(
             'command' => 'site:delete',
@@ -89,6 +110,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteAddUrlWithoutIdShouldFail()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:url',
             '-vvv' => true,
@@ -99,6 +121,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteAddUrlWithoutIdAndWithUrlShouldFail()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:url',
             '--url' => 'https://foo.bar',
@@ -110,6 +133,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteAddUrlWithoutUrlAndWithIdShouldFail()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:url',
             '--id' => self::$fixture->idSite,
@@ -121,6 +145,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testSiteAddUrlWithNeededParametersShouldSucceed()
     {
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:url',
             '--id' => self::$fixture->idSite,
@@ -131,8 +156,14 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("URL https://foo.bar added for site 1", $this->applicationTester->getDisplay());
     }
 
+
+    /**
+     * @group Segment
+     * @group SegmentAdmin
+     */
     public function testSegmentAdminWithoutIdShouldFail()
     {
+        CommandsTest::$fixture = new SomePageGoalVisitsWithConversions();
         $code = $this->applicationTester->run(array(
             'command' => 'segment:admin',
             '-vvv' => true,
@@ -141,21 +172,52 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("You need to provide a segment id", $this->applicationTester->getDisplay());
     }
 
+
+    /**
+     * @group Segment
+     * @group SegmentAdmin
+     */
     public function testSegmentAdminWithDeleteSegmentShouldFailBecauseItDoesNotExist()
     {
+        CommandsTest::$fixture = new SomePageGoalVisitsWithConversions();
         $code = $this->applicationTester->run(array(
             'command' => 'segment:admin',
-            '--delete-segment' => '1',
+            '--delete-segment' => '10000',
             '-vvv' => true,
         ));
         $this->assertEquals(1, $code);
         $this->assertStringContainsStringIgnoringCase("You need to provide an existing segment id", $this->applicationTester->getDisplay());
     }
-    public function testSegmentAdminWithActivateSegmentShouldFailBecauseItDoesNotExist()
+
+    /**
+     * @group Segment
+     * @group SegmentAdmin
+     */
+    public function testSegmentAdminWithDeleteSegmentShouldSucceedBecauseItDoesExist()
     {
+        CommandsTest::$fixture = new SomePageGoalVisitsWithConversions();
         $code = $this->applicationTester->run(array(
             'command' => 'segment:admin',
-            '--activate-segment' => '1',
+            '--delete-segment' => '1',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("Segment id 1 marked as deleted", $this->applicationTester->getDisplay());
+    }
+
+
+
+
+    /**
+     * @group Segment
+     * @group SegmentAdmin
+     */
+    public function testSegmentAdminWithActivateSegmentShouldFailBecauseItDoesNotExist()
+    {
+        CommandsTest::$fixture = new SomePageGoalVisitsWithConversions();
+        $code = $this->applicationTester->run(array(
+            'command' => 'segment:admin',
+            '--activate-segment' => '10000',
             '-vvv' => true,
         ));
         $this->assertEquals(1, $code);
@@ -164,6 +226,7 @@ class CommandsTest extends ConsoleCommandTestCase
 
     public function testArchiveListShouldSucceed()
     {
+        CommandsTest::$fixture = new SomePageGoalVisitsWithConversions();
         $code = $this->applicationTester->run(array(
             'command' => 'archive:list',
             '-vvv' => true,
@@ -413,6 +476,27 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertEquals(1, $code);
         $this->assertStringContainsStringIgnoringCase("Are you really sure you would like to drop the database? Not dropping db", $this->applicationTester->getDisplay());
     }
+
+    /**
+     * @group Segment
+     * @group SegmentList
+     */
+    public function testSegmentListShouldSucceed()
+    {
+        CommandsTest::$fixture = new SomePageGoalVisitsWithConversions();
+        $code = $this->applicationTester->run(array(
+            'command' => 'segment:list',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("Definition: countryCode==jp", $this->applicationTester->getDisplay());
+    }
+
+
+
+
+
+
 }
 
-CommandsTest::$fixture = new OneVisitorTwoVisits();
+CommandsTest::$fixture = new SomePageGoalVisitsWithConversions();
