@@ -115,24 +115,14 @@ class Install
 
         $this->tableCreation();
         $this->saveLanguage('en');
-        # Environment check can not be used right now. It has a dependency on being installed.
-        //  $this->checkEnvironment();
- //       if ($dontdrobdb === false) {
- //           // Do not create a new default site if not dropping db.
- //           $this->addWebsite();
- //       }
-
         $this->createSuperUser();
         $this->installPlugins();
         $this->unInstallPlugins();
         $this->writeConfig();
-        //$this->setGeo();
+//        $this->setGeo();
         $this->finish();
         $this->saveLicenseKey();
         $this->login();
-
-      //  $this->updateComponents();
-      //  $this->addWebsite();
     }
 
 
@@ -141,21 +131,6 @@ class Install
     {
         $license = new LicenseKey();
         $license->set($this->licensekey);
-    }
-
-    /**
-       * @throws \DI\NotFoundException
-       */
-    protected function checkEnvironment()
-    {
-        $this->log("Checking environment.");
-        $check = new Requirements($this->output);
-        if ($check->hasErrors()) {
-            $this->log("<error>Errors found! They must be fixed before Matomo could be installed.</error>");
-            exit;
-        } else {
-            $this->log("<comment>No environment errors found</comment>");
-        }
     }
 
 
