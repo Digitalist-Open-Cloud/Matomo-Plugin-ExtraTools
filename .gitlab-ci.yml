@@ -64,7 +64,7 @@ phpunit:
       junit: test/report.xml
       coverage_report:
         coverage_format: cobertura
-        path: phpunit-coverage.xml
+        path: test/phpunit-coverage.xml
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 phpstan:
   rules:
