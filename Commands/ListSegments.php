@@ -113,7 +113,6 @@ To run:
     }
 
     /**
-     * @param int[] $idSegments
      * @return array
      */
     public function getSegments()

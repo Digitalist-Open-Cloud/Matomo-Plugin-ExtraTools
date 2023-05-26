@@ -20,7 +20,6 @@ use Piwik\Development;
 use Piwik\EventDispatcher;
 use Piwik\Exception\PluginDeactivatedException;
 use Piwik\Filesystem;
-use Piwik\Log;
 use Piwik\Notification;
 use Piwik\Piwik;
 use Piwik\Plugin;
@@ -45,7 +44,6 @@ class CliManager
     public static function getInstance()
     {
         return StaticContainer::get('Piwik\Plugins\ExtraTools\Lib\CliManager');
-        require_once PIWIK_INCLUDE_PATH . '/core/EventDispatcher.php';
     }
 
     protected $pluginsToLoad = array();

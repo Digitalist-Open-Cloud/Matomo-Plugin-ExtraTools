@@ -15,12 +15,11 @@ class Archivers
         return Common::prefixTable(self::$rawPrefix);
     }
 
-
     /**
      * Returns all stored segments that haven't been deleted. Ignores the site the segments are enabled
      * for and whether to auto archive or not.
      *
-     * @return array
+     * @return mixed
      */
     public function getAllInvalidations()
     {

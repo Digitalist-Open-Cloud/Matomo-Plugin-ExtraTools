@@ -10,7 +10,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
 use Piwik\Common;
@@ -104,7 +103,7 @@ To run:
 
 
     /**
-     * @param $idSegment
+     * @param $segment
      * @return array
      * @throws \Exception
      */
@@ -117,7 +116,6 @@ To run:
     }
 
     /**
-     * @param int[] $idSegments
      * @return array
      */
     public function getSegments()
