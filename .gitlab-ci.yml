@@ -80,15 +80,19 @@ phpstan:
     - docker-compose up -d --quiet-pull
     - sleep 2
     - docker-compose exec matomo bash -c  "cd plugins/ExtraTools && composer install --no-interaction --no-progress"
-    - docker-compose exec matomo bash -c "/var/www/html/plugins/ExtraTools/vendor/bin/phpstan analyze --error-format=junit -c /var/www/html/plugins/ExtraTools/tests/phpstan.neon --no-progress --level=0 plugins/ExtraTools/ > phpstan80.xml" || true
+    - docker-compose exec matomo bash -c "/var/www/html/plugins/ExtraTools/vendor/bin/phpstan analyze --error-format=junit -c /var/www/html/plugins/ExtraTools/tests/phpstan.neon --no-progress --level=1 plugins/ExtraTools/ > phpstan80.xml" || true
+    - docker-compose exec matomo bash -c "/var/www/html/plugins/ExtraTools/vendor/bin/phpstan analyze --error-format=gitlab -c /var/www/html/plugins/ExtraTools/tests/phpstan.neon --no-progress --level=1 plugins/ExtraTools/ > phpstan-report.json" || true
     - docker-compose exec matomo bash -c "/var/www/html/plugins/ExtraTools/vendor/bin/phpstan analyze -c /var/www/html/plugins/ExtraTools/tests/phpstan.neon --level=0 plugins/ExtraTools/" || true
     - docker cp matomo:/var/www/html/phpstan80.xml phpstan80.xml
+    - docker cp matomo:/var/www/html/phpstan-report.json phpstan-report.json
     - docker-compose down
   artifacts:
     when: always
     paths:
       - phpstan80.xml
+      - phpstan-report.json
     reports:
+      codequality: "./phpstan-report.json"
       junit:
       - phpstan80.xml
 

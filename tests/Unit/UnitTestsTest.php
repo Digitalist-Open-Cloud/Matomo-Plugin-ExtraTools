@@ -8,29 +8,48 @@
 
 namespace Piwik\Plugins\ExtraTools\tests\Unit;
 
+use Piwik\Plugins\ExtraTools\Lib\Archivers;
+use Piwik\Tests\Fixtures\SomePageGoalVisitsWithConversions;
+
 /**
  * @group ExtraTools
- * @group UnitTestsTest
+ * @group Archivers
  * @group Plugins
  */
 class UnitTestsTest extends \PHPUnit\Framework\TestCase
 {
+
+    /**
+     * @var SomePageGoalVisitsWithConversions
+     */
+    public static $fixture;
+
     public function setUp(): void
     {
-        // set up here if needed
+        parent::setUp();
+        UnitTestsTest::$fixture = new SomePageGoalVisitsWithConversions();
     }
-    
+
     public function tearDown(): void
     {
         // tear down here if needed
     }
 
-    /**
-     * All your actual test methods should start with the name "test"
-     */
-    public function testSimpleAddition()
+    public function test_list_archivers()
     {
-        $this->assertEquals(2, 1+1);
+        $archiver= new Archivers();
+        $result = $archiver->getAllInvalidations();
+
+       // $this->assertTrue($result);
+
+      //  $notificationsInArray = Manager::getPendingInMemoryNotifications();
+
+        // $expected = [
+        //     'testid' => $notification,
+        // ];
+        // $this->assertEquals($expected, $notificationsInArray);
     }
 
+
 }
+

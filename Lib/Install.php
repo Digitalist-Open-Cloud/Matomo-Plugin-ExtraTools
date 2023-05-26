@@ -315,8 +315,12 @@ class Install
         }
 
         $this->log('Creating Super user');
+
         Access::doAsSuperUser(
             function () use ($user) {
+                $username = '';
+                $pass = '';
+                $email = '';
                 // split up the array - now we get $username, $pass and $email.
                 extract($user);
                 $api = APIUsersManager::getInstance();
@@ -531,6 +535,8 @@ class Install
 
     private function login()
     {
+        $username = '';
+        $pass = '';
         extract($this->user);
         $this->log("Now you can login with user <comment>$username</comment> and password <comment>$pass</comment>");
     }

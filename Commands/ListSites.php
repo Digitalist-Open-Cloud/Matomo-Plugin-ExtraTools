@@ -53,7 +53,6 @@ To run:
 
         $list = new Site(null);
         $sites = $list->list();
-
         foreach ($sites as $site) {
             $outsites[] = [
                 "id" => $site['idsite'],
@@ -65,16 +64,23 @@ To run:
             ];
         }
 
-        if ($format == 'json') {
-            $this->json($outsites);
+        if (isset($outsites)) {
+            if ($format == 'json') {
+                $this->json($outsites);
+            }
+            if ($format == 'yaml') {
+                $this->yaml($outsites);
+            }
+            if ($format == 'text') {
+                $this->text($outsites, $output);
+            }
+            return self::SUCCESS;
         }
-        if ($format == 'yaml') {
-            $this->yaml($outsites);
+        else {
+            $output->write("<info>No sites in Matomo</info>");
+            return self::FAILURE;
         }
-        if ($format == 'text') {
-            $this->text($outsites, $output);
-        }
-        return self::SUCCESS;
+
     }
     private function json($sites)
     {
