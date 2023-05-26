@@ -50,16 +50,20 @@ phpunit:
     - docker-compose exec matomo ./console config:set --section=database_tests --key=dbname --value=matomo_test
     - docker-compose exec matomo ./console config:set --section=database_tests --key=tables_prefix --value=""
     - docker-compose exec matomo ./console plugin:activate ExtraTools
-    - docker-compose exec matomo /var/www/html/plugins/ExtraTools/vendor/bin/phpunit -c plugins/ExtraTools/tests/phpunit.xml --coverage-text --testdox --log-junit report.xml  || true
+    - docker-compose exec matomo /var/www/html/plugins/ExtraTools/vendor/bin/phpunit -c plugins/ExtraTools/tests/phpunit.xml --coverage-text --testdox --log-junit report.xml --coverage-cobertura phpunit-coverage.xml  || true
     - mkdir -p test
     - mkdir -p coverage
     - docker cp matomo:/var/www/html/report.xml test/report.xml
+    - docker cp matomo:/var/www/html/phpunit-coverage.xml test/phpunit-coverage.xml
     - docker-compose down
   artifacts:
     when: always
     reports:
       junit: test/report.xml
-
+      coverage_report:
+        coverage_format: cobertura
+        path: phpunit-coverage.xml
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 phpstan:
   rules:
     - if: $CI_COMMIT_BRANCH
