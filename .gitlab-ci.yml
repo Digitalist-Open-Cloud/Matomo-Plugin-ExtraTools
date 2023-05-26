@@ -1,16 +1,24 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 include:
-  - template: Security/Secret-Detection.gitlab-ci.yml
-  - template: Security/Dependency-Scanning.gitlab-ci.yml
-
+- template: Security/Secret-Detection.gitlab-ci.yml
+- template: Security/Dependency-Scanning.gitlab-ci.yml
+- template: Security/SAST.gitlab-ci.yml
 stages:
-  - test
-  - base
-
+- test
+- base
 base:
   variables:
-    EXTRA_TOOLS_COMMIT: $CI_COMMIT_SHA
-    EXTRA_TOOLS_BRANCH: $CI_COMMIT_BRANCH
+    EXTRA_TOOLS_COMMIT: "$CI_COMMIT_SHA"
+    EXTRA_TOOLS_BRANCH: "$CI_COMMIT_BRANCH"
   stage: base
   trigger:
     project: matomo-cloud/docker-images/matomo-docker-base
     branch: develop
+sast:
+  stage: test
