@@ -267,13 +267,14 @@ Example:
 
     private function fileConfig($file)
     {
-        if (file_exists($file)) {
+        if ($file !== null && file_exists($file)) {
             $config = new stdClass();
             $config->Config = $this->readconf($file);
             return $config;
         }
         return false;
     }
+
     /**
      * Write an output log.
      * @param $text string
