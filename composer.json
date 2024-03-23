@@ -1,6 +1,7 @@
 {
-    "name": "digitalist-se/extratools",
-    "description": "Extra console tools for Matomo",
+    "name": "digitalist-open-cloud/extratools",
+    "description": "Extra tools for Matomo",
+    "type": "matomo-plugin",
     "keywords": [
         "cli",
         "install"
