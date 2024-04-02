@@ -35,7 +35,8 @@ class Backup
 
         // Build a temp db config file.
         $temp = tmpfile();
-        fwrite($temp,
+        fwrite(
+            $temp,
             "[client]" . "\n" .
             "user=" . $db_user . "\n" .
             "password=" . $db_pass

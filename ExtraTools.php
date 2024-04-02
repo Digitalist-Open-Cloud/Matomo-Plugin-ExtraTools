@@ -23,6 +23,7 @@ class ExtraTools extends \Piwik\Plugin
 
     public function getClientSideTranslationKeys(&$translationKeys)
     {
+        $translationKeys[] = 'ExtraTools_ExtraTools';
         $translationKeys[] = 'ExtraTools_PhpInfo';
         $translationKeys[] = 'ExtraTools_Invalidations';
     }

@@ -56,8 +56,8 @@ To run:
 
         $configs = Config::getInstance();
         $db_configs = $configs->getFromLocalConfig('database');
-        if (!isset( $db_configs['port'])) {
-          $db_configs['port'] = '3306';
+        if (!isset($db_configs['port'])) {
+            $db_configs['port'] = '3306';
         }
         $config = [
             'db_host' =>  $db_configs['host'],

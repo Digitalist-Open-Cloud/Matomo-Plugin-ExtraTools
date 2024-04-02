@@ -75,12 +75,10 @@ To run:
                 $this->text($outsites, $output);
             }
             return self::SUCCESS;
-        }
-        else {
+        } else {
             $output->write("<info>No sites in Matomo</info>");
             return self::FAILURE;
         }
-
     }
     private function json($sites)
     {

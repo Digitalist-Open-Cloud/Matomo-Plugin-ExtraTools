@@ -47,7 +47,6 @@ To run:
             null,
             'If provided, the custom dimension is marked as active'
         );
-
     }
 
     /**

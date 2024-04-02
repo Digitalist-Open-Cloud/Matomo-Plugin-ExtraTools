@@ -110,6 +110,7 @@ class Install
 
         # Always disable sending emails at install
         $this->config->General['emails_enabled'] = 0;
+        $this->config->General['maintenance_mode'] = 1;
         $this->deleteCache();
         $this->initDBConnection();
         $this->tableCreation();
@@ -493,6 +494,7 @@ class Install
         unset(
             $config->General['installation_in_progress']
         );
+        $this->config->General['maintenance_mode'] = 0;
 
         $config->forceSave();
         $this->log("<comment>We are done! Welcome to Matomo!</comment>");

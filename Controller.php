@@ -26,13 +26,39 @@ class Controller extends \Piwik\Plugin\Controller
         return Common::prefixTable(self::$rawPrefix);
     }
 
+
     public function index()
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $info = "<p>ExtraTools is an open source plugin for Matomo, developed and maintained by
+          <a href='https://www.digitalist.se'>Digitalist Open Tech</a> and the Matomo Community.
+          ExtraTools adds a lot of functionality to your Matomo instance, focusing on
+          automation in the backend, like installing, handling segments,
+          sites and more.</p>
+          <p>We are providing <a href='https://www.digitalist.se/blogg/our-matomo-saas'>professional services</a>,
+          <a href='https://github.com/digitalist-se/MatomoPlugins'>open source and licensed plugins</a>.</p>";
+        return $this->renderTemplate('index', array(
+            'info' => $info
+        ));
+    }
+
+    public function docs()
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $info = "ExtraTools Docs";
+        return $this->renderTemplate('docs', array(
+            'info' => $info
+        ));
+    }
+
+
+    public function phpinfo()
     {
         Piwik::checkUserHasSomeAdminAccess();
         $api = new API();
         // Get phpinfo
         $info = $api->getPhpInfo();
-        return $this->renderTemplate('index', array(
+        return $this->renderTemplate('phpinfo', array(
             'info' => $info
         ));
     }

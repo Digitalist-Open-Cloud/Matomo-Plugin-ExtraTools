@@ -51,7 +51,6 @@ To run:
             'Segment id to activate (undo delete)',
             null
         );
-
     }
 
     protected function doExecute(): int

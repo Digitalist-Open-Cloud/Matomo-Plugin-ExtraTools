@@ -184,7 +184,7 @@ Example:
 
         $env_timestamp = $this->defaults()->timestamp();
         if ($env_timestamp == true) {
-          $timestamp = $env_timestamp;
+            $timestamp = $env_timestamp;
         }
 
         $file_config = $this->fileConfig($file);
