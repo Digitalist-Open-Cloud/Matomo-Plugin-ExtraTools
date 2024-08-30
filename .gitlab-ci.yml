@@ -1,10 +1,3 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
@@ -44,7 +37,7 @@ phpunit:
     - cat $DOCKER_AUTH_CONFIG > /root/.docker/config.json
   script:
     - docker-compose up -d --quiet-pull
-    - sleep 10
+    - sleep 20
     - docker-compose exec matomo  bash -c "php --version"
     - docker-compose exec --user=root matomo bash -c  "cd plugins/ExtraTools && composer install --no-interaction --no-progress"
     - docker-compose exec matomo ./console matomo:install --install-file=/var/www/html/config/install.json --force
@@ -109,11 +102,3 @@ phpstan:
       junit:
       - phpstan80.xml
 
-base:
-  variables:
-    EXTRA_TOOLS_COMMIT: "$CI_COMMIT_SHA"
-    EXTRA_TOOLS_BRANCH: "$CI_COMMIT_BRANCH"
-  stage: base
-  trigger:
-    project: matomo-cloud/docker-images/matomo-docker-base
-    branch: develop
