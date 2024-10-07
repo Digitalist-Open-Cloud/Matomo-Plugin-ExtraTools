@@ -1,7 +1,7 @@
 {
     "name": "ExtraTools",
     "description": "Adds automatic installation from the console, db backups etc.",
-    "version": "5.0.4",
+    "version": "5.0.5",
     "theme": false,
     "require": {
         "matomo": ">=5.0.0-b1,<6.0.0-b1"
@@ -19,9 +19,9 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/digitalist-se/extratools/issues"
+        "issues": "https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/issues"
     },
-    "homepage": "https://www.digitalist.se/matomo",
+    "homepage": "https://digitalist.cloud/matomo",
     "license": "GPL v3+",
     "keywords": []
 }
