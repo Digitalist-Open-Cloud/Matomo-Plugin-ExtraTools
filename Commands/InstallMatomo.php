@@ -218,13 +218,9 @@ Example:
         ];
 
         if ($force === false) {
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion(
-                'Are you really sure you would like to install Matomo - '
-                . 'if you have an installation already, it will be wiped? ',
-                false
-            );
-            if (!$helper->ask($input, $output, $question)) {
+            $question = 'Are you really sure you would like to install Matomo - '
+                        . 'if you have an installation already, it will be wiped? ';
+            if (!$this->askForConfirmation($question, false)) {
                 return self::SUCCESS;
             } else {
                 $force = true;
