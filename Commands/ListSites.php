@@ -60,6 +60,7 @@ To run:
                 "created" => $site['ts_created'],
                 "main-url" => $site['main_url'],
                 "timezone" => $site['timezone'],
+                "currency" => $site['currency'],
                 "type" => $site['type']
             ];
         }
