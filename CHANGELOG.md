@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.1.5] - 2025-07-25
+
+### Changed
+
+- [Email sending enabled after install](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/pull/48), thanks @mbrodala
+- [Ensure correct directory with composer/installers](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/pull/53), thanks @mbrodala
+- [Output "currency" in site:list command](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/pull/52), thanks @mbrodala
+
 ## [5.1.4] - 2025-07-25
 
 ### Changed
