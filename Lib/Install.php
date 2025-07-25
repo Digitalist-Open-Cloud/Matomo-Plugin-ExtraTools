@@ -137,6 +137,8 @@ class Install
         $this->installPlugins();
         $this->unInstallPlugins();
         $this->writeConfig();
+        # Enable sending emails after install
+        $this->config->General['emails_enabled'] = 1;
         $this->finish();
         $this->saveLicenseKey();
         $this->login();
