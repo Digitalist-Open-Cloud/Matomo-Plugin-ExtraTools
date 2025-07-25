@@ -25,11 +25,12 @@ use Piwik\Plugins\ExtraTools\Lib\Archivers;
 use Piwik\Common;
 use Piwik\Db;
 use Piwik\Piwik;
+use Piwik\Plugin\ControllerAdmin;
 
 /**
  *
  */
-class Controller extends \Piwik\Plugin\Controller
+class Controller extends ControllerAdmin
 {
     private static $rawPrefix = 'segment';
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.1.4] - 2025-07-25
+
+### Changed
+
+- Use ControllerAdmin for admin links.
+
 ## [5.1.3] - 2025-02-21
 
 ### Changed
