@@ -31,5 +31,8 @@
         "phpstan/phpstan": "^1.12",
         "squizlabs/php_codesniffer": "^3.11",
         "phpstan/phpstan-deprecation-rules": "^1.2"
+    },
+    "extra": {
+        "installer-name": "ExtraTools"
     }
 }
