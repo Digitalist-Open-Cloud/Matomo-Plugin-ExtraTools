@@ -421,14 +421,14 @@ class Install
         }
         if (isset($fileconfig['PluginsInstalled'])) {
             $installplugins = $fileconfig['PluginsInstalled'];
+        } elseif (isset($option_plugins)) {
+            $installplugins = explode(',', $option_plugins);
         } elseif (isset(($this->config->PluginsInstalled['PluginsInstalled']))) {
             foreach ($this->config->PluginsInstalled['PluginsInstalled'] as $plugin) {
                 if (is_string(($plugin))) {
                     $installplugins[] = $plugin;
                 }
             }
-        } elseif (isset($option_plugins)) {
-            $installplugins = explode(',', $option_plugins);
         }
         if (isset($installplugins)) {
             $install_tag_manager = false;
