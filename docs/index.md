@@ -184,6 +184,14 @@ Administration → Extra Tools → Phpinfo.
 
 This displays the PHP configuration information similar to `phpinfo()`.
 
+### Invalidated Archives
+
+Lists invalidated archive entries from the database. This helps you see which archives
+have been invalidated and need to be re-processed by the archiver. Access it via:
+Administration → Extra Tools → Invalidations.
+
+Shows the archive name (or "All visits" for the default), period type, date, and when it was invalidated.
+
 #### Requirements
 
 Matomo needs a MySQL/MariaDB host, with a user setup that is allowed to drop
