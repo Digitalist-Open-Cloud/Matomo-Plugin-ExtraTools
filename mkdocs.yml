@@ -1,0 +1,13 @@
+site_name: Extra Tools
+site_description: Matomo plugin for extra CLI tools and phpinfo administration page
+repo_url: https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools
+theme:
+  name: readthedocs
+  highlightjs: true
+  user_color_mode_toggle: true
+markdown_extensions:
+  - admonition
+
+nav:
+  - Overview:
+      - Usage: index.md

@@ -177,6 +177,13 @@ Get all archived visits, for one site or all. For a segment or all segments, for
 
 Configure a new custom dimension. BETA.
 
+### phpinfo page
+
+Provides a phpinfo page in the admin section. Access it via:
+Administration → Extra Tools → Phpinfo.
+
+This displays the PHP configuration information similar to `phpinfo()`.
+
 #### Requirements
 
 Matomo needs a MySQL/MariaDB host, with a user setup that is allowed to drop
@@ -306,7 +313,7 @@ So, let's make it better!
 
 ## Version supported
 
-This is tested from version 3.8.1, and should work with the latest stable.
+This plugin requires Matomo >= 5.0.0-b1.
 
 ## Thank you!
 

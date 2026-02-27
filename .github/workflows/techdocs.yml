@@ -1,0 +1,20 @@
+name: Publish TechDocs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    uses: Digitalist-Open-Cloud/BackstageTechDocs/.github/workflows/publish-techdocs.yml@main
+    with:
+      entity-name: matomo.plugin.extratools
+      entity-kind: Component
+      entity-namespace: default
+      s3-endpoint: https://hel1.your-objectstorage.com
+      bucket-name: backstage
+      aws-region: hel1
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

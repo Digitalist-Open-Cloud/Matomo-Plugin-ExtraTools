@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: matomo.plugin.extratools
+  title: ExtraTools for Matomo
+  description: Provide a number of console commands for easier administration of Matomo.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - url: https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools
+      title: GitHub
+      icon: github
+spec:
+  type: library
+  lifecycle: production
+  owner: digitalist-open-cloud
