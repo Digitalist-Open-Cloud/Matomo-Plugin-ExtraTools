@@ -21,6 +21,14 @@
 
 namespace Piwik\Plugins\ExtraTools;
 
+// Register the plugin's own Composer dependencies (e.g. symfony/process,
+// symfony/yaml). Matomo boots its own vendor/autoload.php and does not load a
+// plugin's vendor/ automatically, so we require it here if present.
+$extraToolsAutoloader = __DIR__ . '/vendor/autoload.php';
+if (file_exists($extraToolsAutoloader)) {
+    require_once $extraToolsAutoloader;
+}
+
 class ExtraTools extends \Piwik\Plugin
 {
     /**

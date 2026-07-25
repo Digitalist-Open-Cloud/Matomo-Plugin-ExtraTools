@@ -151,6 +151,10 @@ You could use options to override config or environment variables:
         $input = $this->getInput();
         $output = $this->getOutput();
         $siteName = $input->getOption('name');
+        if (empty($siteName)) {
+            $output->writeln("<error>The website name can't be empty</error>");
+            return self::SUCCESS;
+        }
         $urls = $input->getOption('urls');
         if (isset($urls)) {
             $urls = trim($urls);

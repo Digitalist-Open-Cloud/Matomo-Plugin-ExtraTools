@@ -70,10 +70,15 @@ You could use options to override config or environment variables:
         $section = $input->getOption('section');
         $format = $input->getOption('format');
 
+        if (empty($section)) {
+            $output->writeln("<info>Looks like section <comment>$section</comment> does not exist</info>");
+            return self::FAILURE;
+        }
+
         $configs = Config::getInstance();
         $get_section = $configs->getFromLocalConfig("$section");
-        if ($get_section == null) {
-            $output->writeln("<info>Looks like section <comment>$section</comment> does not exist</info>");
+        if (empty($get_section)) {
+            $output->writeln("<info>Nothing found</info>");
             return self::FAILURE;
         } else {
             if ($format == 'json') {
@@ -90,14 +95,15 @@ You could use options to override config or environment variables:
     }
     private function json($config)
     {
-        $json = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        print_r($json);
-        echo "\n";
+        $output = $this->getOutput();
+        $json = json_encode($config, JSON_UNESCAPED_SLASHES);
+        $output->writeln($json);
     }
     private function yaml($config)
     {
+        $output = $this->getOutput();
         $yaml = Yaml::dump($config, 2, 2);
-        print_r($yaml);
+        $output->writeln($yaml);
     }
 
 
