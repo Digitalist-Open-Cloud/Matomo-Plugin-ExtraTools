@@ -150,6 +150,48 @@ Example:
             $this->defaults()->dbCharset()
         );
         $this->addOptionalValueOption(
+            'db-enable-ssl',
+            null,
+            'Enable SSL/TLS for the database connection',
+            $this->defaults()->dbEnableSsl()
+        );
+        $this->addOptionalValueOption(
+            'db-ssl-ca',
+            null,
+            'Path to the SSL CA certificate',
+            $this->defaults()->dbSslCa()
+        );
+        $this->addOptionalValueOption(
+            'db-ssl-cert',
+            null,
+            'Path to the SSL client certificate',
+            $this->defaults()->dbSslCert()
+        );
+        $this->addOptionalValueOption(
+            'db-ssl-key',
+            null,
+            'Path to the SSL client key',
+            $this->defaults()->dbSslKey()
+        );
+        $this->addOptionalValueOption(
+            'db-ssl-ca-path',
+            null,
+            'Path to a directory of trusted SSL CA certificates',
+            $this->defaults()->dbSslCaPath()
+        );
+        $this->addOptionalValueOption(
+            'db-ssl-cipher',
+            null,
+            'List of permissible SSL ciphers',
+            $this->defaults()->dbSslCipher()
+        );
+        $this->addOptionalValueOption(
+            'db-ssl-no-verify',
+            null,
+            'Do not verify the database server certificate',
+            $this->defaults()->dbSslNoVerify()
+        );
+        $this->addOptionalValueOption(
             'plugins',
             null,
             'Plugins to install (comma separated)',
@@ -201,6 +243,13 @@ Example:
         $db_adapter = $input->getOption('db-adapter');
         $db_collation = $input->getOption('db-collation');
         $db_charset = $input->getOption('db-charset');
+        $db_enable_ssl = $input->getOption('db-enable-ssl');
+        $db_ssl_ca = $input->getOption('db-ssl-ca');
+        $db_ssl_cert = $input->getOption('db-ssl-cert');
+        $db_ssl_key = $input->getOption('db-ssl-key');
+        $db_ssl_ca_path = $input->getOption('db-ssl-ca-path');
+        $db_ssl_cipher = $input->getOption('db-ssl-cipher');
+        $db_ssl_no_verify = $input->getOption('db-ssl-no-verify');
         $plugins = $input->getOption('plugins');
         $timestamp = $input->getOption('timestamp') ? true : false;
         $dontdropdb = $input->getOption('do-not-drop-db') ? true : false;
@@ -230,6 +279,13 @@ Example:
             'db-adapter' => $db_adapter,
             'db-collation' => $db_collation,
             'db-charset' => $db_charset,
+            'db-enable-ssl' => $db_enable_ssl,
+            'db-ssl-ca' => $db_ssl_ca,
+            'db-ssl-cert' => $db_ssl_cert,
+            'db-ssl-key' => $db_ssl_key,
+            'db-ssl-ca-path' => $db_ssl_ca_path,
+            'db-ssl-cipher' => $db_ssl_cipher,
+            'db-ssl-no-verify' => $db_ssl_no_verify,
             'timestamp' => $timestamp,
             'plugins' => $plugins,
             'do-not-drop-db' => $dontdropdb,
@@ -246,6 +302,21 @@ Example:
             'db_collation' => $db_collation,
             'db_charset' => $db_charset,
         ];
+        // SSL settings for the drop/create commands (only non-empty ones).
+        $ssl = [
+            'enable_ssl' => $db_enable_ssl,
+            'ssl_ca' => $db_ssl_ca,
+            'ssl_cert' => $db_ssl_cert,
+            'ssl_key' => $db_ssl_key,
+            'ssl_ca_path' => $db_ssl_ca_path,
+            'ssl_cipher' => $db_ssl_cipher,
+            'ssl_no_verify' => $db_ssl_no_verify,
+        ];
+        foreach ($ssl as $ssl_key => $ssl_value) {
+            if ($ssl_value !== null && $ssl_value !== '') {
+                $config[$ssl_key] = $ssl_value;
+            }
+        }
 
         if ($force === false) {
             $question = 'Are you really sure you would like to install Matomo - '

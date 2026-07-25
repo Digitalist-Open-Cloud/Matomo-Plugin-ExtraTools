@@ -196,6 +196,21 @@ class Install
             if (isset($options['charset'])) {
                 $config->database['charset'] = $options['db-charset'];
             }
+            // SSL/TLS options.
+            $sslOptionMap = [
+                'db-enable-ssl' => 'enable_ssl',
+                'db-ssl-ca' => 'ssl_ca',
+                'db-ssl-cert' => 'ssl_cert',
+                'db-ssl-key' => 'ssl_key',
+                'db-ssl-ca-path' => 'ssl_ca_path',
+                'db-ssl-cipher' => 'ssl_cipher',
+                'db-ssl-no-verify' => 'ssl_no_verify',
+            ];
+            foreach ($sslOptionMap as $optionKey => $configKey) {
+                if (isset($options[$optionKey]) && $options[$optionKey] !== '') {
+                    $config->database[$configKey] = $options[$optionKey];
+                }
+            }
         }
 
         if (isset($fileconfig)) {
@@ -210,7 +225,14 @@ class Install
                     'dbname',
                     'adapter',
                     'collation',
-                    'charset'
+                    'charset',
+                    'enable_ssl',
+                    'ssl_key',
+                    'ssl_cert',
+                    'ssl_ca',
+                    'ssl_ca_path',
+                    'ssl_cipher',
+                    'ssl_no_verify',
                 ];
                 foreach ($keys as $key) {
                     if (isset($database[$key])) {

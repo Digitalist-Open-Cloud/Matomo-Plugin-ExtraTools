@@ -78,6 +78,8 @@ To run:
             'db_pass' => $db_configs['password'],
             'db_name' =>  $db_configs['dbname'],
         ];
+        // Add SSL settings from the [database] section, if any.
+        $config += \Piwik\Plugins\ExtraTools\Lib\DatabaseSsl::fromDatabaseConfig($db_configs);
         if ($force === false) {
             $question = $this->askForConfirmation("'Are you really sure you would like to drop the database? ", false);
             if (!$question) {
