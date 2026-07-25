@@ -362,6 +362,11 @@ db username.
 This plugin comes with **no** guarantees. But it's free and open source.
 So, let's make it better!
 
+## Tested together with Matomo Helm chart
+
+As the ExtraTools plugin is important part of our [Matomo Helm chart](https://github.com/Digitalist-Open-Cloud/matomo-kubernetes), new versions of this plugin are tested together with the latest release of the Helm chart with Github actions.
+
+
 ## Version supported
 
 This plugin requires Matomo >= 5.1.0, < 6.0.0-b1.
