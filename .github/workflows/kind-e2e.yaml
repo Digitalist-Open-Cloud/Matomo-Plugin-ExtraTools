@@ -56,6 +56,13 @@ jobs:
       - name: Write plugin-override values
         run: |
           cat > extratools-override.yaml <<'EOF'
+          # tests/kind/values.yaml turns gatewayApi on for the upstream
+          # ingress+Gateway e2e test; we don't install Gateway API CRDs here,
+          # so the chart's HTTPRoute resources fail to install unless we
+          # explicitly turn it back off.
+          matomo:
+            gatewayApi:
+              enabled: false
           extraVolumes:
             - name: extratools-branch
               hostPath:
