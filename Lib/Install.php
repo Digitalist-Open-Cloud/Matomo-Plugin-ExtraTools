@@ -184,10 +184,10 @@ class Install
             if (isset($options['db-adapter'])) {
                 $config->database['adapter'] = $options['db-adapter'];
             }
-            if (isset($options['collation'])) {
+            if (isset($options['db-collation'])) {
                 $config->database['collation'] = $options['db-collation'];
             }
-            if (isset($options['charset'])) {
+            if (isset($options['db-charset'])) {
                 $config->database['charset'] = $options['db-charset'];
             }
             // SSL/TLS options.
