@@ -3,7 +3,7 @@
 [![PHPCS check](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/phpcs.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/phpcs.yaml)
 [![Tests with Helm chart](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/kind-e2e.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/kind-e2e.yaml)
 [![Semgrep OSS scan](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/semgrep.yaml)
-
+[![Test plugin with Matomo](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/matomo.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/matomo.yaml)
 Some extra cli commands to help with maintaining Matomo. Also providing an phpinfo page in the admin part.
 Introducing new console commands:
 
