@@ -56,31 +56,52 @@ jobs:
           fi
           ls -la ExtraTools | head
 
+          # kind mounts /tmp on its node containers as a separate tmpfs, which
+          # is a known source of docker-cp weirdness. Try both /tmp and a
+          # plain path on the node's regular overlay root, unfolded (no
+          # ::group::) so the comparison is always visible in the log.
           set +e
           cp_output=$(docker cp ExtraTools "$NODE":/tmp/extratools-plugin 2>&1)
           cp_status=$?
           set -e
-          echo "docker cp exit status: $cp_status"
-          echo "docker cp output: ${cp_output:-<empty>}"
+          echo "docker cp to /tmp exit=$cp_status output=${cp_output:-<empty>}"
+          docker exec "$NODE" test -d /tmp/extratools-plugin \
+            && echo "/tmp/extratools-plugin: EXISTS" || echo "/tmp/extratools-plugin: MISSING"
 
-          echo "::group::/tmp on the node right after cp"
+          set +e
+          cp_output2=$(docker cp ExtraTools "$NODE":/root/extratools-plugin 2>&1)
+          cp_status2=$?
+          set -e
+          echo "docker cp to /root exit=$cp_status2 output=${cp_output2:-<empty>}"
+          docker exec "$NODE" test -d /root/extratools-plugin \
+            && echo "/root/extratools-plugin: EXISTS" || echo "/root/extratools-plugin: MISSING"
+
+          echo "full /tmp listing on node:"
           docker exec "$NODE" ls -la /tmp
-          echo "::endgroup::"
+          echo "full /root listing on node:"
+          docker exec "$NODE" ls -la /root
 
-          if [ "$cp_status" -ne 0 ] || ! docker exec "$NODE" test -d /tmp/extratools-plugin; then
-            echo "::error::plugin copy did not land on the node"
+          if docker exec "$NODE" test -d /root/extratools-plugin; then
+            DEST=/root/extratools-plugin
+          elif docker exec "$NODE" test -d /tmp/extratools-plugin; then
+            DEST=/tmp/extratools-plugin
+          else
+            echo "::error::plugin copy did not land on the node at either path"
             exit 1
           fi
+          echo "Using DEST=$DEST"
+          echo "DEST=$DEST" >> "$GITHUB_ENV"
 
-          docker exec "$NODE" rm -rf /tmp/extratools-plugin/vendor /tmp/extratools-plugin/tests /tmp/extratools-plugin/.git
-          docker exec "$NODE" chmod -R a+rX /tmp/extratools-plugin
+          docker exec "$NODE" rm -rf "$DEST/vendor" "$DEST/tests" "$DEST/.git"
+          docker exec "$NODE" chmod -R a+rX "$DEST"
           echo "::group::what actually landed on the node"
-          docker exec "$NODE" sh -c 'ls -la /tmp/extratools-plugin && echo --- && cat /tmp/extratools-plugin/plugin.json'
+          docker exec "$NODE" sh -c "ls -la '$DEST' && echo --- && cat '$DEST/plugin.json'"
           echo "::endgroup::"
 
       - name: Write plugin-override values
         run: |
-          cat > extratools-override.yaml <<'EOF'
+          echo "Node-side plugin path: $DEST"
+          cat > extratools-override.yaml <<EOF
           # tests/kind/values.yaml turns gatewayApi on for the upstream
           # ingress+Gateway e2e test; we don't install Gateway API CRDs here,
           # so the chart's HTTPRoute resources fail to install unless we
@@ -91,12 +112,13 @@ jobs:
           extraVolumes:
             - name: extratools-branch
               hostPath:
-                path: /tmp/extratools-plugin
+                path: $DEST
                 type: Directory
           extraVolumeMounts:
             - name: extratools-branch
               mountPath: /var/www/html/plugins/ExtraTools
           EOF
+          cat extratools-override.yaml
 
       - name: Install Matomo chart with branch plugin
         run: |
