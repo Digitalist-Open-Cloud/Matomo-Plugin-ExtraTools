@@ -1,0 +1,126 @@
+name: Helm chart tests
+
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+  push:
+    branches: ["5.x-dev"]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: Install chart with branch plugin on kind
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout ExtraTools (this branch)
+        uses: actions/checkout@v7
+        with:
+          path: ExtraTools
+          persist-credentials: false
+
+      - name: Checkout matomo-kubernetes chart
+        uses: actions/checkout@v7
+        with:
+          repository: Digitalist-Open-Cloud/matomo-kubernetes
+          path: matomo-kubernetes
+          persist-credentials: false
+
+      - name: Create kind cluster
+        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+
+      - name: Install MariaDB and Valkey
+        run: |
+          kubectl create namespace matomo
+          kubectl apply -f matomo-kubernetes/tests/kind/mariadb.yaml -f matomo-kubernetes/tests/kind/valkey.yaml
+          kubectl -n matomo rollout status deployment/matomo-db-mysql --timeout=300s
+          kubectl -n matomo rollout status deployment/matomo-valkey --timeout=300s
+
+      # kind nodes are just docker containers, so a hostPath volume lets us drop
+      # this branch's plugin tree straight onto the node's filesystem (nested
+      # dirs and binaries included) with no configmap/PVC/initContainer
+      # plumbing - the same trick this repo already uses for the tagmanager-js
+      # RWX PV further down in the upstream workflow this was adapted from.
+      # vendor/ is skipped: the matomo image already ships ExtraTools' composer
+      # deps, we only want to override the plugin's own PHP/template/lang files.
+      - name: Copy branch plugin onto kind node
+        run: |
+          NODE=chart-testing-control-plane
+          # kind mounts /tmp on its node containers as a separate tmpfs, and
+          # docker cp silently no-ops when writing into it - /root sits on
+          # the node's regular overlay root and works.
+          docker cp ExtraTools "$NODE":/root/extratools-plugin
+          docker exec "$NODE" rm -rf /root/extratools-plugin/vendor /root/extratools-plugin/tests /root/extratools-plugin/.git
+          docker exec "$NODE" chmod -R a+rX /root/extratools-plugin
+
+      - name: Write plugin-override values
+        run: |
+          cat > extratools-override.yaml <<'EOF'
+          # tests/kind/values.yaml turns gatewayApi on for the upstream
+          # ingress+Gateway e2e test; we don't install Gateway API CRDs here,
+          # so the chart's HTTPRoute resources fail to install unless we
+          # explicitly turn it back off.
+          matomo:
+            gatewayApi:
+              enabled: false
+          extraVolumes:
+            - name: extratools-branch
+              hostPath:
+                path: /root/extratools-plugin
+                type: Directory
+          extraVolumeMounts:
+            - name: extratools-branch
+              mountPath: /var/www/html/plugins/ExtraTools
+          EOF
+
+      - name: Install Matomo chart with branch plugin
+        run: |
+          helm install matomo matomo-kubernetes/charts/matomo --namespace matomo \
+            --values matomo-kubernetes/tests/kind/values.yaml \
+            --values extratools-override.yaml
+
+      - name: Wait for Matomo workloads
+        run: |
+          for d in matomo-dashboard matomo-tracker matomo-cli; do
+            echo "::group::rollout $d"
+            kubectl -n matomo rollout status "deployment/$d" --timeout=600s
+            echo "::endgroup::"
+          done
+
+      - name: Verify the branch plugin is the one actually mounted
+        run: |
+          expected=$(grep -m1 '"version"' ExtraTools/plugin.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          actual=$(kubectl -n matomo exec deployment/matomo-dashboard -c matomo -- \
+            grep -m1 '"version"' /var/www/html/plugins/ExtraTools/plugin.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          echo "expected=$expected actual=$actual"
+          if [ "$expected" != "$actual" ]; then
+            echo "::error::mounted ExtraTools version ($actual) doesn't match checked-out branch ($expected)"
+            exit 1
+          fi
+
+      - name: Smoke test dashboard and tracker (in-cluster)
+        run: |
+          kubectl -n matomo run smoke --rm -i --restart=Never \
+            --image=curlimages/curl:8.14.1 --command -- sh -c '
+            set -e
+            echo "dashboard /index.php"
+            curl -sSf -o /dev/null http://matomo-dashboard:8080/index.php
+            echo "tracker /matomo.js"
+            curl -sSf -o /dev/null http://matomo-tracker:8080/matomo.js
+            '
+
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          echo "::group::resources"
+          kubectl get all -n matomo || true
+          kubectl -n matomo get events --sort-by=.lastTimestamp | tail -n 50 || true
+          echo "::endgroup::"
+          for p in $(kubectl -n matomo get pods -o name); do
+            echo "::group::$p"
+            kubectl -n matomo describe "$p" | tail -n 40 || true
+            kubectl -n matomo logs "$p" --all-containers --tail=100 || true
+            echo "::endgroup::"
+          done

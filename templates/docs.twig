@@ -13,7 +13,8 @@
 Introducing new console commands:</p>
 <ul>
 <li><code>archive:list</code></li>
-<li><code>config:get</code></li>
+<li><code>extra:bootstrap</code></li>
+<li><code>extra:config:get</code></li>
 <li><code>database:backup</code></li>
 <li><code>database:create</code></li>
 <li><code>database:drop</code></li>
@@ -65,10 +66,33 @@ and version controlled deliveries with configuration in json or yaml.</p>
 <p>Or add it manually to config.ini.php:</p>
 <pre><code>[ExtraTools]
 db_backup_path = "/var/www/html/tmp"</code></pre>
+<h3>Database SSL/TLS</h3>
+<p>The database commands (<code>database:backup</code>, <code>database:create</code>, <code>database:drop</code>,
+<code>database:import</code>) shell out to the <code>mysql</code>/<code>mysqldump</code>/<code>mysqladmin</code> clients. To
+connect over SSL/TLS they read the same SSL keys Matomo uses in the <code>[database]</code>
+section of <code>config.ini.php</code>:</p>
+<pre><code>[database]
+enable_ssl = 1
+ssl_ca = "/etc/ssl/certs/ca-certificates.crt"
+ssl_cert = "/path/to/client-cert.pem"
+ssl_key = "/path/to/client-key.pem"
+ssl_ca_path = "/etc/ssl/certs"
+ssl_cipher = ""
+ssl_no_verify = 1</code></pre>
+<p>Only <code>enable_ssl</code> is required to turn SSL on; the remaining keys are optional.
+Set <code>ssl_no_verify = 1</code> to require encryption without verifying the server
+certificate. For <code>matomo:install</code>, the same keys can be supplied via command
+line options (<code>--db-enable-ssl</code>, <code>--db-ssl-ca</code>, <code>--db-ssl-cert</code>, <code>--db-ssl-key</code>,
+<code>--db-ssl-ca-path</code>, <code>--db-ssl-cipher</code>, <code>--db-ssl-no-verify</code>), environment
+variables, or the <code>database</code> section of an install file.</p>
 <h2>Commands</h2>
 <h3><code>archive:list</code></h3>
 <p>Gets al list of ongoing or scheduled core archivers, if such exist.</p>
-<h3><code>config:get</code></h3>
+<h3><code>extra:bootstrap</code></h3>
+<p>Bootstraps Matomo (config, DI container, plugins) and warms the tracker cache
+(general plus per-site attributes). Use <code>--idsite</code> to warm specific sites, or
+<code>--skip-sites</code> to only warm the general cache.</p>
+<h3><code>extra:config:get</code></h3>
 <p>Gets a section config.
 @todo - make this more like config:set - so you have more options.</p>
 <h3><code>database:backup</code></h3>
@@ -140,6 +164,14 @@ MATOMO_DB_PREFIX
 MATOMO_DB_USERNAME
 MATOMO_DB_PASSWORD
 MATOMO_DB_NAME</code></pre>
+<p>Non-default SSL environment variables:</p>
+<pre><code class="language-bash">MATOMO_DATABASE_ENABLE_SSL
+MATOMO_DATABASE_SSL_CA
+MATOMO_DATABASE_SSL_CERT
+MATOMO_DATABASE_SSL_KEY
+MATOMO_DATABASE_SSL_CA_PATH
+MATOMO_DATABASE_SSL_CIPHER
+MATOMO_DATABASE_SSL_NO_VERIFY</code></pre>
 <p>Other environment variables:</p>
 <pre><code class="language-bash">MATOMO_FIRST_USER_NAME
 MATOMO_FIRST_USER_EMAIL
@@ -193,7 +225,7 @@ want to save you data, and check if it's ok.</li>
 <p>This plugin comes with <strong>no</strong> guarantees. But it's free and open source.
 So, let's make it better!</p>
 <h2>Version supported</h2>
-<p>This is tested from version 3.8.1, and should work with the latest stable.</p>
+<p>This plugin requires Matomo >= 5.1.0, &lt; 6.0.0-b1.</p>
 <h2>Thank you!</h2>
 <p>This plugin is based on work done by <a href="https://github.com/nebev">Ben Evans</a> in
 <a href="https://github.com/nebev/piwik-cli-setup">https://github.com/nebev/piwik-cli-setup</a>, and also reusing code in Matomo

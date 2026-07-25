@@ -1,9 +1,15 @@
 # Extra Tools (for Matomo)
 
+[![PHPCS check](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/phpcs.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/phpcs.yaml)
+[![Tests with Helm chart](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/kind-e2e.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/kind-e2e.yaml)
+[![Semgrep OSS scan](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/semgrep.yaml)
+[![Test plugin with Matomo](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/matomo.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/actions/workflows/matomo.yaml)
+
 Some extra cli commands to help with maintaining Matomo. Also providing an phpinfo page in the admin part.
 Introducing new console commands:
 
 - `archive:list`
+- `extra:bootstrap`
 - `extra:config:get`
 - `database:backup`
 - `database:create`
@@ -123,6 +129,12 @@ variables, or the `database` section of an install file.
 
 Gets al list of ongoing or scheduled core archivers, if such exist.
 
+### `extra:bootstrap`
+
+Bootstraps Matomo (config, DI container, plugins) and warms the tracker cache
+(general plus per-site attributes). Use `--idsite` to warm specific sites, or
+`--skip-sites` to only warm the general cache.
+
 ### `extra:config:get`
 
 Gets a section config.
@@ -184,7 +196,7 @@ List all segments, with ID, definition, date created and latest updated.
 
 ### `site:add`
 
-Adds a new site to track.
+Adds a new site to track. If a site with the same name already exists, no site is added.
 
 ### `site:delete`
 
@@ -355,9 +367,14 @@ db username.
 This plugin comes with **no** guarantees. But it's free and open source.
 So, let's make it better!
 
+## Tested together with Matomo Helm chart
+
+As the ExtraTools plugin is important part of our [Matomo Helm chart](https://github.com/Digitalist-Open-Cloud/matomo-kubernetes), new versions of this plugin are tested together with the latest release of the Helm chart with Github actions.
+
+
 ## Version supported
 
-This plugin requires Matomo >= 5.0.0-b1.
+This plugin requires Matomo >= 5.1.0, < 6.0.0-b1.
 
 ## Thank you!
 
