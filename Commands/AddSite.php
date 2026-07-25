@@ -39,7 +39,8 @@ You could use options to override config or environment variables:
         $this->setName('site:add');
         $this->setDescription('Add a new site');
 
-        foreach ([
+        foreach (
+            [
             'name' => 'Name for the site',
             'urls' => 'URL for the site',
             'ecommerce' => 'If the site is a ecommerce site',
@@ -54,15 +55,18 @@ You could use options to override config or environment variables:
             'start-date' => 'Start date',
             'type' => 'Type',
             'settings-value' => 'Settings value',
-        ] as $name => $description) {
+            ] as $name => $description
+        ) {
             $this->addOptionalValueOption($name, null, $description, null);
         }
 
-        foreach ([
+        foreach (
+            [
             'exclude-user-agents' => 'Exclude user agents',
             'keep-url-fragments' => 'Keep url fragments',
             'exclude-unknown-urls' => 'Exclude unknown urls',
-        ] as $name => $description) {
+            ] as $name => $description
+        ) {
             $this->addNoValueOption($name, null, $description, null);
         }
     }
