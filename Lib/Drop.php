@@ -46,15 +46,15 @@ class Drop
     {
         $db_host = $this->config['db_host'];
         $db_port = $this->config['db_port'];
-        $db_user = $this->config['db_user'];
-        $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
+
+        // Credentials and (optionally) SSL settings via an option file.
+        [$temp, $config_path] = DatabaseSsl::createClientOptionFile($this->config);
 
         $checkDbExists = new Process\Process(
             [
                 'mysql',
-                "-u$db_user",
-                "-p$db_pass",
+                "--defaults-extra-file=$config_path",
                 "-P$db_port",
                 "-h$db_host",
                 "--execute=SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = '$db_name'"
@@ -67,12 +67,11 @@ class Drop
             $drop = new Process\Process(
                 [
                     "mysqladmin",
-                    "-u$db_user",
+                    "--defaults-extra-file=$config_path",
                     "-h",
                     "$db_host",
                     "-P",
                     "$db_port",
-                    "-p$db_pass",
                     "drop",
                     "$db_name",
                     "--force"
@@ -80,6 +79,7 @@ class Drop
             );
             $drop->enableOutput();
             $drop->run();
+            fclose($temp);
             $message = $drop->getOutput();
             if (!$drop->isSuccessful()) {
                 $message = $drop->getErrorOutput();
@@ -94,5 +94,6 @@ class Drop
                 }
             }
         }
+        fclose($temp);
     }
 }

@@ -86,6 +86,8 @@ To run:
                 'db_pass' => $db_configs['password'],
                 'db_name' => $db_configs['dbname'],
             ];
+            // Add SSL settings from the [database] section, if any.
+            $config += \Piwik\Plugins\ExtraTools\Lib\DatabaseSsl::fromDatabaseConfig($db_configs);
 
             $create = new Create($config, $output);
             $output->writeln('<info>Dropping db:</info>');

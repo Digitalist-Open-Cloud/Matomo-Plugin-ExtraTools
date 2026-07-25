@@ -46,19 +46,19 @@ class Import
         $backup_path = $this->config['db_backup_path'];
         $db_host = $this->config['db_host'];
         $db_port = $this->config['db_port'];
-        $db_user = $this->config['db_user'];
-        $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
+
+        // Credentials and (optionally) SSL settings via an option file.
+        [$temp, $config_path] = DatabaseSsl::createClientOptionFile($this->config);
 
         $import = new Process\Process(
             [
                 "mysql",
-                "-u$db_user",
+                "--defaults-extra-file=$config_path",
                 "-h",
                 "$db_host",
                 "-P",
                 "$db_port",
-                "-p$db_pass",
                 "$db_name",
                 "<",
                 "$backup_path"
@@ -67,6 +67,7 @@ class Import
         $import->enableOutput();
 
         $import->run();
+        fclose($temp);
         echo $import->getOutput();
         if (!$import->isSuccessful()) {
             throw new ProcessFailedException($import);

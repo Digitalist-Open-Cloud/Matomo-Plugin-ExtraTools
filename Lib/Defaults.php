@@ -160,6 +160,90 @@ class Defaults
     /**
      * @return string
      */
+    public function dbEnableSsl()
+    {
+        $value = '';
+        if (getenv('MATOMO_DATABASE_ENABLE_SSL')) {
+            $value = getenv('MATOMO_DATABASE_ENABLE_SSL');
+        }
+        return $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function dbSslCa()
+    {
+        $value = '';
+        if (getenv('MATOMO_DATABASE_SSL_CA')) {
+            $value = getenv('MATOMO_DATABASE_SSL_CA');
+        }
+        return $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function dbSslCert()
+    {
+        $value = '';
+        if (getenv('MATOMO_DATABASE_SSL_CERT')) {
+            $value = getenv('MATOMO_DATABASE_SSL_CERT');
+        }
+        return $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function dbSslKey()
+    {
+        $value = '';
+        if (getenv('MATOMO_DATABASE_SSL_KEY')) {
+            $value = getenv('MATOMO_DATABASE_SSL_KEY');
+        }
+        return $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function dbSslCaPath()
+    {
+        $value = '';
+        if (getenv('MATOMO_DATABASE_SSL_CA_PATH')) {
+            $value = getenv('MATOMO_DATABASE_SSL_CA_PATH');
+        }
+        return $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function dbSslCipher()
+    {
+        $value = '';
+        if (getenv('MATOMO_DATABASE_SSL_CIPHER')) {
+            $value = getenv('MATOMO_DATABASE_SSL_CIPHER');
+        }
+        return $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function dbSslNoVerify()
+    {
+        $value = '';
+        if (getenv('MATOMO_DATABASE_SSL_NO_VERIFY')) {
+            $value = getenv('MATOMO_DATABASE_SSL_NO_VERIFY');
+        }
+        return $value;
+    }
+
+    /**
+     * @return string
+     */
     public function firstSiteUrl()
     {
         $url = '';

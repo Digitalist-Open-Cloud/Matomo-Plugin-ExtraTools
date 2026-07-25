@@ -46,21 +46,13 @@ class Backup
         $backup_folder = $this->config['db_backup_folder'];
         $db_host = $this->config['db_host'];
         $db_port = $this->config['db_port'];
-        $db_user = $this->config['db_user'];
-        $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
         $prefix = $this->config['db_backup_prefix'];
         $timeout = $this->config['timeout'];
 
-        // Build a temp db config file.
-        $temp = tmpfile();
-        fwrite(
-            $temp,
-            "[client]" . "\n" .
-            "user=" . $db_user . "\n" .
-            "password=" . $db_pass
-        );
-        $config_path = stream_get_meta_data($temp)['uri'];
+        // Build a temp db config file ([client] group with credentials and,
+        // when enabled, SSL settings).
+        [$temp, $config_path] = DatabaseSsl::createClientOptionFile($this->config);
         $timestamp = date("Ymd-His");
         $backup = Process\Process::fromShellCommandline("mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql");
         $backup->setTimeout($timeout);

@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- SSL/TLS support for the database commands (`database:backup`, `database:create`, `database:drop`, `database:import`) and `matomo:install`, using the `enable_ssl`, `ssl_ca`, `ssl_cert`, `ssl_key`, `ssl_ca_path`, `ssl_cipher` and `ssl_no_verify` keys from the `[database]` config, matching command line options and environment variables.
+
 ## [5.1.5] - 2025-07-25
 
 ### Changed

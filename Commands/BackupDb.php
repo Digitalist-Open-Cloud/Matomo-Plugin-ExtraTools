@@ -103,6 +103,8 @@ You could use options to override config or environment variables:
             'db_backup_prefix' => $backup_prefix,
             'timeout' => $timeout,
         ];
+        // Add SSL settings from the [database] section, if any.
+        $config += \Piwik\Plugins\ExtraTools\Lib\DatabaseSsl::fromDatabaseConfig($db_configs);
 
 
         $backup = new Backup($config, $output);

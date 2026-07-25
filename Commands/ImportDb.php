@@ -93,6 +93,8 @@ To run:
             'db_name' =>  $db_configs['dbname'],
             'db_backup_path' => $backup_path,
         ];
+        // Add SSL settings from the [database] section, if any.
+        $config += \Piwik\Plugins\ExtraTools\Lib\DatabaseSsl::fromDatabaseConfig($db_configs);
 
         $backup = new Import($config, $output);
         $output->writeln('<info>Starting import db job:</info>');

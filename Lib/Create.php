@@ -46,16 +46,16 @@ class Create
     {
         $db_host = $this->config['db_host'];
         $db_port = $this->config['db_port'];
-        $db_user = $this->config['db_user'];
-        $db_pass = $this->config['db_pass'];
         $db_name = $this->config['db_name'];
+
+        // Credentials and (optionally) SSL settings via an option file.
+        [$temp, $config_path] = DatabaseSsl::createClientOptionFile($this->config);
 
         $createDatabaseCommand = "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE DATABASE IF NOT EXISTS `$db_name` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
         $drop = new Process\Process(
             [
                 'mysql',
-                "-u$db_user",
-                "-p$db_pass",
+                "--defaults-extra-file=$config_path",
                 "-P$db_port",
                 "-h$db_host",
                 "--execute=$createDatabaseCommand",
@@ -65,6 +65,7 @@ class Create
 
         $drop->enableOutput();
         $drop->run();
+        fclose($temp);
 
         if (!$drop->isSuccessful()) {
             throw new ProcessFailedException($drop);
