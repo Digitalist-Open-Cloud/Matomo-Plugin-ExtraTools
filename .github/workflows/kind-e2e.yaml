@@ -47,7 +47,13 @@ jobs:
       # deps, we only want to override the plugin's own PHP/template/lang files.
       - name: Copy branch plugin onto kind node
         run: |
-          NODE=chart-testing-control-plane
+          docker ps -a
+          NODE=$(docker ps --filter "name=control-plane" --format '{{.Names}}' | head -1)
+          echo "Detected kind node: $NODE"
+          if [ -z "$NODE" ]; then
+            echo "::error::no control-plane container found"
+            exit 1
+          fi
           ls -la ExtraTools | head
           # destination must NOT pre-exist: docker cp only reliably copies
           # directory *contents* (rather than nesting or no-op'ing) when the
