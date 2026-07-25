@@ -61,21 +61,7 @@ class ArchiveList extends ConsoleCommand
                 }
                 $out_period = '';
                 if (isset($out['period'])) {
-                    $period = $out['period'];
-                    switch ($period) {
-                        case 1:
-                            $period = 'day';
-                            break;
-                        case 2:
-                            $period = 'week';
-                            break;
-                        case 3:
-                            $period = 'month';
-                            break;
-                        case 4:
-                            $period = 'year';
-                            break;
-                    }
+                    $period = [1 => 'day', 2 => 'week', 3 => 'month', 4 => 'year'][$out['period']] ?? $out['period'];
                     $out_period =  "     period: <comment>" . $period . "</comment>\n";
                 }
                 if (isset($out['started'])) {
@@ -110,14 +96,10 @@ class ArchiveList extends ConsoleCommand
     {
         try {
             $sql = "SELECT `name` FROM " . $this->getTable() . " WHERE `hash` = '" . $hash . "';";
-            $name = $this->getDb()->fetchRow($sql);
+            $name = Db::get()->fetchRow($sql);
             return $name;
         } catch (\Exception $e) {
             return false;
         }
-    }
-    private function getDb()
-    {
-        return Db::get();
     }
 }

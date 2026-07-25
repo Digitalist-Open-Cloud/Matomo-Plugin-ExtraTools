@@ -68,10 +68,7 @@ To run:
 
         if ($force === false) {
             $question = $this->askForConfirmation('Are you really sure you would like to create the database? ', false);
-            if (!$question) {
-                echo "foo";
-                //return self::FAILURE;
-            } else {
+            if ($question) {
                 $force = true;
             }
         }

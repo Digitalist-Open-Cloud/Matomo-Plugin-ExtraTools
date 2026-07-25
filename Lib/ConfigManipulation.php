@@ -42,19 +42,12 @@ class ConfigManipulation
 
     public function saveConfig($section, $key, $value)
     {
-
-        $manipulations = [];
         $isSingleAssignment = !empty($section) && !empty($key) && $value !== false;
-        if ($isSingleAssignment) {
-            if (is_array($section)) {
-                $manipulations[] = new ConfigSettingManipulation($section, $key, $value, true);
-            } else {
-                $manipulations[] = new ConfigSettingManipulation($section, $key, $value);
-            }
-        }
-
         $config = Config::getInstance();
-        foreach ($manipulations as $manipulation) {
+        if ($isSingleAssignment) {
+            $manipulation = is_array($section)
+                ? new ConfigSettingManipulation($section, $key, $value, true)
+                : new ConfigSettingManipulation($section, $key, $value);
             $manipulation->manipulate($config);
         }
         $config->forceSave();

@@ -22,7 +22,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Piwik\Plugins\ExtraTools\Lib\Drop;
 use Piwik\Plugins\ExtraTools\Lib\Create;
@@ -378,8 +377,7 @@ Example:
      */
     protected function log($text)
     {
-        $output = new ConsoleOutput();
-        $output->writeln("<info>$text</info>");
+        $this->getOutput()->writeln("<info>$text</info>");
     }
 
     /**

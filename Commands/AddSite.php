@@ -39,108 +39,32 @@ You could use options to override config or environment variables:
         $this->setName('site:add');
         $this->setDescription('Add a new site');
 
-        $this->addOptionalValueOption(
-            'name',
-            null,
-            'Name for the site',
-            null
-        );
-        $this->addOptionalValueOption(
-            'urls',
-            null,
-            'URL for the site',
-            null
-        );
-        $this->addOptionalValueOption(
-            'ecommerce',
-            null,
-            'If the site is a ecommerce site',
-            null
-        );
-        $this->addOptionalValueOption(
-            'no-site-search',
-            null,
-            'If site search should be tracked',
-            null
-        );
-        $this->addOptionalValueOption(
-            'search-keyword-parameters',
-            null,
-            'Search keyword parameters',
-            null
-        );
-        $this->addOptionalValueOption(
-            'search-category-parameters',
-            null,
-            'Search category parameters',
-            null
-        );
-        $this->addOptionalValueOption(
-            'exclude-ips',
-            null,
-            'Exclude IPs',
-            null
-        );
-        $this->addOptionalValueOption(
-            'exclude-query-parameters',
-            null,
-            'Exclude query parameters',
-            null
-        );
-        $this->addOptionalValueOption(
-            'timezone',
-            null,
-            'Timezone',
-            null
-        );
-        $this->addOptionalValueOption(
-            'currency',
-            null,
-            'Currency',
-            null
-        );
-        $this->addOptionalValueOption(
-            'group',
-            null,
-            'Group',
-            null
-        );
-        $this->addOptionalValueOption(
-            'start-date',
-            null,
-            'Start date',
-            null
-        );
-        $this->addNoValueOption(
-            'exclude-user-agents',
-            null,
-            'Exclude user agents',
-            null
-        );
-        $this->addNoValueOption(
-            'keep-url-fragments',
-            null,
-            'Keep url fragments',
-            null
-        );
-        $this->addNoValueOption(
-            'exclude-unknown-urls',
-            null,
-            'Exclude unknown urls',
-            null
-        );
-        $this->addOptionalValueOption(
-            'type',
-            null,
-            'Type',
-            null
-        );
-        $this->addOptionalValueOption(
-            'settings-value',
-            null,
-            'Settings value',
-            null
-        );
+        foreach ([
+            'name' => 'Name for the site',
+            'urls' => 'URL for the site',
+            'ecommerce' => 'If the site is a ecommerce site',
+            'no-site-search' => 'If site search should be tracked',
+            'search-keyword-parameters' => 'Search keyword parameters',
+            'search-category-parameters' => 'Search category parameters',
+            'exclude-ips' => 'Exclude IPs',
+            'exclude-query-parameters' => 'Exclude query parameters',
+            'timezone' => 'Timezone',
+            'currency' => 'Currency',
+            'group' => 'Group',
+            'start-date' => 'Start date',
+            'type' => 'Type',
+            'settings-value' => 'Settings value',
+        ] as $name => $description) {
+            $this->addOptionalValueOption($name, null, $description, null);
+        }
+
+        foreach ([
+            'exclude-user-agents' => 'Exclude user agents',
+            'keep-url-fragments' => 'Keep url fragments',
+            'exclude-unknown-urls' => 'Exclude unknown urls',
+        ] as $name => $description) {
+            $this->addNoValueOption($name, null, $description, null);
+        }
     }
 
     /**

@@ -44,15 +44,6 @@ class Archivers
     {
         $sql = "SELECT * FROM " . $this->getTable() . " ORDER BY `ts_invalidated`";
 
-        $invalidations = $this->getDb()->fetchAll($sql);
-        if (isset($invalidations)) {
-            return $invalidations;
-        } else {
-            return false;
-        }
-    }
-    private function getDb()
-    {
-        return Db::get();
+        return Db::get()->fetchAll($sql);
     }
 }

@@ -37,60 +37,38 @@ class Site
     {
         $site = $this->site;
 
-        $result = Access::doAsSuperUser(
+        return Access::doAsSuperUser(
             function () use ($site) {
-                $siteName = false;
-                $urls = null;
-                $ecommerce = null;
-                $siteSearch = null;
-                $searchKeywordParameters = null;
-                $searchCategoryParameters = null;
-                $excludedIps = null;
-                $excludedQueryParameters = null;
-                $timezone = null;
-                $currency = null;
-                $group = null;
-                $startDate = null;
-                $excludedUserAgents = null;
-                $keepURLFragments = null;
-                $type = null;
-                $settingValues = null;
-                $excludeUnknownUrls = null;
-                $site = $this->site;
-                $extract = extract($site);
                 return APISitesManager::getInstance()->addSite(
-                    $siteName,
-                    $urls,
-                    $ecommerce,
-                    $siteSearch,
-                    $searchKeywordParameters,
-                    $searchCategoryParameters,
-                    $excludedIps,
-                    $excludedQueryParameters,
-                    $timezone,
-                    $currency,
-                    $group,
-                    $startDate,
-                    $excludedUserAgents,
-                    $keepURLFragments,
-                    $type,
-                    $settingValues,
-                    $excludeUnknownUrls
+                    $site['siteName'] ?? false,
+                    $site['urls'] ?? null,
+                    $site['ecommerce'] ?? null,
+                    $site['siteSearch'] ?? null,
+                    $site['searchKeywordParameters'] ?? null,
+                    $site['searchCategoryParameters'] ?? null,
+                    $site['excludedIps'] ?? null,
+                    $site['excludedQueryParameters'] ?? null,
+                    $site['timezone'] ?? null,
+                    $site['currency'] ?? null,
+                    $site['group'] ?? null,
+                    $site['startDate'] ?? null,
+                    $site['excludedUserAgents'] ?? null,
+                    $site['keepURLFragments'] ?? null,
+                    $site['type'] ?? null,
+                    $site['settingValues'] ?? null,
+                    $site['excludeUnknownUrls'] ?? null
                 );
             }
         );
-        return $result;
     }
 
     public function exists(): bool
     {
-        $sites = Access::doAsSuperUser(
-            function (): array {
-                $siteName = false;
-                $site = $this->site;
-                extract($site);
+        $site = $this->site;
 
-                return APISitesManager::getInstance()->getPatternMatchSites($siteName, 1);
+        $sites = Access::doAsSuperUser(
+            function () use ($site): array {
+                return APISitesManager::getInstance()->getPatternMatchSites($site['siteName'] ?? false, 1);
             }
         );
 

@@ -88,20 +88,7 @@ class Controller extends ControllerAdmin
                 $name = $this->getSegmentName($hash);
                 $out['name'] = $name['name'];
             }
-            switch ($out['period']) {
-                case 1:
-                    $out['period'] = 'day';
-                    break;
-                case 2:
-                    $out['period'] = 'week';
-                    break;
-                case 3:
-                    $out['period'] = 'month';
-                    break;
-                case 4:
-                    $out['period'] = 'year';
-                    break;
-            }
+            $out['period'] = array_flip(Piwik::$idPeriods)[$out['period']] ?? $out['period'];
 
             $result[] = $out;
         }
@@ -122,14 +109,10 @@ class Controller extends ControllerAdmin
     {
         try {
             $sql = "SELECT `name` FROM " . $this->getTable() . " WHERE `hash` = '" . $hash . "';";
-            $name = $this->getDb()->fetchRow($sql);
+            $name = Db::get()->fetchRow($sql);
             return $name;
         } catch (\Exception $e) {
             return false;
         }
-    }
-    private function getDb()
-    {
-        return Db::get();
     }
 }

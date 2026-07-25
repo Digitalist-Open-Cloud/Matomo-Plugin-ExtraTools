@@ -78,15 +78,12 @@ To run:
         }
 
         if (isset($outsites)) {
-            if ($format == 'json') {
-                $this->json($outsites);
-            }
-            if ($format == 'yaml') {
-                $this->yaml($outsites);
-            }
-            if ($format == 'text') {
-                $this->text($outsites, $output);
-            }
+            match ($format) {
+                'json' => $this->json($outsites),
+                'yaml' => $this->yaml($outsites),
+                'text' => $this->text($outsites, $output),
+                default => null,
+            };
             return self::SUCCESS;
         } else {
             $output->write("<info>No sites in Matomo</info>");
