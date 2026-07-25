@@ -7,7 +7,7 @@
         "install"
     ],
     "homepage": "https://digitalist.cloud",
-    "version": "5.1.5",
+    "version": "5.2.0",
     "license": "GPL-3.0-or-later",
     "authors": [
         {
@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "symfony/process": "~5.4.21",
         "symfony/yaml": "~5.4.21"
     },
