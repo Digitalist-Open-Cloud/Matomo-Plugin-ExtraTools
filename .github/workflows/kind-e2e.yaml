@@ -1,4 +1,4 @@
-name: E2E (kind) - branch plugin in matomo-kubernetes
+name: Helm chart tests
 
 on:
   pull_request: {}
