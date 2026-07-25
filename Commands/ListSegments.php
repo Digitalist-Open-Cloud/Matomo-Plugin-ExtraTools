@@ -22,8 +22,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Piwik\Container\StaticContainer;
-use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
 use Piwik\Common;
 use Piwik\Db;
 use Piwik\Config;
@@ -125,17 +123,6 @@ To run:
     }
 
     /**
-     * @return array
-     */
-    public function getSegments()
-    {
-        /** @var SegmentEditorModel $segmentEditorModel */
-        $segmentEditorModel = StaticContainer::get('Piwik\Plugins\SegmentEditor\Model');
-        $segments = $segmentEditorModel->getAllSegmentsAndIgnoreVisibility();
-
-        return $segments;
-    }
-    /**
      * Returns all stored segments that haven't been deleted. Ignores the site the segments are enabled
      * for and whether to auto archive or not.
      *
@@ -145,12 +132,6 @@ To run:
     {
         $sql = "SELECT * FROM " . $this->getTable();
 
-        $segments = $this->getDb()->fetchAll($sql);
-
-        return $segments;
-    }
-    private function getDb()
-    {
-        return Db::get();
+        return Db::get()->fetchAll($sql);
     }
 }

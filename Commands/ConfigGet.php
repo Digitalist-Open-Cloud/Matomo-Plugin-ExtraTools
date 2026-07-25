@@ -81,15 +81,12 @@ You could use options to override config or environment variables:
             $output->writeln("<info>Nothing found</info>");
             return self::FAILURE;
         } else {
-            if ($format == 'json') {
-                $this->json($get_section);
-            }
-            if ($format == 'yaml') {
-                $this->yaml($get_section);
-            }
-            if ($format == 'text') {
-                $this->text($get_section);
-            }
+            match ($format) {
+                'json' => $this->json($get_section),
+                'yaml' => $this->yaml($get_section),
+                'text' => $this->text($get_section),
+                default => null,
+            };
         }
         return self::SUCCESS;
     }

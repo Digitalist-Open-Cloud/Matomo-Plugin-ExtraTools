@@ -36,7 +36,6 @@ use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\Marketplace\LicenseKey;
 use Piwik\Plugins\TagManager\Dao\ContainersDao;
-use Piwik\Plugins\ExtraTools\Lib\Site;
 
 class Install
 {
@@ -62,18 +61,14 @@ class Install
     public function __construct(
         $options,
         OutputInterface $output,
-        $fileconfig = null,
-        $user = null,
-        $silent = 0
+        $fileconfig = null
     ) {
         $this->config = Config::getInstance();
         $this->options = $options;
         $this->output = $output;
         $this->fileconfig = $fileconfig;
         $this->timestamp = false;
-        $this->user = $user;
         $this->licensekey = getenv('MATOMO_LICENSE');
-        $this->silent = $silent;
     }
 
     public function execute()
@@ -119,7 +114,6 @@ class Install
         if (isset($fileconfig['first-site-url'])) {
             $first_site_url = $fileconfig['first-site-url'];
         }
-        $dontdrobdb = $options['do-not-drop-db'];
         $this->silent = $options['silent'];
 
         if ($this->silent !== true) {
@@ -546,22 +540,6 @@ class Install
 
         $config->forceSave();
         $this->log("<comment>We are done! Welcome to Matomo!</comment>");
-    }
-
-    /**
-     * Extract host from URL
-     *
-     * @param string $url URL
-     *
-     * @return string|false
-     */
-    protected function extractHost($url)
-    {
-        $urlParts = parse_url($url);
-        if (isset($urlParts['host']) && strlen($host = $urlParts['host'])) {
-            return $host;
-        }
-        return false;
     }
 
     /**

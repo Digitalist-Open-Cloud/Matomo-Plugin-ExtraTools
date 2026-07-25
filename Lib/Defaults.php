@@ -28,14 +28,7 @@ class Defaults
      */
     public function dbHost()
     {
-        $host = '';
-        if (getenv('MATOMO_DATABASE_HOST')) {
-            $host = getenv('MATOMO_DATABASE_HOST');
-        }
-        if (getenv('MATOMO_DB_HOST')) {
-            $host = getenv('MATOMO_DB_HOST');
-        }
-        return $host;
+        return getenv('MATOMO_DB_HOST') ?: getenv('MATOMO_DATABASE_HOST') ?: '';
     }
 
     /**
@@ -43,14 +36,7 @@ class Defaults
      */
     public function dbPort()
     {
-        $port = '3306';
-        if (getenv('MATOMO_DATABASE_PORT')) {
-            $port = getenv('MATOMO_DATABASE_PORT');
-        }
-        if (getenv('MATOMO_DB_PORT')) {
-            $port = getenv('MATOMO_DB_PORT');
-        }
-        return $port;
+        return getenv('MATOMO_DB_PORT') ?: getenv('MATOMO_DATABASE_PORT') ?: '3306';
     }
 
     /**
@@ -58,14 +44,7 @@ class Defaults
      */
     public function dbName()
     {
-        $name = '';
-        if (getenv('MATOMO_DATABASE_DBNAME')) {
-            $name = getenv('MATOMO_DATABASE_DBNAME');
-        }
-        if (getenv('MATOMO_DB_NAME')) {
-            $name = getenv('MATOMO_DB_NAME');
-        }
-        return $name;
+        return getenv('MATOMO_DB_NAME') ?: getenv('MATOMO_DATABASE_DBNAME') ?: '';
     }
 
     /**
@@ -73,14 +52,7 @@ class Defaults
      */
     public function dbPrefix()
     {
-        $prefix = '';
-        if (getenv('MATOMO_DATABASE_TABLES_PREFIX')) {
-            $prefix = getenv('MATOMO_DATABASE_TABLES_PREFIX');
-        }
-        if (getenv('MATOMO_DB_PREFIX')) {
-            $prefix = getenv('MATOMO_DB_PREFIX');
-        }
-        return $prefix;
+        return getenv('MATOMO_DB_PREFIX') ?: getenv('MATOMO_DATABASE_TABLES_PREFIX') ?: '';
     }
 
     /**
@@ -88,27 +60,15 @@ class Defaults
      */
     public function dbAdapter()
     {
-        $adapter = 'PDO\MYSQL';
-        if (getenv('MATOMO_DATABASE_ADAPTER')) {
-            $adapter = getenv('MATOMO_DATABASE_ADAPTER');
-        }
-        return $adapter;
+        return getenv('MATOMO_DATABASE_ADAPTER') ?: 'PDO\MYSQL';
     }
-
 
     /**
      * @return string
      */
     public function dbPass()
     {
-        $pass = '';
-        if (getenv('MATOMO_DATABASE_PASSWORD')) {
-            $pass = getenv('MATOMO_DATABASE_PASSWORD');
-        }
-        if (getenv('MATOMO_DB_PASSWORD')) {
-            $pass = getenv('MATOMO_DB_PASSWORD');
-        }
-        return $pass;
+        return getenv('MATOMO_DB_PASSWORD') ?: getenv('MATOMO_DATABASE_PASSWORD') ?: '';
     }
 
     /**
@@ -116,14 +76,7 @@ class Defaults
      */
     public function dbUser()
     {
-        $user = '';
-        if (getenv('MATOMO_DATABASE_USERNAME')) {
-            $user = getenv('MATOMO_DATABASE_USERNAME');
-        }
-        if (getenv('MATOMO_DB_USERNAME')) {
-            $user = getenv('MATOMO_DB_USERNAME');
-        }
-        return $user;
+        return getenv('MATOMO_DB_USERNAME') ?: getenv('MATOMO_DATABASE_USERNAME') ?: '';
     }
 
     /**
@@ -131,14 +84,7 @@ class Defaults
      */
     public function dbCollation()
     {
-        $collation = 'utf8mb4_general_ci';
-        if (getenv('MATOMO_DATABASE_COLLATION')) {
-            $host = getenv('MATOMO_DATABASE_COLLATION');
-        }
-        if (getenv('MATOMO_DB_COLLATION')) {
-            $host = getenv('MATOMO_DB_COLLATION');
-        }
-        return $collation;
+        return getenv('MATOMO_DB_COLLATION') ?: getenv('MATOMO_DATABASE_COLLATION') ?: 'utf8mb4_general_ci';
     }
 
     /**
@@ -146,27 +92,15 @@ class Defaults
      */
     public function dbCharset()
     {
-        $charset = 'utf8mb4';
-        if (getenv('MATOMO_DATABASE_CHARSET')) {
-            $host = getenv('MATOMO_DATABASE_CHARSET');
-        }
-        if (getenv('MATOMO_DB_CHARSET')) {
-            $host = getenv('MATOMO_DB_CHARSET');
-        }
-        return $charset;
+        return getenv('MATOMO_DB_CHARSET') ?: getenv('MATOMO_DATABASE_CHARSET') ?: 'utf8mb4';
     }
-
 
     /**
      * @return string
      */
     public function dbEnableSsl()
     {
-        $value = '';
-        if (getenv('MATOMO_DATABASE_ENABLE_SSL')) {
-            $value = getenv('MATOMO_DATABASE_ENABLE_SSL');
-        }
-        return $value;
+        return getenv('MATOMO_DATABASE_ENABLE_SSL') ?: '';
     }
 
     /**
@@ -174,11 +108,7 @@ class Defaults
      */
     public function dbSslCa()
     {
-        $value = '';
-        if (getenv('MATOMO_DATABASE_SSL_CA')) {
-            $value = getenv('MATOMO_DATABASE_SSL_CA');
-        }
-        return $value;
+        return getenv('MATOMO_DATABASE_SSL_CA') ?: '';
     }
 
     /**
@@ -186,11 +116,7 @@ class Defaults
      */
     public function dbSslCert()
     {
-        $value = '';
-        if (getenv('MATOMO_DATABASE_SSL_CERT')) {
-            $value = getenv('MATOMO_DATABASE_SSL_CERT');
-        }
-        return $value;
+        return getenv('MATOMO_DATABASE_SSL_CERT') ?: '';
     }
 
     /**
@@ -198,11 +124,7 @@ class Defaults
      */
     public function dbSslKey()
     {
-        $value = '';
-        if (getenv('MATOMO_DATABASE_SSL_KEY')) {
-            $value = getenv('MATOMO_DATABASE_SSL_KEY');
-        }
-        return $value;
+        return getenv('MATOMO_DATABASE_SSL_KEY') ?: '';
     }
 
     /**
@@ -210,11 +132,7 @@ class Defaults
      */
     public function dbSslCaPath()
     {
-        $value = '';
-        if (getenv('MATOMO_DATABASE_SSL_CA_PATH')) {
-            $value = getenv('MATOMO_DATABASE_SSL_CA_PATH');
-        }
-        return $value;
+        return getenv('MATOMO_DATABASE_SSL_CA_PATH') ?: '';
     }
 
     /**
@@ -222,11 +140,7 @@ class Defaults
      */
     public function dbSslCipher()
     {
-        $value = '';
-        if (getenv('MATOMO_DATABASE_SSL_CIPHER')) {
-            $value = getenv('MATOMO_DATABASE_SSL_CIPHER');
-        }
-        return $value;
+        return getenv('MATOMO_DATABASE_SSL_CIPHER') ?: '';
     }
 
     /**
@@ -234,11 +148,7 @@ class Defaults
      */
     public function dbSslNoVerify()
     {
-        $value = '';
-        if (getenv('MATOMO_DATABASE_SSL_NO_VERIFY')) {
-            $value = getenv('MATOMO_DATABASE_SSL_NO_VERIFY');
-        }
-        return $value;
+        return getenv('MATOMO_DATABASE_SSL_NO_VERIFY') ?: '';
     }
 
     /**
@@ -246,11 +156,7 @@ class Defaults
      */
     public function firstSiteUrl()
     {
-        $url = '';
-        if (getenv('MATOMO_FIRST_SITE_URL')) {
-            $url = getenv('MATOMO_FIRST_SITE_URL');
-        }
-        return $url;
+        return getenv('MATOMO_FIRST_SITE_URL') ?: '';
     }
 
     /**
@@ -258,11 +164,7 @@ class Defaults
      */
     public function firstSiteName()
     {
-        $name = '';
-        if (getenv('MATOMO_FIRST_SITE_NAME')) {
-            $name = getenv('MATOMO_FIRST_SITE_NAME');
-        }
-        return $name;
+        return getenv('MATOMO_FIRST_SITE_NAME') ?: '';
     }
 
     /**
@@ -270,24 +172,15 @@ class Defaults
      */
     public function firstSiteUserPass()
     {
-        $pass = '';
-        if (getenv('MATOMO_FIRST_USER_PASSWORD')) {
-            $pass = getenv('MATOMO_FIRST_USER_PASSWORD');
-        }
-        return $pass;
+        return getenv('MATOMO_FIRST_USER_PASSWORD') ?: '';
     }
-
 
     /**
      * @return string
      */
     public function firstSiteUserEmail()
     {
-        $email = '';
-        if (getenv('MATOMO_FIRST_USER_EMAIL')) {
-            $email = getenv('MATOMO_FIRST_USER_EMAIL');
-        }
-        return $email;
+        return getenv('MATOMO_FIRST_USER_EMAIL') ?: '';
     }
 
     /**
@@ -295,36 +188,22 @@ class Defaults
      */
     public function firstSiteUserName()
     {
-        $name = '';
-        if (getenv('MATOMO_FIRST_USER_NAME')) {
-            $name = getenv('MATOMO_FIRST_USER_NAME');
-        }
-        return $name;
+        return getenv('MATOMO_FIRST_USER_NAME') ?: '';
     }
-
 
     /**
      * @return string
      */
     public function plugins()
     {
-        $plugins = '';
-        if (getenv('MATOMO_PLUGINS')) {
-            $plugins = getenv('MATOMO_PLUGINS');
-        }
-        return $plugins;
+        return getenv('MATOMO_PLUGINS') ?: '';
     }
-
 
     /**
      * @return bool|false|string
      */
     public function timestamp()
     {
-        $timestamp = false;
-        if (getenv('MATOMO_LOG_TIMESTAMP')) {
-            $timestamp = getenv('MATOMO_LOG_TIMESTAMP');
-        }
-        return $timestamp;
+        return getenv('MATOMO_LOG_TIMESTAMP') ?: false;
     }
 }

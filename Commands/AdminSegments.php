@@ -22,8 +22,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Piwik\Container\StaticContainer;
-use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
 use Piwik\Common;
 use Piwik\Db;
 use Piwik\Date;
@@ -84,7 +82,7 @@ To run:
             $output->writeln("<error>You need to provide a segment id</error>");
             return self::FAILURE;
         }
-        $validate = $this->isInt($segmentId);
+        $validate = filter_var($segmentId, FILTER_VALIDATE_INT) !== false;
         if (!$validate) {
             $output->writeln("<error>You need to provide a single int id for segment (ex. 1)</error>");
             return self::FAILURE;
@@ -120,22 +118,9 @@ To run:
      */
     public function getSegment($idSegment)
     {
-        $db = $this->getDb();
-        $segment = $db->fetchRow("SELECT * FROM " . $this->getTable() . " WHERE idsegment = ?", $idSegment);
+        $segment = Db::get()->fetchRow("SELECT * FROM " . $this->getTable() . " WHERE idsegment = ?", $idSegment);
 
         return $segment;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSegments()
-    {
-        /** @var SegmentEditorModel $segmentEditorModel */
-        $segmentEditorModel = StaticContainer::get('Piwik\Plugins\SegmentEditor\Model');
-        $segments = $segmentEditorModel->getAllSegmentsAndIgnoreVisibility();
-
-        return $segments;
     }
 
     /**
@@ -149,8 +134,7 @@ To run:
             'ts_last_edit' => Date::factory('now')->toString('Y-m-d H:i:s')
         );
 
-        $db = $this->getDb();
-        $db->update($this->getTable(), $fieldsToSet, 'idsegment = ' . (int) $idSegment);
+        Db::get()->update($this->getTable(), $fieldsToSet, 'idsegment = ' . (int) $idSegment);
     }
 
     /**
@@ -164,26 +148,6 @@ To run:
             'ts_last_edit' => Date::factory('now')->toString('Y-m-d H:i:s')
         );
 
-        $db = $this->getDb();
-        $db->update($this->getTable(), $fieldsToSet, 'idsegment = ' . (int) $idSegment);
-    }
-
-    /**
-     * @param $idSegment
-     * @return bool
-     */
-    private function isInt($idSegment)
-    {
-        if (filter_var($idSegment, FILTER_VALIDATE_INT)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    private function getDb()
-    {
-        return Db::get();
+        Db::get()->update($this->getTable(), $fieldsToSet, 'idsegment = ' . (int) $idSegment);
     }
 }
