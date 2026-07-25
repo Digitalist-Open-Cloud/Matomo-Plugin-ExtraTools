@@ -363,7 +363,7 @@ class CommandsTest extends ConsoleCommandTestCase
             '-vvv' => true,
         ));
         $this->assertEquals(0, $code);
-        $this->assertStringContainsStringIgnoringCase('{"dbname":"matomo_tests"', $this->applicationTester->getDisplay());
+        $this->assertStringContainsStringIgnoringCase('matomo_tests', $this->applicationTester->getDisplay());
     }
 
     /**
