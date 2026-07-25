@@ -47,61 +47,17 @@ jobs:
       # deps, we only want to override the plugin's own PHP/template/lang files.
       - name: Copy branch plugin onto kind node
         run: |
-          docker ps -a
-          NODE=$(docker ps --filter "name=control-plane" --format '{{.Names}}' | head -1)
-          echo "Detected kind node: $NODE"
-          if [ -z "$NODE" ]; then
-            echo "::error::no control-plane container found"
-            exit 1
-          fi
-          ls -la ExtraTools | head
-
-          # kind mounts /tmp on its node containers as a separate tmpfs, which
-          # is a known source of docker-cp weirdness. Try both /tmp and a
-          # plain path on the node's regular overlay root, unfolded (no
-          # ::group::) so the comparison is always visible in the log.
-          set +e
-          cp_output=$(docker cp ExtraTools "$NODE":/tmp/extratools-plugin 2>&1)
-          cp_status=$?
-          set -e
-          echo "docker cp to /tmp exit=$cp_status output=${cp_output:-<empty>}"
-          docker exec "$NODE" test -d /tmp/extratools-plugin \
-            && echo "/tmp/extratools-plugin: EXISTS" || echo "/tmp/extratools-plugin: MISSING"
-
-          set +e
-          cp_output2=$(docker cp ExtraTools "$NODE":/root/extratools-plugin 2>&1)
-          cp_status2=$?
-          set -e
-          echo "docker cp to /root exit=$cp_status2 output=${cp_output2:-<empty>}"
-          docker exec "$NODE" test -d /root/extratools-plugin \
-            && echo "/root/extratools-plugin: EXISTS" || echo "/root/extratools-plugin: MISSING"
-
-          echo "full /tmp listing on node:"
-          docker exec "$NODE" ls -la /tmp
-          echo "full /root listing on node:"
-          docker exec "$NODE" ls -la /root
-
-          if docker exec "$NODE" test -d /root/extratools-plugin; then
-            DEST=/root/extratools-plugin
-          elif docker exec "$NODE" test -d /tmp/extratools-plugin; then
-            DEST=/tmp/extratools-plugin
-          else
-            echo "::error::plugin copy did not land on the node at either path"
-            exit 1
-          fi
-          echo "Using DEST=$DEST"
-          echo "DEST=$DEST" >> "$GITHUB_ENV"
-
-          docker exec "$NODE" rm -rf "$DEST/vendor" "$DEST/tests" "$DEST/.git"
-          docker exec "$NODE" chmod -R a+rX "$DEST"
-          echo "::group::what actually landed on the node"
-          docker exec "$NODE" sh -c "ls -la '$DEST' && echo --- && cat '$DEST/plugin.json'"
-          echo "::endgroup::"
+          NODE=chart-testing-control-plane
+          # kind mounts /tmp on its node containers as a separate tmpfs, and
+          # docker cp silently no-ops when writing into it - /root sits on
+          # the node's regular overlay root and works.
+          docker cp ExtraTools "$NODE":/root/extratools-plugin
+          docker exec "$NODE" rm -rf /root/extratools-plugin/vendor /root/extratools-plugin/tests /root/extratools-plugin/.git
+          docker exec "$NODE" chmod -R a+rX /root/extratools-plugin
 
       - name: Write plugin-override values
         run: |
-          echo "Node-side plugin path: $DEST"
-          cat > extratools-override.yaml <<EOF
+          cat > extratools-override.yaml <<'EOF'
           # tests/kind/values.yaml turns gatewayApi on for the upstream
           # ingress+Gateway e2e test; we don't install Gateway API CRDs here,
           # so the chart's HTTPRoute resources fail to install unless we
@@ -112,13 +68,12 @@ jobs:
           extraVolumes:
             - name: extratools-branch
               hostPath:
-                path: $DEST
+                path: /root/extratools-plugin
                 type: Directory
           extraVolumeMounts:
             - name: extratools-branch
               mountPath: /var/www/html/plugins/ExtraTools
           EOF
-          cat extratools-override.yaml
 
       - name: Install Matomo chart with branch plugin
         run: |
@@ -133,17 +88,6 @@ jobs:
             kubectl -n matomo rollout status "deployment/$d" --timeout=600s
             echo "::endgroup::"
           done
-
-      - name: Show what the pod actually got mounted
-        run: |
-          echo "::group::rendered volume + mount for the matomo container"
-          kubectl -n matomo get deployment matomo-dashboard -o json \
-            | jq '.spec.template.spec.volumes, (.spec.template.spec.containers[] | select(.name=="matomo") | .volumeMounts)'
-          echo "::endgroup::"
-          echo "::group::plugins dir as seen inside the pod"
-          kubectl -n matomo exec deployment/matomo-dashboard -c matomo -- \
-            sh -c 'ls -la /var/www/html/plugins/ExtraTools 2>&1 || echo MISSING; echo ---; ls -la /var/www/html/plugins | head -5'
-          echo "::endgroup::"
 
       - name: Verify the branch plugin is the one actually mounted
         run: |
