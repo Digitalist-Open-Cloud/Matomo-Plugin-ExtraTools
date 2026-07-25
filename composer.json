@@ -23,6 +23,7 @@
     ],
     "require": {
         "php": ">=8.0",
+        "symfony/process": "~5.4.21",
         "symfony/yaml": "~5.4.21"
     },
     "require-dev": {
