@@ -451,6 +451,7 @@ class Install
             foreach ($installplugins as $plugin) {
                 if ($plugin == 'TagManager') {
                         $install_tag_manager = true;
+                        unset($plugin);
                 }
                 if (isset($plugin)) {
                     Manager::getInstance()->activatePlugin($plugin);

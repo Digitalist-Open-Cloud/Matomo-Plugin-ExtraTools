@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.3.1] - 2026-07-26
+
+## Fixed
+
+- Fix for tagmanager
+
 ## [5.3.0] - 2026-07-25
 
 ## Fixed
