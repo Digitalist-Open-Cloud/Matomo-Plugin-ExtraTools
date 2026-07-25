@@ -4,7 +4,8 @@ Some extra cli commands to help with maintaining Matomo. Also providing an phpin
 Introducing new console commands:
 
 - `archive:list`
-- `config:get`
+- `extra:bootstrap`
+- `extra:config:get`
 - `database:backup`
 - `database:create`
 - `database:drop`
@@ -88,13 +89,48 @@ Or add it manually to config.ini.php:
 db_backup_path = "/var/www/html/tmp"
 ```
 
+### Database SSL/TLS
+
+The database commands (`database:backup`, `database:create`, `database:drop`,
+`database:import`) shell out to the `mysql`/`mysqldump`/`mysqladmin` clients. To
+connect over SSL/TLS they read the same SSL keys Matomo uses in the `[database]`
+section of `config.ini.php`:
+
+```php
+[database]
+enable_ssl = 1
+ssl_ca = "/etc/ssl/certs/ca-certificates.crt"
+ssl_cert = "/path/to/client-cert.pem"
+ssl_key = "/path/to/client-key.pem"
+ssl_ca_path = "/etc/ssl/certs"
+ssl_cipher = ""
+ssl_no_verify = 1
+```
+
+Only `enable_ssl` is required to turn SSL on; the remaining keys are optional.
+Set `ssl_no_verify = 1` to require encryption without verifying the server
+certificate. The settings are written to a temporary client option file, and
+client specific options use the `loose-` prefix so they work with both the
+MySQL and MariaDB command line clients.
+
+For `matomo:install`, the same keys can be supplied via command line options
+(`--db-enable-ssl`, `--db-ssl-ca`, `--db-ssl-cert`, `--db-ssl-key`,
+`--db-ssl-ca-path`, `--db-ssl-cipher`, `--db-ssl-no-verify`), environment
+variables, or the `database` section of an install file.
+
 ## Commands
 
 ### `archive:list`
 
 Gets al list of ongoing or scheduled core archivers, if such exist.
 
-### `config:get`
+### `extra:bootstrap`
+
+Bootstraps Matomo (config, DI container, plugins) and warms the tracker cache
+(general plus per-site attributes). Use `--idsite` to warm specific sites, or
+`--skip-sites` to only warm the general cache.
+
+### `extra:config:get`
 
 Gets a section config.
 @todo - make this more like config:set - so you have more options.
@@ -226,6 +262,13 @@ Non-default:
 ```sh
 MATOMO_DATABASE_COLLATION
 MATOMO_DATABASE_CHARSET
+MATOMO_DATABASE_ENABLE_SSL
+MATOMO_DATABASE_SSL_CA
+MATOMO_DATABASE_SSL_CERT
+MATOMO_DATABASE_SSL_KEY
+MATOMO_DATABASE_SSL_CA_PATH
+MATOMO_DATABASE_SSL_CIPHER
+MATOMO_DATABASE_SSL_NO_VERIFY
 ```
 
 These could be overridden with (historical reasons):
@@ -321,7 +364,7 @@ So, let's make it better!
 
 ## Version supported
 
-This plugin requires Matomo >= 5.0.0-b1.
+This plugin requires Matomo >= 5.1.0, < 6.0.0-b1.
 
 ## Thank you!
 

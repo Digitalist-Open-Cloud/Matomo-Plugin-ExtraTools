@@ -4,6 +4,7 @@ Some extra cli commands to help with maintaining Matomo. Also providing an phpin
 Introducing new console commands:
 
 - `archive:list`
+- `extra:bootstrap`
 - `extra:config:get`
 - `database:backup`
 - `database:create`
@@ -123,6 +124,12 @@ variables, or the `database` section of an install file.
 
 Gets al list of ongoing or scheduled core archivers, if such exist.
 
+### `extra:bootstrap`
+
+Bootstraps Matomo (config, DI container, plugins) and warms the tracker cache
+(general plus per-site attributes). Use `--idsite` to warm specific sites, or
+`--skip-sites` to only warm the general cache.
+
 ### `extra:config:get`
 
 Gets a section config.
@@ -184,7 +191,7 @@ List all segments, with ID, definition, date created and latest updated.
 
 ### `site:add`
 
-Adds a new site to track.
+Adds a new site to track. If a site with the same name already exists, no site is added.
 
 ### `site:delete`
 
@@ -357,7 +364,7 @@ So, let's make it better!
 
 ## Version supported
 
-This plugin requires Matomo >= 5.0.0-b1.
+This plugin requires Matomo >= 5.1.0, < 6.0.0-b1.
 
 ## Thank you!
 
