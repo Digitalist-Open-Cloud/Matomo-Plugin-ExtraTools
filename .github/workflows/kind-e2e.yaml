@@ -52,6 +52,9 @@ jobs:
           docker cp ExtraTools/. "$NODE":/tmp/extratools-plugin/
           docker exec "$NODE" rm -rf /tmp/extratools-plugin/vendor /tmp/extratools-plugin/tests /tmp/extratools-plugin/.git
           docker exec "$NODE" chmod -R a+rX /tmp/extratools-plugin
+          echo "::group::what actually landed on the node"
+          docker exec "$NODE" sh -c 'ls -la /tmp/extratools-plugin && echo --- && cat /tmp/extratools-plugin/plugin.json'
+          echo "::endgroup::"
 
       - name: Write plugin-override values
         run: |
@@ -86,6 +89,17 @@ jobs:
             kubectl -n matomo rollout status "deployment/$d" --timeout=600s
             echo "::endgroup::"
           done
+
+      - name: Show what the pod actually got mounted
+        run: |
+          echo "::group::rendered volume + mount for the matomo container"
+          kubectl -n matomo get deployment matomo-dashboard -o json \
+            | jq '.spec.template.spec.volumes, (.spec.template.spec.containers[] | select(.name=="matomo") | .volumeMounts)'
+          echo "::endgroup::"
+          echo "::group::plugins dir as seen inside the pod"
+          kubectl -n matomo exec deployment/matomo-dashboard -c matomo -- \
+            sh -c 'ls -la /var/www/html/plugins/ExtraTools 2>&1 || echo MISSING; echo ---; ls -la /var/www/html/plugins | head -5'
+          echo "::endgroup::"
 
       - name: Verify the branch plugin is the one actually mounted
         run: |
