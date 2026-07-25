@@ -1,6 +1,16 @@
 # Changelog
 
-## [Unreleased]
+## [5.3.0] - 2026-07-25
+
+## Fixed
+
+- Rewrite of some parts of the plugin to reduce codebase and remove dead code.
+
+## Added
+
+- Tests together with Digitalist Open Cloud Helm chart for Matomo.
+
+## [5.2.0] - 2026-07-25
 
 ### Added
 
