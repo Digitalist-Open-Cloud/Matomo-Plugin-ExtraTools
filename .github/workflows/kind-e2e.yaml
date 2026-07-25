@@ -48,8 +48,11 @@ jobs:
       - name: Copy branch plugin onto kind node
         run: |
           NODE=chart-testing-control-plane
-          docker exec "$NODE" mkdir -p /tmp/extratools-plugin
-          docker cp ExtraTools/. "$NODE":/tmp/extratools-plugin/
+          ls -la ExtraTools | head
+          # destination must NOT pre-exist: docker cp only reliably copies
+          # directory *contents* (rather than nesting or no-op'ing) when the
+          # dest path doesn't already exist, so let it create the dir itself.
+          docker cp ExtraTools "$NODE":/tmp/extratools-plugin
           docker exec "$NODE" rm -rf /tmp/extratools-plugin/vendor /tmp/extratools-plugin/tests /tmp/extratools-plugin/.git
           docker exec "$NODE" chmod -R a+rX /tmp/extratools-plugin
           echo "::group::what actually landed on the node"
