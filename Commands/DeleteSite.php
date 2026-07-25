@@ -54,12 +54,13 @@ To run:
         $input = $this->getInput();
         $output = $this->getOutput();
         $id = $input->getOption('id');
-        $site = new Site($id);
-        $record = $site->record();
         if (!$id) {
             $output->writeln("<info>You must provide an id for the site to delete</info>");
             return self::FAILURE;
         }
+        $id = (int) $id;
+        $site = new Site($id);
+        $record = $site->record();
         if (!$record) {
             $output->writeln("<info>Site with id <comment>$id</comment> could not be found</info>");
         } else {
