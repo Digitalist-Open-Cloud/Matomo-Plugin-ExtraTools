@@ -493,6 +493,19 @@ class CommandsTest extends ConsoleCommandTestCase
     }
 
     /**
+     * @group ClearExternalCache
+     */
+    public function testClearExternalCacheShouldSucceedAndDoNothingWhenRedisNotConfigured()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'extra:clear-external-cache',
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsStringIgnoringCase("Redis is not the configured cache backend, nothing to clear", $this->applicationTester->getDisplay());
+    }
+
+    /**
      * @group Segment
      * @group SegmentList
      */

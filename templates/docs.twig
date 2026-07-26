@@ -14,6 +14,7 @@ Introducing new console commands:</p>
 <ul>
 <li><code>archive:list</code></li>
 <li><code>extra:bootstrap</code></li>
+<li><code>extra:clear-external-cache</code></li>
 <li><code>extra:config:get</code></li>
 <li><code>database:backup</code></li>
 <li><code>database:create</code></li>
@@ -92,6 +93,17 @@ variables, or the <code>database</code> section of an install file.</p>
 <p>Bootstraps Matomo (config, DI container, plugins) and warms the tracker cache
 (general plus per-site attributes). Use <code>--idsite</code> to warm specific sites, or
 <code>--skip-sites</code> to only warm the general cache.</p>
+<h3><code>extra:clear-external-cache</code></h3>
+<p>Clears Matomo's cache entries from the configured external (Redis) cache
+backend using <code>SCAN</code>/<code>DEL</code> instead of <code>FLUSHDB</code>. Use this when the regular
+<code>cache:clear</code> appears to not clear the cache &mdash; this happens when Redis is
+shared with other applications or the hosting provider disables/restricts
+<code>FLUSHDB</code>/<code>FLUSHALL</code>. Because it only deletes Matomo's own <code>matomocache_*</code>
+and <code>eagercache-*</code> keys, it is safe to run even if QueuedTracking's Redis
+queue (<code>trackingQueueV1*</code>/<code>QueuedTrackingLock*</code> keys) shares the same
+<code>database</code> as the cache &mdash; unlike <code>cache:clear</code> or a manual
+<code>redis-cli flushdb</code>, which would wipe the queue too. Does nothing
+(and exits successfully) if Redis is not the configured cache backend.</p>
 <h3><code>extra:config:get</code></h3>
 <p>Gets a section config.
 @todo - make this more like config:set - so you have more options.</p>

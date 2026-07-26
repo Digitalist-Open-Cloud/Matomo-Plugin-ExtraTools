@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+## Added
+
+- `extra:clear-external-cache` command to clear Matomo's cache entries from the external (Redis) cache backend without relying on `FLUSHDB`.
+
 ## [5.3.1] - 2026-07-26
 
 ## Fixed
