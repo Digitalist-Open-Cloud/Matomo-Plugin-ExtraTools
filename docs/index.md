@@ -130,6 +130,19 @@ Bootstraps Matomo (config, DI container, plugins) and warms the tracker cache
 (general plus per-site attributes). Use `--idsite` to warm specific sites, or
 `--skip-sites` to only warm the general cache.
 
+### `extra:clear-external-cache`
+
+Clears Matomo's cache entries from the configured external (Redis) cache
+backend using `SCAN`/`DEL` instead of `FLUSHDB`. Use this when the regular
+`cache:clear` appears to not clear the cache — this happens when Redis is
+shared with other applications or the hosting provider disables/restricts
+`FLUSHDB`/`FLUSHALL`. Because it only deletes Matomo's own `matomocache_*`
+and `eagercache-*` keys, it is safe to run even if QueuedTracking's Redis
+queue (`trackingQueueV1*`/`QueuedTrackingLock*` keys) shares the same
+`database` as the cache — unlike `cache:clear` or a manual `redis-cli
+flushdb`, which would wipe the queue too. Does nothing (and exits successfully) if Redis is not
+the configured cache backend.
+
 ### `extra:config:get`
 
 Gets a section config.
