@@ -54,11 +54,18 @@ You could use options to override config or environment variables:
             'group' => 'Group',
             'start-date' => 'Start date',
             'type' => 'Type',
-            'settings-value' => 'Settings value',
             ] as $name => $description
         ) {
             $this->addOptionalValueOption($name, null, $description, null);
         }
+
+        $this->addOptionalValueOption(
+            'settings-value',
+            null,
+            'Site setting values with plugin and setting name like "Plugin.setting=value". May be used multiple times, all settings are merged',
+            null,
+            true
+        );
 
         foreach (
             [
@@ -101,7 +108,7 @@ You could use options to override config or environment variables:
         $excludedUserAgents = $input->getOption('exclude-user-agents');
         $keepURLFragments = $input->getOption('keep-url-fragments') ? true : false;
         $type = $input->getOption('type');
-        $settingValues = $input->getOption('settings-value'); // this need to be looked into - expects serialized json.
+        $settingValues = $this->parseSettingValues($input->getOption('settings-value')); // TODO: some settings need JSON-encoded values
         $excludeUnknownUrls = $input->getOption('exclude-unknown-urls') ? true : false;
 
         $site = [
@@ -137,5 +144,50 @@ You could use options to override config or environment variables:
         $output->writeln("<comment>Site $siteName added</comment>");
 
         return self::SUCCESS;
+    }
+
+    private function parseSettingValues(array $values): array
+    {
+        // "Plugin1.setting1=value1"
+        // => ['Plugin1' => ['name' => 'setting1', 'value' => 'value1']]
+        $values = array_map(function(string $value): array {
+            [$key, $value] = explode('=', $value, 2);
+            [$plugin, $setting] = explode('.', $key, 2);
+
+            return [
+                $plugin => [
+                    [
+                      'name' => $setting,
+                      'value' => $value,
+                    ]
+                ],
+            ];
+        }, $values);
+        // [
+        //     ['Plugin1' => ['name' => 'setting1', 'value' => 'value1']]
+        //     ['Plugin1' => ['name' => 'setting2', 'value' => 'value2']]
+        //     ['Plugin2' => ['name' => 'setting1', 'value' => 'value1']]
+        // ]
+        // => [
+        //     'Plugin1' => [
+        //         [
+        //             'name' => 'setting1',
+        //             'value' => 'value1',
+        //         ],
+        //         [
+        //             'name' => 'setting2',
+        //             'value' => 'value2',
+        //         ],
+        //     ],
+        //     'Plugin2' => [
+        //         [
+        //             'name' => 'setting1',
+        //             'value' => 'value1',
+        //         ],
+        //     ]
+        // ]
+        $values = array_merge_recursive(...$values);
+
+        return $values;
     }
 }
