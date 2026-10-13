@@ -311,6 +311,9 @@ class Install
             $this->updateComponents();
             Updater::recordComponentSuccessfullyUpdated('core', Version::VERSION);
         }
+        // Plugin tables (e.g. ScheduledReports' report table) must exist before
+        // the super user is created, as plugins listen to UsersManager.createUser.
+        Manager::getInstance()->installLoadedPlugins();
     }
 
     /**
