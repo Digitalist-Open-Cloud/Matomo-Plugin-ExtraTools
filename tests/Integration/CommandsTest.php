@@ -87,6 +87,30 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertStringContainsStringIgnoringCase("Site Foo already exists", $this->applicationTester->getDisplay());
     }
 
+    public function testSiteAddWithSettingsValuesShouldSucceed(): void
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:add',
+            '--name' => 'Foo',
+            '--settings-value' => [
+                'Live.disable_visitor_log=1',
+            ],
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:add',
+            '--name' => 'Bar',
+            '--settings-value' => [
+                'Live.disable_visitor_log=1',
+                'Live.disable_visitor_profile=1',
+            ],
+            '-vvv' => true,
+        ));
+        $this->assertEquals(0, $code);
+    }
+
     public function testSiteListShouldSuceedAndShowUrl()
     {
 
