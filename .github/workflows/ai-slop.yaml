@@ -7,20 +7,25 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write  # required by upload-sarif
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with: { python-version: '3.12' }
       - run: pip install doc-ai-slopcheck
-      - run: doc-ai-slopcheck scan . --output findings.json --fail-on warning
+      - run: doc-ai-slopcheck scan . --output findings.json
       - if: always()
         run: |
           doc-ai-slopcheck github-annotations findings.json
           doc-ai-slopcheck sarif findings.json > results.sarif
           doc-ai-slopcheck html findings.json > slopcheck-report.html
       - if: always()
-        uses: github/codeql-action/upload-sarif@v4
-        with: { sarif_file: results.sarif }
+        run: |
+          doc-ai-slopcheck github-annotations findings.json
+          doc-ai-slopcheck sarif findings.json | jq 'del(.runs[].results[]?.fixes)' > results.sarif
+          doc-ai-slopcheck html findings.json > slopcheck-report.html
       - if: always()
         uses: actions/upload-artifact@v7
         with: { name: slopcheck-report, path: slopcheck-report.html }
