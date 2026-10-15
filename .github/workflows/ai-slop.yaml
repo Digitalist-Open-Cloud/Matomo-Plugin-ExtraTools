@@ -22,10 +22,5 @@ jobs:
           doc-ai-slopcheck sarif findings.json > results.sarif
           doc-ai-slopcheck html findings.json > slopcheck-report.html
       - if: always()
-        run: |
-          doc-ai-slopcheck github-annotations findings.json
-          doc-ai-slopcheck sarif findings.json | jq 'del(.runs[].results[]?.fixes)' > results.sarif
-          doc-ai-slopcheck html findings.json > slopcheck-report.html
-      - if: always()
         uses: actions/upload-artifact@v7
         with: { name: slopcheck-report, path: slopcheck-report.html }
