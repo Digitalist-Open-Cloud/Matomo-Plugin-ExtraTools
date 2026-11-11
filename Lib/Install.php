@@ -438,18 +438,18 @@ class Install
         if (isset($config_from_file->Config)) {
             $fileconfig = $config_from_file->Config;
         }
-        if (isset($fileconfig['PluginsInstalled'])) {
+        if (!empty($fileconfig['PluginsInstalled'])) {
             $installplugins = $fileconfig['PluginsInstalled'];
-        } elseif (isset($option_plugins)) {
-            $installplugins = explode(',', $option_plugins);
-        } elseif (isset(($this->config->PluginsInstalled['PluginsInstalled']))) {
+        } elseif (!empty($option_plugins)) {
+            $installplugins = array_filter(array_map('trim', explode(',', $option_plugins)));
+        } elseif (!empty(($this->config->PluginsInstalled['PluginsInstalled']))) {
             foreach ($this->config->PluginsInstalled['PluginsInstalled'] as $plugin) {
                 if (is_string(($plugin))) {
                     $installplugins[] = $plugin;
                 }
             }
         }
-        if (isset($installplugins)) {
+        if (!empty($installplugins)) {
             $install_tag_manager = false;
             foreach ($installplugins as $plugin) {
                 if ($plugin == 'TagManager') {
