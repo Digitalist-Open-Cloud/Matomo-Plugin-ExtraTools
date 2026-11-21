@@ -43,28 +43,17 @@ Adding a site as part of `matomo:install` is currently broken, but you could jus
 
 ## Dependencies
 
-Sine version 4.1.0-beta1 we are dependent on PHP 8.1
+PHP 8.2 or later.
 
 ### On host
 
 - mysql-client or mariadb-client (for database tasks)
 - PHP json extension
 
-### In composer.json (Matomo root)
+### PHP packages
 
-From version 5.1.0:
-
-- `composer require symfony/yaml:~2.6.0` (moves it from dev)
-
-From version 4.1.0-beta1:
-
-- `composer require symfony/yaml:~2.6.0` (moves it from dev)
-- `composer require symfony/process:^5.4`
-
-Earlier versions:
-
-- `composer require symfony/yaml:~2.6.0` (moves it from dev)
-- `composer require symfony/process:^3.4`
+The plugin uses `symfony/process` and `symfony/yaml`. Current Matomo versions ship both. On a
+Matomo that does not, run `composer install --no-dev` in the plugin folder.
 
 ## Install
 
@@ -170,8 +159,8 @@ Adding the --force flag stops the command for asking questions.
 
 ### `database:import`
 
-Imports database dump to database defined in config.ini.php, so if
-you already have a installation - it overwrites it.
+Imports the database dump given with `--backup-path` to the database defined in config.ini.php,
+so if you already have a installation - it overwrites it.
 
 ### `logger:delete`
 
@@ -214,7 +203,8 @@ Adds a new site to track. If a site with the same name already exists, no site i
 
 ### `site:delete`
 
-Deletes a site with ID provided.
+Deletes a site with ID provided. If the site does not exist or cannot be deleted, the command
+says why and fails.
 
 ### `site:list`
 
@@ -222,7 +212,7 @@ List sites, with the optional format argument - supported output is text(default
 
 ### `site:url`
 
-Adds one or more URLs to a site.
+Adds one or more URLs to a site. If they cannot be added, the command says why and fails.
 
 ### `visits:get`
 
@@ -234,18 +224,21 @@ Configure a new custom dimension. BETA.
 
 ### phpinfo page
 
-Provides a phpinfo page in the admin section. Access it via:
+Provides a phpinfo page in the admin section, for super users only. Access it via:
 Administration → Extra Tools → Phpinfo.
 
-This displays the PHP configuration information similar to `phpinfo()`.
+This displays the PHP configuration information similar to `phpinfo()`. That includes
+environment variables, which can hold passwords.
 
 ### Invalidated Archives
 
 Lists invalidated archive entries from the database. This helps you see which archives
-have been invalidated and need to be re-processed by the archiver. Access it via:
+have been invalidated and need to be re-processed by the archiver. For super users only, as the
+list covers every website. Access it via:
 Administration → Extra Tools → Invalidations.
 
-Shows the archive name (or "All visits" for the default), period type, date, and when it was invalidated.
+Shows the segment (or "All visits"), with the plugin in brackets when the entry is for one
+plugin only, the period type, dates, and when it was invalidated.
 
 #### Requirements
 
@@ -253,8 +246,12 @@ Matomo needs a MySQL/MariaDB host, with a user setup that is allowed to drop
 that db.
 The first user is created as a super user and it is need to have one to
 set up Matomo. If you do not add values in environment variables or options to
-matomo:install command, it will use the defaults for the user - so important
-that you change that users password after install.
+matomo:install command, the user is named `admin`. There is no default password:
+give one with `--first-user-pass`, `MATOMO_FIRST_USER_PASSWORD` or the install file.
+
+`matomo:install` can also be run against a database that is already in use, with
+`--do-not-drop-db`, for example when Matomo is updated. The updates of Matomo and its plugins
+that the database is waiting for are then run as well.
 Matomo also creates a first site to track, this also has default values that
 you could override with environment variables or options.
 

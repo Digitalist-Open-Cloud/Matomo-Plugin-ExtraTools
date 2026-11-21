@@ -39,23 +39,15 @@ and version controlled deliveries with configuration in json or yaml.</p>
 <p>Adding a site as part of <code>matomo:install</code> is currently broken, but you could just after the command run the <code>site:add</code> command:</p>
 <pre><code>./console site:add --name=Foo --urls=https://foo.bar</code></pre>
 <h2>Dependencies</h2>
-<p>Sine version 4.1.0-beta1 we are dependent on PHP 8.1</p>
+<p>PHP 8.2 or later.</p>
 <h3>On host:</h3>
 <ul>
 <li>mysql-client or mariadb-client (for database tasks)</li>
 <li>PHP json extension</li>
 </ul>
-<h3>In composer.json (Matomo root):</h3>
-<p>From version 4.1.0-beta1:</p>
-<ul>
-<li><code>composer require symfony/yaml:~2.6.0</code> (moves it from dev)</li>
-<li><code>composer require symfony/process:^5.4</code></li>
-</ul>
-<p>Earlier versions:</p>
-<ul>
-<li><code>composer require symfony/yaml:~2.6.0</code> (moves it from dev)</li>
-<li><code>composer require symfony/process:^3.4</code></li>
-</ul>
+<h3>PHP packages:</h3>
+<p>The plugin uses <code>symfony/process</code> and <code>symfony/yaml</code>. Current Matomo versions ship both. On a
+Matomo that does not, run <code>composer install --no-dev</code> in the plugin folder.</p>
 <h2>Install</h2>
 <p>Git clone the plugin into your plugins folder:</p>
 <pre><code>git clone https://github.com/digitalist-se/extratools.git ExtraTools</code></pre>
@@ -116,8 +108,8 @@ Adding the --force flag stops the command for asking questions.</p>
 <p>Drops the db defined i config.ini.php - backup first if needed.
 Adding the --force flag stops the command for asking questions.</p>
 <h3><code>database:import</code></h3>
-<p>Imports database dump to database defined in config.ini.php, so if
-you already have a installation - it overwrites it.</p>
+<p>Imports the database dump given with <code>--backup-path</code> to the database defined in config.ini.php,
+so if you already have a installation - it overwrites it.</p>
 <h3><code>logger:delete</code></h3>
 <p>Removes logging entries from the DB, that is the internal logging in Matomo, not visits on sites.</p>
 <h3><code>logger:show</code></h3>
@@ -140,11 +132,12 @@ docker-compose file, the environment array etc. If the variable is set, Matomo w
 <h3><code>site:add</code></h3>
 <p>Adds a new site to track. If a site with the same name already exists, no site is added.</p>
 <h3><code>site:delete</code></h3>
-<p>Deletes a site with ID provided.</p>
+<p>Deletes a site with ID provided. If the site does not exist or cannot be deleted, the command
+says why and fails.</p>
 <h3><code>site:list</code></h3>
 <p>List sites, with the optional format argument - supported output is text(default), json and yaml.</p>
 <h3><code>site:url</code></h3>
-<p>Adds one or more URLs to a site.</p>
+<p>Adds one or more URLs to a site. If they cannot be added, the command says why and fails.</p>
 <h3><code>visits:get</code></h3>
 <p>Get all archived visits, for one site or all. For a segment or all segments, for today, or another day etc.</p>
 <h3><code>customdimensions:configure-new-dimension</code></h3>
@@ -154,8 +147,11 @@ docker-compose file, the environment array etc. If the variable is set, Matomo w
 that db.
 The first user is created as a super user and it is need to have one to
 set up Matomo. If you do not add values in environment variables or options to
-matomo:install command, it will use the defaults for the user - so important
-that you change that users password after install.
+matomo:install command, the user is named <code>admin</code>. There is no default password:
+give one with <code>--first-user-pass</code>, <code>MATOMO_FIRST_USER_PASSWORD</code> or the install file.</p>
+<p><code>matomo:install</code> can also be run against a database that is already in use, with
+<code>--do-not-drop-db</code>, for example when Matomo is updated. The updates of Matomo and its plugins
+that the database is waiting for are then run as well.
 Matomo also creates a first site to track, this also has default values that
 you could override with environment variables or options.</p>
 <p>You could also use a json-file for configuration - like all the above
