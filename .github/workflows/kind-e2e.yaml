@@ -52,8 +52,10 @@ jobs:
           # docker cp silently no-ops when writing into it - /root sits on
           # the node's regular overlay root and works.
           docker cp ExtraTools "$NODE":/root/extratools-plugin
+          # A plugin with a database update, for the "plugin update" step below.
+          docker cp ExtraTools/tests/fixtures/ExtraToolsDummy "$NODE":/root/extratools-dummy
           docker exec "$NODE" rm -rf /root/extratools-plugin/vendor /root/extratools-plugin/tests /root/extratools-plugin/.git
-          docker exec "$NODE" chmod -R a+rX /root/extratools-plugin
+          docker exec "$NODE" chmod -R a+rX /root/extratools-plugin /root/extratools-dummy
 
       - name: Write plugin-override values
         run: |
@@ -70,9 +72,15 @@ jobs:
               hostPath:
                 path: /root/extratools-plugin
                 type: Directory
+            - name: extratools-dummy
+              hostPath:
+                path: /root/extratools-dummy
+                type: Directory
           extraVolumeMounts:
             - name: extratools-branch
               mountPath: /var/www/html/plugins/ExtraTools
+            - name: extratools-dummy
+              mountPath: /var/www/html/plugins/ExtraToolsDummy
           EOF
 
       - name: Install Matomo chart with branch plugin
@@ -110,6 +118,12 @@ jobs:
             echo "tracker /matomo.js"
             curl -sSf -o /dev/null http://matomo-tracker:8080/matomo.js
             '
+
+      # The chart's init container runs the ExtraTools of the image, so the
+      # install is run here in the dashboard container, where this branch is
+      # mounted, with the config file removed as in a new pod.
+      - name: Plugin update is run by matomo:install
+        run: ExtraTools/tests/kind/plugin-update.sh
 
       - name: Diagnostics on failure
         if: failure()

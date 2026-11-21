@@ -1,0 +1,10 @@
+{
+    "name": "ExtraToolsDummy",
+    "description": "A plugin with a database update, for the tests of ExtraTools.",
+    "version": "1.0.0",
+    "theme": false,
+    "require": {
+        "matomo": ">=5.0.0,<6.0.0-b1"
+    },
+    "license": "GPL-3.0-or-later"
+}

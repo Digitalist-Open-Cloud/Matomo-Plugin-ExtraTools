@@ -103,13 +103,17 @@ class Install
         $this->config->General['emails_enabled'] = 0;
         $this->deleteCache();
         $this->initDBConnection();
-        $recordedVersions = (new RecordedVersions())->read();
+        $isExistingDatabase = count(DbHelper::getTablesInstalled()) > 0;
+        // Before Matomo installs plugins: those of the database are not new.
+        (new InstalledPlugins())->addToConfig($this->config);
         $this->tableCreation();
         $this->saveLanguage('en');
         $this->createSuperUser();
         $this->installPlugins();
         $this->unInstallPlugins();
-        $this->updateExistingDatabase($recordedVersions);
+        if ($isExistingDatabase) {
+            $this->updateExistingDatabase();
+        }
         $this->writeConfig();
         # Enable sending emails after install
         $this->config->General['emails_enabled'] = 1;
@@ -355,20 +359,12 @@ class Install
 
     /**
      * Runs the updates of Matomo and its plugins that a database from before this install is
-     * still waiting for.
+     * waiting for.
      *
-     * @param array<string, string> $recordedVersions the versions from before the install
      * @throws \Exception if an update failed
      */
-    protected function updateExistingDatabase(array $recordedVersions): void
+    protected function updateExistingDatabase(): void
     {
-        if (empty($recordedVersions)) {
-            // A new database is at the version of the code.
-            return;
-        }
-
-        (new RecordedVersions())->restore($recordedVersions);
-
         $result = $this->updateComponents();
         if (!is_array($result)) {
             $this->log('The database is up to date');
