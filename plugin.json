@@ -23,6 +23,6 @@
         "issues": "https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-ExtraTools/issues"
     },
     "homepage": "https://digitalist.cloud/matomo",
-    "license": "GPL-3.0-or-later",
+    "license": "GPL v3+",
     "keywords": []
 }
