@@ -26,11 +26,11 @@ MATOMO_FIRST_USER_EMAIL=$(value .matomo.dashboard.firstuser.email) \
 MATOMO_FIRST_USER_PASSWORD=$(value .matomo.dashboard.firstuser.password)"
 
 install() {
-  # A new pod has the config of the image only, as its init container copies it in, and that is
-  # when plugin updates used to be skipped.
-  in_pod "rm -f config/config.ini.php \
-    && rsync -crlOt --no-owner --no-group --no-perms /usr/src/matomo/config/ /var/www/html/config/ \
-    && $ENVIRONMENT ./console plugin:activate ExtraTools \
+  # A new pod starts with a config file that names no installed plugins, and that is when
+  # plugin updates used to be skipped. The entries are removed here to get the same. A new pod
+  # has no cache either, and Matomo caches the version of a plugin.
+  in_pod "sed -i '/^PluginsInstalled\\[\\]/d' config/config.ini.php \
+    && rm -rf tmp/cache \
     && $ENVIRONMENT ./console matomo:install --install-file=/tmp/install-dummy.json --force --do-not-drop-db"
 }
 
