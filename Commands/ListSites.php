@@ -24,7 +24,6 @@ namespace Piwik\Plugins\ExtraTools\Commands;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\ExtraTools\Lib\Site;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -41,17 +40,7 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('site:list');
         $this->setDescription('List sites.');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'format',
-                    'f',
-                    InputOption::VALUE_OPTIONAL,
-                    'Output format (json, yaml, text)',
-                    'text'
-                )
-            ]
-        );
+        $this->addOptionalValueOption('format', 'f', 'Output format (json, yaml, text)', 'text');
     }
 
     /**

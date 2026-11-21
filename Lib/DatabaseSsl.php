@@ -95,12 +95,48 @@ class DatabaseSsl
     {
         $temp = tmpfile();
         $contents = "[client]\n"
-            . 'user=' . ($config['db_user'] ?? '') . "\n"
-            . 'password=' . ($config['db_pass'] ?? '') . "\n";
+            . 'user=' . self::quoteOptionValue((string) ($config['db_user'] ?? '')) . "\n"
+            . 'password=' . self::quoteOptionValue((string) ($config['db_pass'] ?? '')) . "\n";
         $contents .= self::sslOptionLines($config);
         fwrite($temp, $contents);
         $path = stream_get_meta_data($temp)['uri'];
         return [$temp, $path];
+    }
+
+    /**
+     * Quote a value for a mysql option file. Unquoted, a "#" starts a comment
+     * and cuts the value short, and a line break would start a new option.
+     *
+     * @throws \InvalidArgumentException if the value has a line break
+     */
+    public static function quoteOptionValue(string $value): string
+    {
+        self::assertSingleLine($value);
+
+        return '"' . addcslashes($value, '\\"') . '"';
+    }
+
+    /**
+     * The database name is written into SQL and cannot be bound there, so it
+     * is limited to the characters a name needs.
+     *
+     * @param mixed $name
+     * @throws \InvalidArgumentException if the name has other characters
+     */
+    public static function assertValidDatabaseName($name): string
+    {
+        if (!is_string($name) || !preg_match('/^[A-Za-z0-9_$-]{1,64}$/', $name)) {
+            throw new \InvalidArgumentException('The database name can only have letters, digits, "_", "$" and "-".');
+        }
+
+        return $name;
+    }
+
+    private static function assertSingleLine(string $value): void
+    {
+        if (preg_match('/[\r\n]/', $value)) {
+            throw new \InvalidArgumentException('A database setting cannot have a line break.');
+        }
     }
 
     /**
@@ -131,6 +167,7 @@ class DatabaseSsl
         ];
         foreach ($map as $configKey => $option) {
             if (!empty($config[$configKey])) {
+                self::assertSingleLine((string) $config[$configKey]);
                 $lines[] = $option . '=' . $config[$configKey];
             }
         }

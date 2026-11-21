@@ -95,23 +95,20 @@ class Site
         }
     }
 
-    public function delete()
+    /**
+     * @throws \Exception if the site could not be deleted
+     */
+    public function delete(): void
     {
-        try {
-            $delete = APISitesManager::getInstance()->deleteSite($this->site);
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        APISitesManager::getInstance()->deleteSite($this->site);
     }
-    public function addURL($id, $urls)
+
+    /**
+     * @throws \Exception if the URLs could not be added
+     */
+    public function addURL($id, $urls): void
     {
-        try {
-            $add_url = APISitesManager::getInstance()->addSiteAliasUrls($id, $urls);
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        APISitesManager::getInstance()->addSiteAliasUrls($id, $urls);
     }
 
     public function totalSites()

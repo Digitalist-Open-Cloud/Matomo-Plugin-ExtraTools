@@ -2,7 +2,17 @@
   "ExtraTools": {
     "ExtraTools": "ExtraTools",
     "Documentation": "Documentation",
-    "Invalidations" : "Invalidations",
-    "PhpInfo": "Phpinfo"
+    "Invalidations": "Invalidations",
+    "PhpInfo": "Phpinfo",
+    "Intro": "ExtraTools is an open source plugin for Matomo, developed and maintained by %1$sDigitalist Open Cloud%2$s and the Matomo Community. It adds functionality to your Matomo instance with a focus on automation in the backend, like installing and handling segments, sites and more.",
+    "IntroServices": "We provide %1$sprofessional services%2$s and %3$sopen source and licensed plugins%4$s.",
+    "ColumnSite": "Site",
+    "ColumnPeriod": "Period",
+    "ColumnFrom": "From",
+    "ColumnTo": "To",
+    "ColumnInvalidated": "Invalidated",
+    "ColumnStarted": "Started",
+    "ColumnSegment": "Info/Segment",
+    "NoInvalidations": "Nothing is waiting to be archived."
   }
 }

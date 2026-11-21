@@ -46,7 +46,7 @@ class Create
     {
         $db_host = $this->config['db_host'];
         $db_port = $this->config['db_port'];
-        $db_name = $this->config['db_name'];
+        $db_name = DatabaseSsl::assertValidDatabaseName($this->config['db_name']);
 
         // Credentials and (optionally) SSL settings via an option file.
         [$temp, $config_path] = DatabaseSsl::createClientOptionFile($this->config);

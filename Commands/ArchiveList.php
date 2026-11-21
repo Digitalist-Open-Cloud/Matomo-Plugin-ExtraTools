@@ -23,18 +23,9 @@ namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\ExtraTools\Lib\Archivers;
-use Piwik\Common;
-use Piwik\Db;
 
 class ArchiveList extends ConsoleCommand
 {
-    private static $rawPrefix = 'segment';
-
-    protected function getTable()
-    {
-        return Common::prefixTable(self::$rawPrefix);
-    }
-
     protected function configure()
     {
         $HelpText = 'The <info>%command.name%</info> wil list archives that are going
@@ -51,13 +42,9 @@ class ArchiveList extends ConsoleCommand
         $get = $this->getArchivers();
         if (!empty($get)) {
             foreach ($get as $out) {
-                $name = $out['name'];
-                if ($name == 'done') {
-                    $out_name = '';
-                } else {
-                    $hash = preg_replace('/^done/', '', $name);
-                    $name = $this->getSegmentName($hash);
-                    $out_name =  "     segment: <comment>" . $name['name'] . "</comment>\n";
+                $out_name = '';
+                if ($out['name'] !== 'done') {
+                    $out_name = "     segment: <comment>" . (new Archivers())->getLabel($out['name']) . "</comment>\n";
                 }
                 $out_period = '';
                 if (isset($out['period'])) {
@@ -89,17 +76,5 @@ class ArchiveList extends ConsoleCommand
         $list = new Archivers();
         $out = $list->getAllInvalidations();
         return $out;
-    }
-
-
-    public function getSegmentName($hash)
-    {
-        try {
-            $sql = "SELECT `name` FROM " . $this->getTable() . " WHERE `hash` = '" . $hash . "';";
-            $name = Db::get()->fetchRow($sql);
-            return $name;
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 }

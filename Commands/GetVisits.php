@@ -24,7 +24,6 @@ namespace Piwik\Plugins\ExtraTools\Commands;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
-use Symfony\Component\Console\Input\InputOption;
 use Piwik\Plugins\API\API;
 use Piwik\Plugins\SitesManager\API as SitesManagerAPI;
 
@@ -46,46 +45,12 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('visits:get');
         $this->setDescription('Gets archived visits for all or a chosen site.');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'id',
-                    'i',
-                    InputOption::VALUE_OPTIONAL,
-                    'Site id to list total visits for.',
-                    null
-                ),
-                new InputOption(
-                    'period',
-                    'p',
-                    InputOption::VALUE_OPTIONAL,
-                    'Period to use - day, week, month, year. Defaults to day.',
-                    'day'
-                ),
-                new InputOption(
-                    'date',
-                    'd',
-                    InputOption::VALUE_OPTIONAL,
-                    'Matomo date to get visits from. today, yesterday, 2020-04-12. You could also use range: '
-                    . '2020-03-30,2020-04-20. Defaults to today.',
-                    'today'
-                ),
-                new InputOption(
-                    'segmentid',
-                    's',
-                    InputOption::VALUE_OPTIONAL,
-                    'Segment id, to get total visits in a segment.',
-                    null
-                ),
-                new InputOption(
-                    'view',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'What to output, visits, actions, pageviews, revenue,  defaults to pageviews',
-                    'pageviews'
-                ),
-            ]
-        );
+        $this->addOptionalValueOption('id', 'i', 'Site id to list total visits for.', null);
+        $this->addOptionalValueOption('period', 'p', 'Period to use - day, week, month, year. Defaults to day.', 'day');
+        $this->addOptionalValueOption('date', 'd', 'Matomo date to get visits from. today, yesterday, 2020-04-12. You could also use range: '
+            . '2020-03-30,2020-04-20. Defaults to today.', 'today');
+        $this->addOptionalValueOption('segmentid', 's', 'Segment id, to get total visits in a segment.', null);
+        $this->addOptionalValueOption('view', null, 'What to output, visits, actions, pageviews, revenue,  defaults to pageviews', 'pageviews');
     }
 
     /**

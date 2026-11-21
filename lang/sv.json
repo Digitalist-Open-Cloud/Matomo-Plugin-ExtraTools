@@ -1,8 +1,18 @@
 {
   "ExtraTools": {
-    "ExtraTools" : "ExtraTools",
+    "ExtraTools": "ExtraTools",
     "Documentation": "Dokumentation",
-    "Invalidations" : "Invalideringar",
-    "PhpInfo": "Phpinfo"
+    "Invalidations": "Invalideringar",
+    "PhpInfo": "Phpinfo",
+    "Intro": "ExtraTools är ett plugin med öppen källkod för Matomo, utvecklat och underhållet av %1$sDigitalist Open Cloud%2$s och Matomo-communityn. Det ger din Matomo-instans fler funktioner med fokus på automatisering i backend, som installation och hantering av segment, webbplatser med mera.",
+    "IntroServices": "Vi erbjuder %1$sprofessionella tjänster%2$s och %3$splugin med öppen källkod och licensierade plugin%4$s.",
+    "ColumnSite": "Webbplats",
+    "ColumnPeriod": "Period",
+    "ColumnFrom": "Från",
+    "ColumnTo": "Till",
+    "ColumnInvalidated": "Invaliderad",
+    "ColumnStarted": "Påbörjad",
+    "ColumnSegment": "Info/segment",
+    "NoInvalidations": "Inget väntar på att arkiveras."
   }
 }

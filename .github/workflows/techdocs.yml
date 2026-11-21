@@ -7,7 +7,8 @@ on:
 
 jobs:
   publish:
-    uses: Digitalist-Open-Cloud/BackstageTechDocs/.github/workflows/publish-techdocs.yml@main
+    # Pinned, as the workflow is handed the storage credentials.
+    uses: Digitalist-Open-Cloud/BackstageTechDocs/.github/workflows/publish-techdocs.yml@766134ca2a59f1c9d98038a0bdd492d314eacf2f # main
     with:
       entity-name: matomo.plugin.extratools
       entity-kind: Component

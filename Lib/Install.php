@@ -73,6 +73,9 @@ class Install
 
     public function execute()
     {
+        // Before anything is dropped or created.
+        $this->resolveFirstUser();
+
         $options = $this->options;
         if (isset($options['timestamp'])) {
             if ($options['timestamp'] == true) {
@@ -89,32 +92,7 @@ class Install
             }
         }
 
-        $first_user = $options['first-user'];
-
-        if (isset($fileconfig['first-user'])) {
-            $first_user = $fileconfig['first-user'];
-        }
-
-        $first_user_pass = $options['first-user-password'];
-        if (isset($fileconfig['first-user-password'])) {
-            $first_user_pass = $fileconfig['first-user-password'];
-        }
-
-        $first_user_email = $options['first-user-email'];
-        if (isset($fileconfig['first-user-email'])) {
-            $first_user_pass = $fileconfig['first-user-email'];
-        }
-
-        $first_site_name = $options['first-site-name'];
-        if (isset($fileconfig['first-site-name'])) {
-            $first_site_name = $fileconfig['first-site-name'];
-        }
-
-        $first_site_url = $options['first-site-url'];
-        if (isset($fileconfig['first-site-url'])) {
-            $first_site_url = $fileconfig['first-site-url'];
-        }
-        $this->silent = $options['silent'];
+        $this->silent = $options['silent'] ?? false;
 
         if ($this->silent !== true) {
             $this->output->writeln("<info>Starting <comment>install</comment></info>");
@@ -317,72 +295,56 @@ class Install
     }
 
     /**
+     * Returns the first user from the options, which the install file overrides.
+     *
+     * @return array{username: string, pass: string, email: string}
+     * @throws \InvalidArgumentException if no password is given: there is no default one
+     */
+    private function resolveFirstUser(): array
+    {
+        $fileconfig = $this->fileconfig->Config ?? null;
+        $options = $this->options ?? [];
+
+        $user = [
+            'username' => 'admin',
+            'pass' => '',
+            'email' => 'admin@example.com',
+        ];
+        foreach (['username' => 'first-user', 'email' => 'first-user-email', 'pass' => 'first-user-password'] as $key => $option) {
+            if (!empty($options[$option])) {
+                $user[$key] = $options[$option];
+            }
+        }
+        foreach (array_keys($user) as $key) {
+            if (isset($fileconfig['User'][$key])) {
+                $user[$key] = $fileconfig['User'][$key];
+            }
+        }
+
+        if ((string) $user['pass'] === '') {
+            throw new \InvalidArgumentException(
+                'A password for the first user is required: --first-user-pass, MATOMO_FIRST_USER_PASSWORD or "pass" under "User" in the install file.'
+            );
+        }
+
+        return $user;
+    }
+
+    /**
      * Creates the first superuser.
      */
     protected function createSuperUser()
     {
-        $fileconfig = $this->fileconfig;
-        $config_from_file = $this->fileconfig;
-        if (isset($config_from_file->Config)) {
-            $fileconfig = $config_from_file->Config;
-        }
-        $options = $this->options;
-
-        // Default values if none are set.
-        $user = [
-            'username' => 'admin',
-            'pass' => 'password',
-            'email' => 'admin@example.com',
-        ];
-        // Options (aka flags for install:matomo or env. variables overrides default)
-        if (isset($options)) {
-            if (isset($options['first-user'])) {
-                $user['username'] = $options['first-user'];
-            }
-            if (isset($options['first-user-email'])) {
-                $user['email'] = $options['first-user-email'];
-            }
-            if (isset($options['first-user-password'])) {
-                $user['pass'] = $options['first-user-password'];
-            }
-        }
-        // Settings from install file overrides everything.
-        if (isset($fileconfig)) {
-            if (isset($fileconfig['User'])) {
-                $userdata = $fileconfig['User'];
-                $keys = [
-                    'username',
-                    'pass',
-                    'email',
-                ];
-                foreach ($keys as $key) {
-                    if (isset($userdata[$key])) {
-                        $user[$key] = $userdata[$key];
-                    }
-                }
-            }
-        }
+        $user = $this->resolveFirstUser();
 
         $this->log('Creating Super user');
 
         Access::doAsSuperUser(
             function () use ($user) {
-                $username = '';
-                $pass = '';
-                $email = '';
-                // split up the array - now we get $username, $pass and $email.
-                extract($user);
                 $api = APIUsersManager::getInstance();
-                if (
-                    !$api->userExists($username)
-                    and !$api->userEmailExists($email)
-                ) {
-                    $api->addUser(
-                        $username,
-                        $pass,
-                        $email
-                    );
-                    $api->setSuperUserAccess($username, true);
+                if (!$api->userExists($user['username']) && !$api->userEmailExists($user['email'])) {
+                    $api->addUser($user['username'], $user['pass'], $user['email']);
+                    $api->setSuperUserAccess($user['username'], true);
                 }
             }
         );
@@ -480,8 +442,8 @@ class Install
         $config = $this->config;
         $pluginsInstalled = $config->PluginsInstalled;
 
-        CliManager::getInstance()->loadActivatedPlugins();
-        $activated = CliManager::getInstance()->getActivatedPlugins();
+        Manager::getInstance()->loadActivatedPlugins();
+        $activated = Manager::getInstance()->getActivatedPlugins();
 
         $all_active = array_unique(array_merge($pluginsInstalled, $activated), SORT_REGULAR);
 
@@ -497,8 +459,7 @@ class Install
             if (isset($uninstallplugins)) {
                 foreach ($uninstallplugins as $plugin) {
                     if (in_array($plugin, $all_active)) {
-                        CliManager::getInstance()->deactivatePlugin($plugin);
-                        CliManager::getInstance()->uninstallPlugin($plugin);
+                        (new PluginUninstaller())->uninstall($plugin);
                         $this->log("Deactivated $plugin");
                     }
                 }
@@ -567,9 +528,6 @@ class Install
 
     private function login()
     {
-        $username = '';
-        $pass = '';
-        extract($this->user);
-        $this->log("Now you can login with user <comment>$username</comment> and password <comment>$pass</comment>");
+        $this->log("Now you can login with user <comment>{$this->user['username']}</comment> and the password that was given.");
     }
 }

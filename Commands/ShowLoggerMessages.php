@@ -22,7 +22,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Piwik\Plugins\LogViewer\API as LoggerAPI;
 
 class ShowLoggerMessages extends ConsoleCommand
@@ -36,38 +35,10 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('logger:show');
         $this->setDescription('Show internal logger messages in database (monolog)');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'query',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Query logs for this',
-                    ''
-                ),
-                new InputOption(
-                    'results',
-                    'r',
-                    InputOption::VALUE_OPTIONAL,
-                    'Number of results. Defaults to 100',
-                    '100'
-                ),
-                new InputOption(
-                    'format',
-                    'f',
-                    InputOption::VALUE_OPTIONAL,
-                    'output format, stdout, json or csv, defaults to stdout.',
-                    'stdout'
-                ),
-                new InputOption(
-                    'file',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'If using csv output, output to this file',
-                    'logger.csv'
-                ),
-            ]
-        );
+        $this->addOptionalValueOption('query', null, 'Query logs for this', '');
+        $this->addOptionalValueOption('results', 'r', 'Number of results. Defaults to 100', '100');
+        $this->addOptionalValueOption('format', 'f', 'output format, stdout, json or csv, defaults to stdout.', 'stdout');
+        $this->addOptionalValueOption('file', null, 'If using csv output, output to this file', 'logger.csv');
     }
 
     /**

@@ -63,6 +63,7 @@ To run:
         $record = $site->record();
         if (!$record) {
             $output->writeln("<info>Site with id <comment>$id</comment> could not be found</info>");
+            return self::FAILURE;
         } else {
             if ($site->totalSites() === 1) {
                 $output->writeln("<info>You can't delete the site, you must have at least on site in Matomo.</info>");
@@ -74,7 +75,12 @@ To run:
                 $output->writeln("<info>Site was <comment>not</comment> deleted</info>");
                 return self::FAILURE;
             } else {
-                $delete = $site->delete();
+                try {
+                    $site->delete();
+                } catch (\Exception $e) {
+                    $output->writeln("<error>Site $record could not be deleted: {$e->getMessage()}</error>");
+                    return self::FAILURE;
+                }
                 $output->writeln("<info>Site <comment>$record</comment> deleted</info>");
             }
         }

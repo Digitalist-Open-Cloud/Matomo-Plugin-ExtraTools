@@ -54,7 +54,18 @@ class Backup
         // when enabled, SSL settings).
         [$temp, $config_path] = DatabaseSsl::createClientOptionFile($this->config);
         $timestamp = date("Ymd-His");
-        $backup = Process\Process::fromShellCommandline("mysqldump --defaults-extra-file=$config_path -h $db_host -P $db_port $db_name --add-drop-table > $backup_folder/$prefix-$timestamp.sql");
+        // No shell is involved, so no value can be read as a command.
+        $backup = new Process\Process([
+            'mysqldump',
+            "--defaults-extra-file=$config_path",
+            '-h',
+            (string) $db_host,
+            '-P',
+            (string) $db_port,
+            '--add-drop-table',
+            "--result-file=$backup_folder/$prefix-$timestamp.sql",
+            (string) $db_name,
+        ]);
         $backup->setTimeout($timeout);
         $backup->enableOutput();
         $backup->run();

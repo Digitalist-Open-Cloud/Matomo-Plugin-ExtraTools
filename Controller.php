@@ -22,8 +22,6 @@
 namespace Piwik\Plugins\ExtraTools;
 
 use Piwik\Plugins\ExtraTools\Lib\Archivers;
-use Piwik\Common;
-use Piwik\Db;
 use Piwik\Piwik;
 use Piwik\Plugin\ControllerAdmin;
 
@@ -32,29 +30,11 @@ use Piwik\Plugin\ControllerAdmin;
  */
 class Controller extends ControllerAdmin
 {
-    private static $rawPrefix = 'segment';
-
-    protected function getTable()
-    {
-        return Common::prefixTable(self::$rawPrefix);
-    }
-
-
     public function index()
     {
         Piwik::checkUserHasSomeViewAccess();
-        $info = "<p>ExtraTools is an open source plugin for Matomo, developed and maintained by
-          <a href='https://digitalist.cloud'>Digitalist Open Cloud</a> and the Matomo Community.
-          ExtraTools adds a lot of functionality to your Matomo instance, focusing on
-          automation in the backend, like installing, handling segments,
-          sites and more.</p>
-          <p>We are providing <a href='https://digitalist.cloud/tjanster/matomo'>professional services</a>,
-          <a href='https://github.com/digitalist-se/MatomoPlugins'>open source and licensed plugins</a>.</p>";
-        return $this->renderTemplate('index', array(
-            'info' => $info
-        ));
+        return $this->renderTemplate('index');
     }
-
     public function docs()
     {
         Piwik::checkUserHasSomeViewAccess();
@@ -67,7 +47,7 @@ class Controller extends ControllerAdmin
 
     public function phpinfo()
     {
-        Piwik::checkUserHasSomeAdminAccess();
+        Piwik::checkUserHasSuperUserAccess();
         $api = new API();
         // Get phpinfo
         $info = $api->getPhpInfo();
@@ -77,17 +57,12 @@ class Controller extends ControllerAdmin
     }
     public function invalidatedarchives()
     {
-        Piwik::checkUserHasSomeAdminAccess();
+        // The list covers every website.
+        Piwik::checkUserHasSuperUserAccess();
         $result = [];
-        $archivers = $this->getArchivers();
-        foreach ($archivers as $out) {
-            if ($out['name'] == 'done') {
-                $out['name'] = 'All visits';
-            } else {
-                $hash = preg_replace('/^done/', '', $out['name']);
-                $name = $this->getSegmentName($hash);
-                $out['name'] = $name['name'];
-            }
+        $list = new Archivers();
+        foreach ($list->getAllInvalidations() as $out) {
+            $out['name'] = $list->getLabel($out['name']);
             $out['period'] = array_flip(Piwik::$idPeriods)[$out['period']] ?? $out['period'];
 
             $result[] = $out;
@@ -95,24 +70,5 @@ class Controller extends ControllerAdmin
         return $this->renderTemplate('invalidatedarchives', array(
             'archivers' => $result
         ));
-    }
-
-
-    public function getArchivers()
-    {
-        $list = new Archivers();
-        $out = $list->getAllInvalidations();
-        return $out;
-    }
-
-    public function getSegmentName($hash)
-    {
-        try {
-            $sql = "SELECT `name` FROM " . $this->getTable() . " WHERE `hash` = '" . $hash . "';";
-            $name = Db::get()->fetchRow($sql);
-            return $name;
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 }

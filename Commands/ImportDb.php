@@ -22,7 +22,6 @@
 namespace Piwik\Plugins\ExtraTools\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Piwik\Config;
 use Piwik\Plugins\ExtraTools\Lib\Import;
 
@@ -49,17 +48,7 @@ To run:
         $this->setHelp($HelpText);
         $this->setName('database:import');
         $this->setDescription('Import database - overwrites the default');
-        $this->setDefinition(
-            [
-                new InputOption(
-                    'backup-path',
-                    'b',
-                    InputOption::VALUE_OPTIONAL,
-                    'backup path',
-                    null
-                ),
-            ]
-        );
+        $this->addOptionalValueOption('backup-path', 'b', 'backup path', null);
     }
 
     /**
@@ -73,17 +62,21 @@ To run:
 
         if ($backup_path == null) {
             $output->writeln("<error>Value for backup-path is required</error>");
-            exit;
+            return self::FAILURE;
         }
 
-        if (!file_exists($backup_path)) {
+        if (!is_readable($backup_path) || is_dir($backup_path)) {
             $output->writeln("<error>Looks like backup does not exist or is not readable in $backup_path</error>");
-            exit;
+            return self::FAILURE;
         }
 
         $configs = Config::getInstance();
         // Only supporting local config.
         $db_configs = $configs->getFromLocalConfig('database');
+        // port is not always set.
+        if (!isset($db_configs['port'])) {
+            $db_configs['port'] = '3306';
+        }
 
         $config = [
             'db_host' =>  $db_configs['host'],

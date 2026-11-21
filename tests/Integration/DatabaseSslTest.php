@@ -128,8 +128,8 @@ class DatabaseSslTest extends TestCase
         $contents = file_get_contents($path);
 
         $this->assertStringContainsString('[client]', $contents);
-        $this->assertStringContainsString('user=bob', $contents);
-        $this->assertStringContainsString('password=secret', $contents);
+        $this->assertStringContainsString('user="bob"', $contents);
+        $this->assertStringContainsString('password="secret"', $contents);
         $this->assertStringContainsString('ssl-ca=/etc/ssl/certs/ca.crt', $contents);
         $this->assertStringContainsString('loose-ssl-mode=REQUIRED', $contents);
 
@@ -147,11 +147,52 @@ class DatabaseSslTest extends TestCase
 
         $contents = file_get_contents($path);
 
-        $this->assertStringContainsString('user=bob', $contents);
-        $this->assertStringContainsString('password=secret', $contents);
+        $this->assertStringContainsString('user="bob"', $contents);
+        $this->assertStringContainsString('password="secret"', $contents);
         $this->assertStringNotContainsString('ssl-', $contents);
         $this->assertStringNotContainsString('loose-ssl', $contents);
 
         fclose($handle);
+    }
+
+    public function testAPasswordWithSpecialCharactersIsWrittenWhole()
+    {
+        [$handle, $path] = DatabaseSsl::createClientOptionFile(['db_user' => 'bob', 'db_pass' => 'se#cr"et\\ ']);
+
+        // Unquoted, the client would read the password as "se".
+        $this->assertStringContainsString('password="se#cr\\"et\\\\ "' . "\n", file_get_contents($path));
+
+        fclose($handle);
+    }
+
+    public function testASettingCannotAddOptionsOfItsOwn()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        DatabaseSsl::createClientOptionFile(['db_user' => 'bob', 'db_pass' => "x\nssl-ca=/tmp/evil"]);
+    }
+
+    /**
+     * @dataProvider getDatabaseNames
+     */
+    public function testADatabaseNameCanOnlyHaveTheCharactersANameNeeds(string $name, bool $isValid)
+    {
+        if (!$isValid) {
+            $this->expectException(\InvalidArgumentException::class);
+        }
+
+        $this->assertSame($name, DatabaseSsl::assertValidDatabaseName($name));
+    }
+
+    public function getDatabaseNames(): array
+    {
+        return [
+            ['matomo', true],
+            ['matomo_prod-2', true],
+            ['', false],
+            ['matomo`; DROP DATABASE mysql; --', false],
+            ["matomo' OR '1'='1", false],
+            ['matomo db', false],
+        ];
     }
 }

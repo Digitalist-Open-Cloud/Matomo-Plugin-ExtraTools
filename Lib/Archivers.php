@@ -35,6 +35,40 @@ class Archivers
     }
 
     /**
+     * Tells what an invalidation is for, from its name: "done", followed by the hash of a
+     * segment if it is for one, and by "." and a plugin if it is for one plugin only.
+     *
+     * @return string eg, "All visits", "Returning visitors" or "Returning visitors (Goals)"
+     */
+    public function getLabel(string $name): string
+    {
+        if (!preg_match('/^done([0-9a-f]{32})?(?:\.(.+))?$/', $name, $parts)) {
+            return $name;
+        }
+
+        $hash = $parts[1] ?? '';
+        $label = 'All visits';
+        if ($hash !== '') {
+            // The segment may have been deleted since.
+            $label = $this->getSegmentName($hash) ?: $hash;
+        }
+
+        return empty($parts[2]) ? $label : "$label ({$parts[2]})";
+    }
+
+    /**
+     * @return string|false the name of the segment, or false if there is none with the hash
+     */
+    private function getSegmentName(string $hash)
+    {
+        try {
+            return Db::get()->fetchOne('SELECT `name` FROM ' . Common::prefixTable('segment') . ' WHERE `hash` = ?', [$hash]);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Returns all stored segments that haven't been deleted. Ignores the site the segments are enabled
      * for and whether to auto archive or not.
      *

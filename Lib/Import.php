@@ -60,13 +60,17 @@ class Import
                 "-P",
                 "$db_port",
                 "$db_name",
-                "<",
-                "$backup_path"
             ]
         );
+        // The dump is read by the client as its input; no shell is there to do a "<".
+        $dump = fopen($backup_path, 'r');
+        $import->setInput($dump);
+        // A large dump takes longer than the default limit of a minute.
+        $import->setTimeout(null);
         $import->enableOutput();
 
         $import->run();
+        fclose($dump);
         fclose($temp);
         echo $import->getOutput();
         if (!$import->isSuccessful()) {

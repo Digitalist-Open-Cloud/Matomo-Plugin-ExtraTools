@@ -1,42 +1,44 @@
 {% extends 'admin.twig' %}
 
 {% block content %}
-
 <div class="card">
-    <div class="card-content">
-      <div style="float:right">
-        <a style="text-decoration:none" href="https://digitalist.cloud/">
-          <img src="plugins/ExtraTools/assets/dot.png" height="40" />
-        </a>
-      </div>
-      <h2>{{ 'ExtraTools_Invalidations'|translate }}</h2>
-   <table id="results" onchange="unCheckAll()" piwik-content-table>
-        <thead>
-            <tr>
-                <th class="center">Site</th>
-                <th class="center">Period</th>
-                <th class="center">From</th>
-                <th class="center">To</th>
-                <th class="center">Invalidated</th>
-                <th class="center">Started</th>
-                <th class="center">Info/Segment</th>
-
-            </tr>
-        </thead>
-        <tbody>
+  <div class="card-content">
+    <div style="float:right">
+      <a style="text-decoration:none" href="https://digitalist.cloud/">
+        <img src="plugins/ExtraTools/assets/dot.png" height="40" alt="Digitalist Open Cloud" />
+      </a>
+    </div>
+    <h2>{{ 'ExtraTools_Invalidations'|translate }}</h2>
+    <table id="results" class="entityTable" vue-directive="CoreHome.ContentTable">
+      <thead>
+        <tr>
+          <th>{{ 'ExtraTools_ColumnSite'|translate }}</th>
+          <th>{{ 'ExtraTools_ColumnPeriod'|translate }}</th>
+          <th>{{ 'ExtraTools_ColumnFrom'|translate }}</th>
+          <th>{{ 'ExtraTools_ColumnTo'|translate }}</th>
+          <th>{{ 'ExtraTools_ColumnInvalidated'|translate }}</th>
+          <th>{{ 'ExtraTools_ColumnStarted'|translate }}</th>
+          <th>{{ 'ExtraTools_ColumnSegment'|translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
         {% for archive in archivers %}
-            <tr>
-                <td>{{ archive.idsite }}</td>
-                <td>{{ archive.period }}</td>
-                <td>{{ archive.date1 }}</td>
-                <td>{{ archive.date2 }} </td>
-                <td>{{ archive.ts_invalidated }}</td>
-                <td>{{ archive.ts_started }}</td>
-                <td>{{ archive.name }}</td>
-            </tr>
+          <tr>
+            <td>{{ archive.idsite }}</td>
+            <td>{{ archive.period }}</td>
+            <td>{{ archive.date1 }}</td>
+            <td>{{ archive.date2 }}</td>
+            <td>{{ archive.ts_invalidated }}</td>
+            <td>{{ archive.ts_started }}</td>
+            <td>{{ archive.name }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="7">{{ 'ExtraTools_NoInvalidations'|translate }}</td>
+          </tr>
         {% endfor %}
-        </tbody>
-   </table>
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
-

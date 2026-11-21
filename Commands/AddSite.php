@@ -150,7 +150,7 @@ You could use options to override config or environment variables:
     {
         // "Plugin1.setting1=value1"
         // => ['Plugin1' => ['name' => 'setting1', 'value' => 'value1']]
-        $values = array_map(function(string $value): array {
+        $values = array_map(function (string $value): array {
             [$key, $value] = explode('=', $value, 2);
             [$plugin, $setting] = explode('.', $key, 2);
 

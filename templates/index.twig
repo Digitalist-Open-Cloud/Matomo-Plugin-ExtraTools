@@ -2,14 +2,15 @@
 
 {% block content %}
 <div class="card">
-<div class="card-content">
-  <div style="float:right">
-    <a style="text-decoration:none" href="https://digitalist.cloud/">
-      <img src="plugins/ExtraTools/assets/dot.png" height="40" />
-    </a>
+  <div class="card-content">
+    <div style="float:right">
+      <a style="text-decoration:none" href="https://digitalist.cloud/">
+        <img src="plugins/ExtraTools/assets/dot.png" height="40" alt="Digitalist Open Cloud" />
+      </a>
+    </div>
+    <h2 class="card-title">{{ 'ExtraTools_ExtraTools'|translate }}</h2>
+    <p>{{ 'ExtraTools_Intro'|translate('<a href="https://digitalist.cloud">', '</a>')|raw }}</p>
+    <p>{{ 'ExtraTools_IntroServices'|translate('<a href="https://digitalist.cloud/tjanster/matomo">', '</a>', '<a href="https://github.com/digitalist-se/MatomoPlugins">', '</a>')|raw }}</p>
   </div>
-  <h2 class="card-title">ExtraTools</h2>
-{{ info | raw }}
-</div>
 </div>
 {% endblock %}

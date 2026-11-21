@@ -185,14 +185,29 @@ class CommandsTest extends ConsoleCommandTestCase
     public function testSiteAddUrlWithNeededParametersShouldSucceed()
     {
 
+        // A site of its own: another test deletes the site of the fixture.
+        $idSite = \Piwik\Access::doAsSuperUser(fn () => \Piwik\Tests\Framework\Fixture::createWebsite('2024-01-01 00:00:00'));
+
         $code = $this->applicationTester->run(array(
             'command' => 'site:url',
-            '--id' => self::$fixture->idSite,
+            '--id' => $idSite,
             '--url' => 'https://foo.bar',
             '-vvv' => true,
         ));
-        $this->assertEquals(0, $code);
-        $this->assertStringContainsStringIgnoringCase("URL https://foo.bar added for site 1", $this->applicationTester->getDisplay());
+        $this->assertEquals(0, $code, $this->applicationTester->getDisplay());
+        $this->assertStringContainsStringIgnoringCase("URL https://foo.bar added for site $idSite", $this->applicationTester->getDisplay());
+    }
+
+    public function testSiteAddUrlForASiteThatDoesNotExistShouldFail()
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:url',
+            '--id' => 99999,
+            '--url' => 'https://foo.bar',
+        ));
+
+        $this->assertEquals(1, $code);
+        $this->assertStringContainsStringIgnoringCase('could not be added for site 99999', $this->applicationTester->getDisplay());
     }
 
 

@@ -72,7 +72,12 @@ To run:
 
         $urls = explode(",", trim($url));
         $site = new Site($id);
-        $site->addURL($id, $urls);
+        try {
+            $site->addURL($id, $urls);
+        } catch (\Exception $e) {
+            $output->writeln("<error>The URL could not be added for site $id: {$e->getMessage()}</error>");
+            return self::FAILURE;
+        }
         $output->writeln("<info>URL $url added for site $id</info>");
         return self::SUCCESS;
     }
