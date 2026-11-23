@@ -47,11 +47,6 @@ class Install
     protected $licensekey;
     public bool $silent;
 
-    /**
-     * @var APIUsersManager
-     */
-    private $api;
-
    /**
     * @var OutputInterface
     */
@@ -510,7 +505,7 @@ class Install
                 if (isset($configarray)) {
                     foreach ($configarray as $key => $values) {
                         foreach ($values as $setting => $value) {
-                            $config_write = new ConfigManipulation($this->config, $this->output);
+                            $config_write = new ConfigManipulation($this->config);
                             $config_write->saveConfig("$key", "$setting", "$value");
                         }
                     }

@@ -82,10 +82,9 @@ To run:
                 $paused = Config::getInstance()->Segments['pause'];
             }
             if (isset($paused)) {
-                trim($paused);
                 $id = $out['idsegment'];
-                $pausedSegmentIDs = explode(",", $paused);
-                if (in_array($id, $pausedSegmentIDs, true)) {
+                $pausedSegmentIDs = array_map('trim', explode(",", $paused));
+                if (in_array((string) $id, $pausedSegmentIDs, true)) {
                     $segment_paused = "Segment is paused";
                 }
             }
@@ -110,7 +109,7 @@ To run:
             if (isset($out['ts_last_edit'])) {
                 $message .=  "\n     Latest update: <comment>" . $out['ts_last_edit'] . "</comment>";
             }
-            if (!is_null($segment_paused)) {
+            if ($segment_paused !== '') {
                 $message .= "\n     $segment_paused\n";
             }
 
