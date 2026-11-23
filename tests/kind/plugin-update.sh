@@ -43,10 +43,15 @@ expect_status() {
   fi
 }
 
-# The install file of the chart, with the dummy plugin added.
-kubectl -n "$NAMESPACE" get configmap matomo-configuration -o jsonpath='{.data.install\.json}' \
-  | jq '.PluginsInstalled += ["ExtraToolsDummy"]' \
-  | kubectl -n "$NAMESPACE" exec -i deployment/matomo-dashboard -c matomo -- sh -c 'cat > /tmp/install-dummy.json'
+# The install file of the chart, with the dummy plugin added. It goes to the pod as an argument:
+# kubectl exec can lose what is piped to it.
+config=$(kubectl -n "$NAMESPACE" get configmap matomo-configuration -o jsonpath='{.data.install\.json}' \
+  | jq -c '.PluginsInstalled += ["ExtraToolsDummy"]' | base64 | tr -d '\n')
+if [ -z "$config" ]; then
+  echo "::error::the configmap matomo-configuration has no install.json to add the dummy plugin to"
+  exit 1
+fi
+in_pod "echo $config | base64 -d > /tmp/install-dummy.json"
 
 echo "::group::install with the dummy plugin at 1.0.0"
 install
