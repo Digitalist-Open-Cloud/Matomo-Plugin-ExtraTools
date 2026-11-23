@@ -1,7 +1,7 @@
 {
     "name": "ExtraTools",
     "description": "Adds automatic installation from the console, db backups etc.",
-    "version": "5.4.3",
+    "version": "5.4.4",
     "theme": false,
     "require": {
         "php": ">=8.2.0",
