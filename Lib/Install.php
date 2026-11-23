@@ -33,6 +33,7 @@ use Piwik\Plugins\UsersManager\API as APIUsersManager;
 use Piwik\Plugin\Manager;
 use Piwik\Version;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
+use Piwik\Plugins\CoreUpdater\Commands\Update\CliUpdateObserver;
 use Symfony\Component\Console\Output\OutputInterface;
 use Piwik\Plugins\Marketplace\LicenseKey;
 use Piwik\Plugins\TagManager\Dao\ContainersDao;
@@ -391,6 +392,11 @@ class Install
 
             if (empty($componentsWithUpdateFile)) {
                 return false;
+            }
+            // Print per-migration progress like the core:update command does.
+            if ($this->silent !== true) {
+                $migrationCount = count($updater->getSqlQueriesToExecute());
+                $updater->addUpdateObserver(new CliUpdateObserver($this->output, $migrationCount));
             }
             $result = $updater->updateComponents($componentsWithUpdateFile);
 
