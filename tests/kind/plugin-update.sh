@@ -68,4 +68,12 @@ if ! echo "$output" | grep -q 'The database was updated'; then
   echo "::error::matomo:install did not report that it updated the database"
   exit 1
 fi
+if ! echo "$output" | grep -q 'Executing'; then
+  echo "::error::matomo:install did not report the migration it executed"
+  exit 1
+fi
+if ! echo "$output" | grep -q 'Done\.'; then
+  echo "::error::matomo:install did not report the migration as done"
+  exit 1
+fi
 expect_status 'version=1.1.0 column=yes'
