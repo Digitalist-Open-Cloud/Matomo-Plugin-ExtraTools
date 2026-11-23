@@ -129,12 +129,7 @@ To run:
      */
     public function deleteSegment($idSegment)
     {
-        $fieldsToSet = array(
-            'deleted' => 1,
-            'ts_last_edit' => Date::factory('now')->toString('Y-m-d H:i:s')
-        );
-
-        Db::get()->update($this->getTable(), $fieldsToSet, 'idsegment = ' . (int) $idSegment);
+        $this->setDeleted($idSegment, 1);
     }
 
     /**
@@ -143,11 +138,14 @@ To run:
      */
     public function unDeleteSegment($idSegment)
     {
-        $fieldsToSet = array(
-            'deleted' => 0,
-            'ts_last_edit' => Date::factory('now')->toString('Y-m-d H:i:s')
-        );
+        $this->setDeleted($idSegment, 0);
+    }
 
-        Db::get()->update($this->getTable(), $fieldsToSet, 'idsegment = ' . (int) $idSegment);
+    private function setDeleted($idSegment, int $deleted): void
+    {
+        Db::query(
+            'UPDATE ' . $this->getTable() . ' SET deleted = ?, ts_last_edit = ? WHERE idsegment = ?',
+            [$deleted, Date::factory('now')->toString('Y-m-d H:i:s'), (int) $idSegment]
+        );
     }
 }

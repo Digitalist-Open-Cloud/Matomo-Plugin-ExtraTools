@@ -1,0 +1,51 @@
+name: PHPStan check
+
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+  push:
+    branches: ["5.x-dev"]
+
+permissions:
+  contents: read
+
+env:
+  PLUGIN_NAME: ExtraTools
+
+jobs:
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          lfs: false
+          persist-credentials: false
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+      - name: Check out github-action-tests repository
+        uses: actions/checkout@v7
+        with:
+          repository: matomo-org/github-action-tests
+          ref: main
+          path: github-action-tests
+          persist-credentials: false
+      # The plugin is analysed inside a Matomo checkout, which holds the classes it uses.
+      - name: Check out Matomo
+        shell: bash
+        run: ${{ github.workspace }}/github-action-tests/scripts/bash/checkout_matomo.sh
+        env:
+          PLUGIN_NAME: ${{ env.PLUGIN_NAME }}
+          WORKSPACE: ${{ github.workspace }}
+          ACTION_PATH: ${{ github.workspace }}/github-action-tests
+          MATOMO_TEST_TARGET: maximum_supported_matomo
+      - name: Install the dependencies of Matomo
+        working-directory: ${{ github.workspace }}/matomo
+        run: composer install --ignore-platform-reqs --no-progress
+      - name: Run PHPStan
+        working-directory: ${{ github.workspace }}/matomo
+        run: >
+          docker run --rm -v "$PWD":/app -w /app ghcr.io/phpstan/phpstan:1-php8.4
+          analyse -c plugins/${{ env.PLUGIN_NAME }}/phpstan.neon --memory-limit=2G --no-progress

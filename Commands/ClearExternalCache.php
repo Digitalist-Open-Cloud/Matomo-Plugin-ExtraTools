@@ -71,7 +71,11 @@ which can make the regular <info>cache:clear</info> command appear to do nothing
         }
 
         try {
-            $redis = Cache::buildBackend('redis')->getRedis();
+            $backend = Cache::buildBackend('redis');
+            if (!$backend instanceof \Matomo\Cache\Backend\Redis) {
+                throw new \InvalidArgumentException('The cache backend is not Redis.');
+            }
+            $redis = $backend->getRedis();
             // Ensures scan() keeps iterating internally until it has a batch of
             // keys (or the cursor is exhausted) instead of returning early.
             $redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
