@@ -125,8 +125,10 @@ class CommandsTest extends ConsoleCommandTestCase
 
         $site = \Piwik\Db::fetchRow('SELECT idsite, excluded_referrers FROM ' . \Piwik\Common::prefixTable('site') . ' WHERE name = ?', ['With a list']);
         $this->assertSame('a.example,b.example', $site['excluded_referrers']);
-        $settings = new \Piwik\Plugins\Live\MeasurableSettings((int) $site['idsite']);
-        $this->assertTrue($settings->disableVisitorLog->getValue());
+        $disabled = \Piwik\Access::doAsSuperUser(function () use ($site) {
+            return (new \Piwik\Plugins\Live\MeasurableSettings((int) $site['idsite']))->disableVisitorLog->getValue();
+        });
+        $this->assertTrue($disabled);
     }
 
     public function testSiteListShouldSuceedAndShowUrl()
