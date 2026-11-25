@@ -59,12 +59,17 @@ jobs:
 
       - name: Write plugin-override values
         run: |
-          cat > extratools-override.yaml <<'EOF'
+          # The lowest Matomo the plugin supports: Matomo does not load a
+          # plugin that asks for a newer Matomo than the image has.
+          MATOMO_VERSION=$(grep -m1 '"matomo"' ExtraTools/plugin.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+          echo "Matomo image: digitalist/matomo:$MATOMO_VERSION"
+          cat > extratools-override.yaml <<EOF
           # tests/kind/values.yaml turns gatewayApi on for the upstream
           # ingress+Gateway e2e test; we don't install Gateway API CRDs here,
           # so the chart's HTTPRoute resources fail to install unless we
           # explicitly turn it back off.
           matomo:
+            image: digitalist/matomo:$MATOMO_VERSION
             gatewayApi:
               enabled: false
           extraVolumes:
