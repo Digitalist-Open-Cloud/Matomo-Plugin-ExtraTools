@@ -22,6 +22,7 @@ Introducing new console commands:
 - `matomo:install`
 - `segment:admin`
 - `segment:list`
+- `segment:save`
 - `site:add`
 - `site:delete`
 - `site:list`
@@ -197,6 +198,27 @@ Administration of segments, only options right now is to delete or activate a se
 ### `segment:list`
 
 List all segments, with ID, definition, date created and latest updated.
+
+### `segment:save`
+
+Adds a segment, or changes one when `--id` is given. A change that Matomo refuses, such as a
+definition it cannot read, is printed and the command returns a failure code.
+
+```sh
+./console segment:save --name="Swedish Firefox" --definition="browserCode==FF;countryCode==se"
+./console segment:save --id=3 --name="Firefox in Sweden"
+```
+
+Options:
+
+- `id` ID of the segment to change, as `segment:list` shows it. Without it a segment is added.
+- `name` Name of the segment. Needed for a new segment.
+- `definition` Definition of the segment, written as the `segment` parameter of the API. Needed for a new segment.
+- `site` ID of the only site the segment is for, or `all`. A new segment is for all sites.
+- `auto-archive` `true` to process the segment when archiving, `false` to process it when a report asks for it. A new segment has `false`. Matomo only allows `true` when archiving is not started by the browser.
+
+When changing a segment, an option that is left out keeps its value. A segment added here is
+seen by all users.
 
 ### `site:add`
 

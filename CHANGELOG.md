@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.4.5] - 2026-11-25
+
+## Added
+
+- `segment:save` to add a segment, or change the name, definition, site or archiving of one.
+
+## Fixed
+
+- `segment:list` shows whether a segment is active, which sites it is for and how it is processed. Every segment was listed as deleted.
+
 ## [5.4.0] - 2026-11-21
 
 ## Security
