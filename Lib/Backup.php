@@ -40,6 +40,22 @@ class Backup
         $this->output = $output;
     }
 
+    /**
+     * @return string the path of the dump client: mysqldump, or mariadb-dump where MariaDB no
+     *                longer ships the former
+     * @throws \RuntimeException if neither is installed
+     */
+    public static function findDumpClient(): string
+    {
+        $finder = new Process\ExecutableFinder();
+        $client = $finder->find('mysqldump') ?? $finder->find('mariadb-dump');
+        if ($client === null) {
+            throw new \RuntimeException('Neither mysqldump nor mariadb-dump was found. Install the client of MySQL or MariaDB.');
+        }
+
+        return $client;
+    }
+
     public function execute()
     {
         // Fetch config.
@@ -56,12 +72,15 @@ class Backup
         $timestamp = date("Ymd-His");
         // No shell is involved, so no value can be read as a command.
         $backup = new Process\Process([
-            'mysqldump',
+            self::findDumpClient(),
             "--defaults-extra-file=$config_path",
             '-h',
             (string) $db_host,
             '-P',
             (string) $db_port,
+            // The dump of MySQL asks for statistics that MariaDB does not have. "loose" lets the
+            // dump of MariaDB, which does not know the option, carry on.
+            '--loose-column-statistics=0',
             '--add-drop-table',
             "--result-file=$backup_folder/$prefix-$timestamp.sql",
             (string) $db_name,

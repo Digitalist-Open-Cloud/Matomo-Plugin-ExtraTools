@@ -31,7 +31,7 @@ class SegmentCommandsTest extends ConsoleCommandTestCase
     {
         $id = $this->add(['--name' => 'Tom & Jerry', '--definition' => 'actions>=2;countryCode==se']);
 
-        $this->assertSame(['Tom &amp; Jerry', 'actions>=2;countryCode==se', 0, 1, 0], $this->getStored($id));
+        $this->assertSame(['Tom & Jerry', 'actions>=2;countryCode==se', 0, 1, 0], $this->getStored($id));
     }
 
     public function testASegmentCanBeAddedForOneSiteAndProcessedWhenArchiving()
@@ -46,10 +46,10 @@ class SegmentCommandsTest extends ConsoleCommandTestCase
         $id = $this->add(['--name' => 'Tom & Jerry', '--definition' => 'actions>=2', '--site' => '1', '--auto-archive' => 'true']);
 
         $this->assertSame(0, $this->save(['--id' => $id, '--name' => 'Cat & mouse']), $this->applicationTester->getDisplay());
-        $this->assertSame(['Cat &amp; mouse', 'actions>=2', 1, 1, 1], $this->getStored($id));
+        $this->assertSame(['Cat & mouse', 'actions>=2', 1, 1, 1], $this->getStored($id));
 
         $this->assertSame(0, $this->save(['--id' => $id, '--definition' => 'countryCode==se', '--site' => 'all', '--auto-archive' => 'false']));
-        $this->assertSame(['Cat &amp; mouse', 'countryCode==se', 0, 1, 0], $this->getStored($id));
+        $this->assertSame(['Cat & mouse', 'countryCode==se', 0, 1, 0], $this->getStored($id));
     }
 
     public function testTheListTellsWhereASegmentIsUsedAndHowItIsProcessed()
@@ -118,7 +118,8 @@ class SegmentCommandsTest extends ConsoleCommandTestCase
         $segment = (new Model())->getSegment((int) $idSegment);
 
         return [
-            $segment['name'],
+            // Stored encoded or as it was given, depending on the version of Matomo.
+            Common::unsanitizeInputValue($segment['name']),
             $segment['definition'],
             (int) $segment['enable_only_idsite'],
             (int) $segment['enable_all_users'],

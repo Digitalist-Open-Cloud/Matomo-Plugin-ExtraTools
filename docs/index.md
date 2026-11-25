@@ -81,7 +81,8 @@ db_backup_path = "/var/www/html/tmp"
 ### Database SSL/TLS
 
 The database commands (`database:backup`, `database:create`, `database:drop`,
-`database:import`) shell out to the `mysql`/`mysqldump`/`mysqladmin` clients. To
+`database:import`) shell out to the `mysql`/`mysqldump`/`mysqladmin` clients. `database:backup` uses
+`mariadb-dump` where there is no `mysqldump`. To
 connect over SSL/TLS they read the same SSL keys Matomo uses in the `[database]`
 section of `config.ini.php`:
 
@@ -243,9 +244,11 @@ set up Matomo. If you do not add values in environment variables or options to
 matomo:install command, the user is named `admin`. There is no default password:
 give one with `--first-user-pass`, `MATOMO_FIRST_USER_PASSWORD` or the install file.
 
-`matomo:install` can also be run against a database that is already in use, with
-`--do-not-drop-db`, for example when Matomo is updated. The updates of Matomo and its plugins
-that the database is waiting for are then run as well.
+With `--do-not-drop-db` the database is used as it is: it is neither dropped nor created,
+and the `mysql` client is not needed. Use it when the database is made for you, as in a
+pipeline. In an empty database the tables are created. In a database that is already in use,
+for example when Matomo is updated, the updates of Matomo and its plugins that the database
+is waiting for are run as well.
 Matomo also creates a first site to track, this also has default values that
 you could override with environment variables or options.
 

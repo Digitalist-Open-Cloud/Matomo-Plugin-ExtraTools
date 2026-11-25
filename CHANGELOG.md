@@ -9,6 +9,8 @@
 ## Fixed
 
 - `segment:list` shows whether a segment is active, which sites it is for and how it is processed. Every segment was listed as deleted.
+- `database:backup` works with the `mysqldump` of MySQL 8 against a MariaDB server.
+- `database:backup` uses `mariadb-dump` where there is no `mysqldump`, as in the newer images of MariaDB.
 
 ## [5.4.0] - 2026-11-21
 
