@@ -62,7 +62,7 @@ You could use options to override config or environment variables:
         $this->addOptionalValueOption(
             'settings-value',
             null,
-            'Site setting values with plugin and setting name like "Plugin.setting=value". May be used multiple times, all settings are merged',
+            'Site setting values with plugin and setting name like "Plugin.setting=value". A list is given as JSON, like \'Plugin.setting=["a","b"]\'. May be used multiple times, all settings are merged',
             null,
             true
         );
@@ -108,7 +108,7 @@ You could use options to override config or environment variables:
         $excludedUserAgents = $input->getOption('exclude-user-agents');
         $keepURLFragments = $input->getOption('keep-url-fragments') ? true : false;
         $type = $input->getOption('type');
-        $settingValues = $this->parseSettingValues($input->getOption('settings-value')); // TODO: some settings need JSON-encoded values
+        $settingValues = $this->parseSettingValues($input->getOption('settings-value'));
         $excludeUnknownUrls = $input->getOption('exclude-unknown-urls') ? true : false;
 
         $site = [
@@ -153,6 +153,10 @@ You could use options to override config or environment variables:
         $values = array_map(function (string $value): array {
             [$key, $value] = explode('=', $value, 2);
             [$plugin, $setting] = explode('.', $key, 2);
+            // A setting that holds a list or a map is given as JSON.
+            if (in_array($value[0] ?? '', ['[', '{'], true) && is_array($decoded = json_decode($value, true))) {
+                $value = $decoded;
+            }
 
             return [
                 $plugin => [

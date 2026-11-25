@@ -203,7 +203,7 @@ Example:
         $this->addNoValueOption(
             'do-not-drop-db',
             null,
-            'Do not drop database'
+            'Use the database as it is: do not drop and create it. The mysql client is then not needed'
         );
         $this->addNoValueOption(
             'force',

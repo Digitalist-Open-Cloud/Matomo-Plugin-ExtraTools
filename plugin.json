@@ -1,11 +1,11 @@
 {
     "name": "ExtraTools",
     "description": "Adds automatic installation from the console, db backups etc.",
-    "version": "5.4.4",
+    "version": "5.4.5",
     "theme": false,
     "require": {
         "php": ">=8.2.0",
-        "matomo": ">=5.1.0,<6.0.0-b1"
+        "matomo": ">=5.14.1,<6.0.0-b1"
     },
     "authors": [
         {

@@ -64,13 +64,13 @@ To run:
         }
 
         foreach ($segments as $out) {
-            if ($out['deleted'] === '0') {
+            if ((int) $out['deleted'] === 0) {
                 $deleted =  "Segment is: <comment>active</comment>";
             } else {
                 $deleted =  "Segment is: <comment>deleted</comment>";
             }
 
-            if ($out['enable_only_idsite'] === '0') {
+            if ((int) $out['enable_only_idsite'] === 0) {
                 $enabled =  "Enabled for: <comment>all sites</comment>";
             } else {
                 $enabled = "Enabled for site id: <comment>" . $out['enable_only_idsite'] . "</comment>";
@@ -90,11 +90,11 @@ To run:
             }
 
             $auto_archive = '';
-            if ($out['auto_archive'] === '0') {
+            if ((int) $out['auto_archive'] === 0) {
                 $auto_archive = 'Segment is processed in realtime';
-            } elseif ($out['auto_archive'] === '1') {
+            } elseif ((int) $out['auto_archive'] === 1) {
                 $auto_archive = 'Segment is pre-processed (cron)';
-            } elseif ($out['auto_archive'] === '9') {
+            } elseif ((int) $out['auto_archive'] === 9) {
                 $auto_archive = 'Segment is not processed (paused)';
             }
 

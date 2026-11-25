@@ -22,6 +22,7 @@ Introducing new console commands:
 - `matomo:install`
 - `segment:admin`
 - `segment:list`
+- `segment:save`
 - `site:add`
 - `site:delete`
 - `site:list`
@@ -88,7 +89,8 @@ db_backup_path = "/var/www/html/tmp"
 ### Database SSL/TLS
 
 The database commands (`database:backup`, `database:create`, `database:drop`,
-`database:import`) shell out to the `mysql`/`mysqldump`/`mysqladmin` clients. To
+`database:import`) shell out to the `mysql`/`mysqldump`/`mysqladmin` clients. `database:backup` uses
+`mariadb-dump` where there is no `mysqldump`. To
 connect over SSL/TLS they read the same SSL keys Matomo uses in the `[database]`
 section of `config.ini.php`:
 
@@ -198,9 +200,38 @@ Administration of segments, only options right now is to delete or activate a se
 
 List all segments, with ID, definition, date created and latest updated.
 
+### `segment:save`
+
+Adds a segment, or changes one when `--id` is given. A change that Matomo refuses, such as a
+definition it cannot read, is printed and the command returns a failure code.
+
+```sh
+./console segment:save --name="Swedish Firefox" --definition="browserCode==FF;countryCode==se"
+./console segment:save --id=3 --name="Firefox in Sweden"
+```
+
+Options:
+
+- `id` ID of the segment to change, as `segment:list` shows it. Without it a segment is added.
+- `name` Name of the segment. Needed for a new segment.
+- `definition` Definition of the segment, written as the `segment` parameter of the API. Needed for a new segment.
+- `site` ID of the only site the segment is for, or `all`. A new segment is for all sites.
+- `auto-archive` `true` to process the segment when archiving, `false` to process it when a report asks for it. A new segment has `false`. Matomo only allows `true` when archiving is not started by the browser.
+
+When changing a segment, an option that is left out keeps its value. A segment added here is
+seen by all users.
+
 ### `site:add`
 
 Adds a new site to track. If a site with the same name already exists, no site is added.
+
+A setting of the site is given with `--settings-value`, which can be repeated. A setting that
+holds a list is written as JSON:
+
+```sh
+./console site:add --name=Foo --settings-value='Live.disable_visitor_log=1' \
+  --settings-value='WebsiteMeasurable.excluded_referrers=["a.example","b.example"]'
+```
 
 ### `site:delete`
 
@@ -250,9 +281,11 @@ set up Matomo. If you do not add values in environment variables or options to
 matomo:install command, the user is named `admin`. There is no default password:
 give one with `--first-user-pass`, `MATOMO_FIRST_USER_PASSWORD` or the install file.
 
-`matomo:install` can also be run against a database that is already in use, with
-`--do-not-drop-db`, for example when Matomo is updated. The updates of Matomo and its plugins
-that the database is waiting for are then run as well.
+With `--do-not-drop-db` the database is used as it is: it is neither dropped nor created,
+and the `mysql` client is not needed. Use it when the database is made for you, as in a
+pipeline. In an empty database the tables are created. In a database that is already in use,
+for example when Matomo is updated, the updates of Matomo and its plugins that the database
+is waiting for are run as well.
 Matomo also creates a first site to track, this also has default values that
 you could override with environment variables or options.
 
