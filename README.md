@@ -225,6 +225,14 @@ seen by all users.
 
 Adds a new site to track. If a site with the same name already exists, no site is added.
 
+A setting of the site is given with `--settings-value`, which can be repeated. A setting that
+holds a list is written as JSON:
+
+```sh
+./console site:add --name=Foo --settings-value='Live.disable_visitor_log=1' \
+  --settings-value='WebsiteMeasurable.excluded_referrers=["a.example","b.example"]'
+```
+
 ### `site:delete`
 
 Deletes a site with ID provided. If the site does not exist or cannot be deleted, the command

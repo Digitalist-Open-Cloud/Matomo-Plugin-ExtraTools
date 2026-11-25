@@ -111,6 +111,24 @@ class CommandsTest extends ConsoleCommandTestCase
         $this->assertEquals(0, $code);
     }
 
+    public function testSiteAddTakesASettingThatIsAListAsJson(): void
+    {
+        $code = $this->applicationTester->run(array(
+            'command' => 'site:add',
+            '--name' => 'With a list',
+            '--settings-value' => [
+                'WebsiteMeasurable.excluded_referrers=["a.example","b.example"]',
+                'Live.disable_visitor_log=1',
+            ],
+        ));
+        $this->assertEquals(0, $code, $this->applicationTester->getDisplay());
+
+        $site = \Piwik\Db::fetchRow('SELECT idsite, excluded_referrers FROM ' . \Piwik\Common::prefixTable('site') . ' WHERE name = ?', ['With a list']);
+        $this->assertSame('a.example,b.example', $site['excluded_referrers']);
+        $settings = new \Piwik\Plugins\Live\MeasurableSettings((int) $site['idsite']);
+        $this->assertTrue($settings->disableVisitorLog->getValue());
+    }
+
     public function testSiteListShouldSuceedAndShowUrl()
     {
 
